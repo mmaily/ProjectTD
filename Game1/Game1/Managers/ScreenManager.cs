@@ -38,7 +38,6 @@ namespace Game1.Screens
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col)
         {
             currentScreen.Draw(spriteBatch,pos,col);
-            
         }
     }   
 

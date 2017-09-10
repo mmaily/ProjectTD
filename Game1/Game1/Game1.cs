@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Game1.Screens;
 using Game1.Managers;
+using Game1.GameElements;
 
 namespace Game1
 {
@@ -14,16 +15,24 @@ namespace Game1
 
     public class Game1 : Game
     {
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Vector2 unitPosition;
         Vector2 unitSpeed;
+
+        // Carte actuelle
+        private Map map;
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             ScreenManager.GetInstance();
-            Content_Manager.GetInstance();
+            CustomContentManager.GetInstance();
         }
 
         /// <summary>
@@ -32,10 +41,11 @@ namespace Game1
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        protected override void Initialize() =>
-            // TODO: Add your initialization logic here
-
+        protected override void Initialize()
+        {
             base.Initialize();
+
+        }
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -47,8 +57,16 @@ namespace Game1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Use the Content_manager to load all the content, the different "Screens" can then acces them
-            Content_Manager.GetInstance().LoadTextures(Content);
-            // TODO: use this.Content to load your game content here
+            CustomContentManager.GetInstance().LoadTextures(Content);
+
+            // Chargement de la carte
+            map = new Map();
+
+
+            // Réglage de la taille de l'écran selon la carte
+            graphics.PreferredBackBufferHeight = map.mapHeight * map.tileSize;
+            graphics.PreferredBackBufferWidth = map.mapWidth * map.tileSize;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -106,12 +124,15 @@ namespace Game1
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            // Début de l'affichage
             spriteBatch.Begin();
-            //spriteBatch.Draw(Content_Manager.GetInstance().Textures["unit"], unitPosition, Color.White);
-            ScreenManager.GetInstance().Draw(spriteBatch, unitPosition, Color.White);
-            //  spriteBatch.Draw(unit, unitPosition, Color.White);
-            // spriteBatch.DrawString(font,unitPosition.ToString(), Vector2.Zero, Color.YellowGreen);
+
+            // Affichage de la carte
+            map.Draw(spriteBatch, CustomContentManager.GetInstance());
+
+            //ScreenManager.GetInstance().Draw(spriteBatch, unitPosition, Color.White);
+
+            // Fin de l'affichage
             spriteBatch.End();
             base.Draw(gameTime);
         }
