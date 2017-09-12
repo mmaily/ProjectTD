@@ -63,8 +63,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
-    <Compile Include="GameElements\Map.cs" />
-    <Compile Include="GameElements\Tile.cs" />
+    <Compile Include="GameElements\Map\Map.cs" />
+    <Compile Include="GameElements\Map\Tile.cs" />
+    <Compile Include="GameElements\Units\DemoUnit.cs" />
+    <Compile Include="GameElements\Units\Unit.cs" />
     <Compile Include="Managers\CustomContentManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

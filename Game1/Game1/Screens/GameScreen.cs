@@ -12,6 +12,8 @@ namespace Game1.Screens
     class GameScreen : Screen
     {
 
+        Texture2D mobTexture;
+
         public GameScreen()
         {
         }
@@ -20,10 +22,10 @@ namespace Game1.Screens
         public override void Draw (SpriteBatch spritebatch, Vector2 pos, Color col)
         {
 
-            
+            mobTexture = CustomContentManager.GetInstance().Textures["unit"];
 
-            spritebatch.Draw(CustomContentManager.GetInstance().Textures["unit"], pos, col);
-            spritebatch.DrawString(CustomContentManager.GetInstance().Fonts["defaultFont"], pos.ToString(), Vector2.Zero, Color.YellowGreen);
+            spritebatch.Draw(mobTexture, pos - new Vector2(mobTexture.Height / 2, mobTexture.Width / 2), col);
+            //spritebatch.DrawString(CustomContentManager.GetInstance().Fonts["defaultFont"], pos.ToString(), Vector2.Zero, Color.YellowGreen);
         }
     }
 }

@@ -49,6 +49,8 @@ namespace Game1.Managers
             AddTexture("Maps/Blocked", "Blocked");
             AddTexture("Maps/Path", "Path");
             AddTexture("Maps/Free", "Free");
+            AddTexture("Maps/Base", "Base");
+            AddTexture("Maps/Spawn", "Spawn");
 
 
             AddFonts("defaultFont", "");

@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework.Input;
 using Game1.Screens;
 using Game1.Managers;
 using Game1.GameElements;
+using Game1.GameElements.Units;
+using System.Collections.Generic;
+using System;
 
 namespace Game1
 {
@@ -18,11 +21,15 @@ namespace Game1
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Vector2 unitPosition;
-        Vector2 unitSpeed;
 
         // Carte actuelle
         private Map map;
+        // Indique si le chemin a été calculé
+        private bool pathComputed = false;
+
+        // Temporaire : spawn de mob
+        private int lastSecondSpawned = 0;
+        private List<DemoUnit> mobs;
 
         /// <summary>
         /// Constructeur
@@ -33,6 +40,8 @@ namespace Game1
             Content.RootDirectory = "Content";
             ScreenManager.GetInstance();
             CustomContentManager.GetInstance();
+
+            mobs = new List<DemoUnit>();
         }
 
         /// <summary>
@@ -86,33 +95,87 @@ namespace Game1
         protected override void Update(GameTime gameTime)
         {
 
+            // Mise à jour du temps de jeu
             base.Update(gameTime);
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            KeyboardState keystate = Keyboard.GetState();
-            // TODO: Add your update logic here
-            unitSpeed = Vector2.Zero;
-            if (keystate.IsKeyDown(Keys.Up)){
-                unitSpeed.Y += -1;
-            }
-            if (keystate.IsKeyDown(Keys.Down))
+            // Si le chemin a besoin d'être calculé
+            if (!pathComputed)
             {
-                unitSpeed.Y += 1;
-            }
-            if (keystate.IsKeyDown(Keys.Left))
-            {
-                unitSpeed.X += -1;
-            }
-            if (keystate.IsKeyDown(Keys.Right))
-            {
-                unitSpeed.X += 1;
+                map.ComputePath();
             }
 
-            base.Update(gameTime);
-            if (unitSpeed != Vector2.Zero) { unitSpeed.Normalize(); }
-            unitPosition += unitSpeed;
-            
+            // Si cela fait plus d'une seconde qu'une unitée n'est pas apparue
+            int enlapsedSeconds = (int)Math.Floor(gameTime.TotalGameTime.TotalSeconds);
+            if (enlapsedSeconds - lastSecondSpawned > 0)
+            {
+                // On sauvegarde le nouveau temps
+                lastSecondSpawned = enlapsedSeconds;
+                // On créé une nouvelle unitée
+                DemoUnit newMob = new DemoUnit();
+                // On définit sa position comme étant celle du spawn
+                newMob.UpdatePosition(map.Spawns[0].getTilePosition() * map.tileSize);
+                // On définit sa destination comme étant la tuile suivante
+                newMob.DestinationTile = map.Spawns[0].NextTile;
+                // On l'ajoute à la liste des mobs
+                mobs.Add(newMob);
+            }
+
+            // Pour chaque mob de la liste
+            foreach (DemoUnit mob in mobs)
+            {
+            // Quantité de déplacement disponible
+            float movementAvailable = mob.Speed * map.tileSize * gameTime.ElapsedGameTime.Milliseconds / 1000;
+
+                while (movementAvailable != 0 && !mob.Dead)
+                {
+                    // Destination
+                    Vector2 destinationPosition = mob.DestinationTile.getTilePosition() * map.tileSize;
+                    // Quantité de mouvement nécessaire pour le déplacement
+                    Vector2 movement = destinationPosition - mob.Position;
+                    // Etude de faisabilité du déplacement
+                    Vector2 finalMovement;
+                    if (movement.Length() > movementAvailable)
+                    {
+                        // Si le déplacement voulu est trop grand
+                        // On normalise le vecteur mouvement
+                        movement.Normalize();
+                        // On le multiplie par la quantité de mouvement restante
+                        movement *= movementAvailable;
+                        // On valide ce mouvement
+                        finalMovement = movement;
+                        // On vide la quantité de mouvement restante
+                        movementAvailable = 0;
+                    }
+                    else
+                    {
+                        // Si le déplacement est plus petit quand la quantité de mouvement restante
+                        // On valide le mouvement prévu
+                        finalMovement = movement;
+                        // On recalcule la quantité de mouvement restante
+                        movementAvailable -= movement.Length();
+                        // On modifie la destination
+                        if (mob.DestinationTile.TileType == Tile.TileTypeEnum.Base)
+                        {
+                            // Si la tuile destination était une base, on détruit le mob et on recommence
+                            mob.Dead = true;
+                        }
+                        else
+                        {
+                            // Sinon, on passe à la tuile suivante
+                            mob.DestinationTile = mob.DestinationTile.NextTile;
+                        }
+
+                    }
+
+                    mob.UpdatePosition(Vector2.Add(mob.Position, finalMovement));
+
+                } // Fin du while quantité de mouvement > 0
+
+            } // Fin de la boucle pour tous les mobs de la liste
+
+            // Suppression de tous les mobs morts
+            mobs.RemoveAll(deadMob => deadMob.Dead);
+
         }
 
 
@@ -130,7 +193,12 @@ namespace Game1
             // Affichage de la carte
             map.Draw(spriteBatch, CustomContentManager.GetInstance());
 
-            //ScreenManager.GetInstance().Draw(spriteBatch, unitPosition, Color.White);
+            // Pour chaque unité de la liste des mobs
+            foreach (DemoUnit mob in mobs)
+            {
+                // Affichage de l'unité sur la carte
+                ScreenManager.GetInstance().Draw(spriteBatch, mob.Position, Color.White);
+            }
 
             // Fin de l'affichage
             spriteBatch.End();
