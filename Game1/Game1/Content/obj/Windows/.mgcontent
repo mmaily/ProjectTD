@@ -4,7 +4,10 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Maxime/Documents/MetaProjectTD/TestCode/1erTest/Game1/Game1/Content/Pawn.png</File>
-    <File>C:/Users/Maxime/Documents/MetaProjectTD/TestCode/1erTest/Game1/Game1/Content/defaultFont.spritefont</File>
+    <File>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/Pawn.png</File>
+    <File>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/defaultFont.spritefont</File>
+    <File>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/Maps/Blocked.png</File>
+    <File>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/Maps/Free.png</File>
+    <File>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/Maps/Path.png</File>
   </SourceFiles>
 </SourceFileCollection>

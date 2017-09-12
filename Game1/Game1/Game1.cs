@@ -128,7 +128,7 @@ namespace Game1
             spriteBatch.Begin();
 
             // Affichage de la carte
-            map.Draw(spriteBatch, CustomContentManager.GetInstance());
+            map.Draw(spriteBatch);
 
             //ScreenManager.GetInstance().Draw(spriteBatch, unitPosition, Color.White);
 

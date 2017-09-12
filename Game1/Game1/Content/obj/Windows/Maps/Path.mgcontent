@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/Pawn.png</SourceFile>
-  <SourceTime>2017-09-04T15:08:40.9689766+02:00</SourceTime>
-  <DestFile>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/bin/Windows/Pawn.xnb</DestFile>
-  <DestTime>2017-09-12T08:15:13.7977046+02:00</DestTime>
+  <SourceFile>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/Maps/Path.png</SourceFile>
+  <SourceTime>2017-09-12T08:04:56.1317493+02:00</SourceTime>
+  <DestFile>C:/Users/Maxime/Documents/MetaProjectTD/Github/ProjectTD/Game1/Game1/Content/bin/Windows/Maps/Path.xnb</DestFile>
+  <DestTime>2017-09-12T08:15:15.3474259+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T16:05:36+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
