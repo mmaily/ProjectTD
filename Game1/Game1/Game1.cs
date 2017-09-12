@@ -191,7 +191,7 @@ namespace Game1
             spriteBatch.Begin();
 
             // Affichage de la carte
-            map.Draw(spriteBatch, CustomContentManager.GetInstance());
+            map.Draw(spriteBatch);
 
             // Pour chaque unité de la liste des mobs
             foreach (DemoUnit mob in mobs)
