@@ -82,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Cursors\Banana.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

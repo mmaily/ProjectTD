@@ -7,6 +7,7 @@ using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Game1.GameElements;
 
 namespace Game1.Managers
 {
@@ -45,13 +46,14 @@ namespace Game1.Managers
             CM = Content;
             AddTexture("Pawn", "unit");
 
-            // Pas bon je pense mais bon
-            AddTexture("Maps/Blocked", "Blocked");
-            AddTexture("Maps/Path", "Path");
-            AddTexture("Maps/Free", "Free");
-            AddTexture("Maps/Base", "Base");
-            AddTexture("Maps/Spawn", "Spawn");
-
+            // Pour tous les types de tuile
+            foreach (Tile.TileTypeEnum tileType in Enum.GetValues(typeof(Tile.TileTypeEnum)))
+            {
+                AddTexture("Maps/" + tileType.ToString(), tileType.ToString());
+            }
+            // Texture pour tuile sélectionnée
+            AddTexture("Maps/Mouseover", "Mouseover");
+            AddTexture("Cursors/Banana", "cursor");
 
             AddFonts("defaultFont", "");
 

@@ -35,7 +35,7 @@ namespace Game1.GameElements
         public List<Tile> Paths { get; private set; }
 
         // Taille d'une tuile en pixels
-        public byte tileSize = 32;
+        public byte tileSize = 64;
         // Taille de la carte
         public byte mapHeight = 8;
         public byte mapWidth = 16;
@@ -107,6 +107,11 @@ namespace Game1.GameElements
                 for (int col = 0; col < mapWidth; col++)
                 {
                     _spriteBatch.Draw(contentManager.Textures[Tiles[line, col].TileType.ToString()], new Vector2(col * tileSize, line * tileSize), Color.White);
+                    if(Tiles[line, col].selected)
+                    {
+                        _spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(col * tileSize, line * tileSize), Color.White);
+                        Tiles[line, col].selected = false;
+                    }
                 }
             }
 

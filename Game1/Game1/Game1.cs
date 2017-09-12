@@ -98,12 +98,16 @@ namespace Game1
             // Mise à jour du temps de jeu
             base.Update(gameTime);
 
+
+            #region Calcul du chemin
             // Si le chemin a besoin d'être calculé
             if (!pathComputed)
             {
                 map.ComputePath();
             }
+            #endregion
 
+            #region Gestion des unitées
             // Si cela fait plus d'une seconde qu'une unitée n'est pas apparue
             int enlapsedSeconds = (int)Math.Floor(gameTime.TotalGameTime.TotalSeconds);
             if (enlapsedSeconds - lastSecondSpawned > 0)
@@ -176,6 +180,22 @@ namespace Game1
             // Suppression de tous les mobs morts
             mobs.RemoveAll(deadMob => deadMob.Dead);
 
+            #endregion
+
+            #region Sélection d'une tuile
+            // Récupération de l'état de la souris
+            MouseState mouseState = Mouse.GetState();
+            // Récupération de la position de la souris
+            Point mousePosition = mouseState.Position;
+            // Si la souris est dans l'écran
+            if(GraphicsDevice.Viewport.Bounds.Contains(mousePosition))
+            {
+                // On récupère la tuile visée
+                Tile selectedTile = map.Tiles[mousePosition.Y / map.tileSize, mousePosition.X / map.tileSize];
+                // On marque la tuile comme sélectionnée
+                selectedTile.selected = true;
+            }
+            #endregion
         }
 
 
@@ -190,6 +210,9 @@ namespace Game1
             // Début de l'affichage
             spriteBatch.Begin();
 
+            // Récupération du ScreenManager
+            ScreenManager screenManager = ScreenManager.GetInstance();
+
             // Affichage de la carte
             map.Draw(spriteBatch);
 
@@ -197,8 +220,11 @@ namespace Game1
             foreach (DemoUnit mob in mobs)
             {
                 // Affichage de l'unité sur la carte
-                ScreenManager.GetInstance().Draw(spriteBatch, mob.Position, Color.White);
+                screenManager.Draw(spriteBatch, mob.Position, Color.White, "unit");
             }
+
+            // Affichage du curseur
+            screenManager.Draw(spriteBatch, Mouse.GetState().Position.ToVector2(), Color.White, "cursor");
 
             // Fin de l'affichage
             spriteBatch.End();

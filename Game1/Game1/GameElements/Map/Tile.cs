@@ -27,9 +27,12 @@ namespace Game1.GameElements
         // Permet de ne pas passer deux fois sur la même tuile lors du calcul du chemin
         public bool explorated = false;
 
+        // Position de la tuile
         public int line;
         public int column;
 
+        // Etat de la tuile, si sélectionnée ou pas
+        public bool selected = false;
         // Type de la tuile
         public TileTypeEnum TileType { get; set; }
 
