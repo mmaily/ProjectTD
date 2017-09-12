@@ -39,20 +39,6 @@ namespace Game1.Managers
             }
             return instance;
         }
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            // Pour chaque unité de la liste des mobs
-            foreach (DemoUnit mob in mobs)
-            {
-
-                // Affichage de l'unité sur la carte
-                spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name],mob.Position, Color.White);
-            }
-        }
-        public void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
-        {
-        }
-
         public void Update(GameTime gameTime)
         {
             #region  Calcul du chemin
@@ -139,5 +125,20 @@ namespace Game1.Managers
             #endregion
 
         }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            // Pour chaque unité de la liste des mobs
+            foreach (DemoUnit mob in mobs)
+            {
+
+                // Affichage de l'unité sur la carte
+                spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name],mob.Position, Color.White);
+            }
+        }
+        public void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
+        {
+        }
+
+
     }
 }

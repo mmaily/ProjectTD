@@ -220,7 +220,7 @@ namespace Game1
 
 
             // Affichage de la carte
-           // map.Draw(spriteBatch);
+            // map.Draw(spriteBatch);
 
             //// Pour chaque unité de la liste des mobs
             //foreach (DemoUnit mob in mobs)
@@ -231,10 +231,12 @@ namespace Game1
 
             // Affichage du curseur
             screenManager.Draw(spriteBatch, Mouse.GetState().Position.ToVector2(), Color.White, "cursor");
+            screenManager.Draw(spriteBatch);
 
             // Fin de l'affichage
             spriteBatch.End();
             base.Draw(gameTime);
         }
     }
+    
 }

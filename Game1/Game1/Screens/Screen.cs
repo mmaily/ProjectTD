@@ -18,6 +18,9 @@ namespace Game1.Screens
         {
 
         }
+        public virtual void Draw(SpriteBatch spritebatch)
+        {
+        }
         public virtual void Draw(SpriteBatch spritebatch, Vector2 pos, Color col)
         {
         }

@@ -31,6 +31,23 @@ namespace Game1.Managers
         }
         public void Draw(SpriteBatch spriteBatch)
         {
+
+                CustomContentManager contentManager = CustomContentManager.GetInstance();
+
+                for (int line = 0; line < map.mapHeight; line++)
+                {
+                    for (int col = 0; col < map.mapWidth; col++)
+                    {
+                        spriteBatch.Draw(contentManager.Textures[map.Tiles[line, col].TileType.ToString()], new Vector2(col * map.tileSize, line * map.tileSize), Color.White);
+                        if (map.Tiles[line, col].selected)
+                        {
+                           spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(col * map.tileSize, line * map.tileSize), Color.White);
+                            map.Tiles[line, col].selected = false;
+                        }
+                    }
+                }
+
+            
         }
         public void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
         {

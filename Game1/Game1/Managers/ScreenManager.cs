@@ -36,6 +36,10 @@ namespace Game1.Screens
             return instance;
         }
         public virtual void LoadContent() { }
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            currentScreen.Draw(spriteBatch);
+        }
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col)
         {
             currentScreen.Draw(spriteBatch,pos,col);
