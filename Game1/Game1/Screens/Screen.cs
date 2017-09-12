@@ -14,11 +14,19 @@ namespace Game1.Screens
     {
         public Screen() { }
 
+        public virtual void LoadContent()
+        {
+
+        }
         public virtual void Draw(SpriteBatch spritebatch, Vector2 pos, Color col)
         {
         }
 
         public virtual void Draw(SpriteBatch spritebatch, Vector2 pos, Color col, string _what)
+        {
+        }
+
+        public virtual void Update(GameTime gameTime)
         {
         }
     }

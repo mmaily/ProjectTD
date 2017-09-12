@@ -68,6 +68,8 @@
     <Compile Include="GameElements\Units\DemoUnit.cs" />
     <Compile Include="GameElements\Units\Unit.cs" />
     <Compile Include="Managers\CustomContentManager.cs" />
+    <Compile Include="Managers\MapManager.cs" />
+    <Compile Include="Managers\UnitsManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\GameScreen.cs" />

@@ -35,6 +35,7 @@ namespace Game1.Screens
             }
             return instance;
         }
+        public virtual void LoadContent() { }
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col)
         {
             currentScreen.Draw(spriteBatch,pos,col);
@@ -42,6 +43,10 @@ namespace Game1.Screens
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
         {
             currentScreen.Draw(spriteBatch, pos, col, _what);
+        }
+        public virtual void Update(GameTime gameTime)
+        {
+            currentScreen.Update(gameTime);
         }
 
     }   
