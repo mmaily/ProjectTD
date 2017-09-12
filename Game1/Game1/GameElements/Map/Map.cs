@@ -97,14 +97,16 @@ namespace Game1.GameElements
         /// Affichage de la carte
         /// </summary>
         /// <param name="_spriteBatch">Instance du ScreenManager</param>
-        internal void Draw(SpriteBatch _spriteBatch, CustomContentManager _contentManager)
+        internal void Draw(SpriteBatch _spriteBatch)
         {
+
+            CustomContentManager contentManager = CustomContentManager.GetInstance();
 
             for (int line = 0; line < mapHeight; line++)
             {
                 for (int col = 0; col < mapWidth; col++)
                 {
-                    _spriteBatch.Draw(_contentManager.Textures[Tiles[line, col].TileType.ToString()], new Vector2(col * tileSize, line * tileSize), Color.White);
+                    _spriteBatch.Draw(contentManager.Textures[Tiles[line, col].TileType.ToString()], new Vector2(col * tileSize, line * tileSize), Color.White);
                 }
             }
 
