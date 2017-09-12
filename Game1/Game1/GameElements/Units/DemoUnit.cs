@@ -21,6 +21,7 @@ namespace Game1.GameElements.Units
         {
             base.Init();
             // Définition des propriétés différentes de la classe de base
+            this.name = "unit";
             this.Speed = 1f;
             this.UnitType = UnitTypeEnum.Ground;
         }

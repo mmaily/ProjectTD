@@ -15,6 +15,8 @@ namespace Game1.GameElements.Units
     {
 
         /// <summary>
+        /// Nom de l'unité
+        public string name{ get; set; }
         /// Position de l'unitée
         /// </summary>
         public Vector2 Position { get; protected set; }
