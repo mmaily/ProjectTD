@@ -75,9 +75,12 @@ namespace Game1
 
 
             // Réglage de la taille de l'écran selon la carte
-            graphics.PreferredBackBufferHeight = MapManager.GetInstance().GetMap().mapHeight * MapManager.GetInstance().GetMap().tileSize;
-            graphics.PreferredBackBufferWidth = MapManager.GetInstance().GetMap().mapWidth * MapManager.GetInstance().GetMap().tileSize;
+            graphics.PreferredBackBufferHeight = (MapManager.GetInstance().GetMap().mapHeight) * MapManager.GetInstance().GetMap().tileSize;
+            graphics.PreferredBackBufferWidth = (MapManager.GetInstance().GetMap().mapWidth+2) * MapManager.GetInstance().GetMap().tileSize;
             graphics.ApplyChanges();
+
+            //selectionne le GameScreen (PROVISOIRE)
+            ScreenManager.GetInstance().SelectScreen(0);
         }
 
         /// <summary>

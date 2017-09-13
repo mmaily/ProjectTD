@@ -31,6 +31,8 @@ namespace Game1.GameElements
         public int line;
         public int column;
 
+        // Etat de la tuile, si survolée ou pas
+        public bool overviewed = false;
         // Etat de la tuile, si sélectionnée ou pas
         public bool selected = false;
         // Type de la tuile

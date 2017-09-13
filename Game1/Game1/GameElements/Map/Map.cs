@@ -107,10 +107,10 @@ namespace Game1.GameElements
                 for (int col = 0; col < mapWidth; col++)
                 {
                     _spriteBatch.Draw(contentManager.Textures[Tiles[line, col].TileType.ToString()], new Vector2(col * tileSize, line * tileSize), Color.White);
-                    if(Tiles[line, col].selected)
+                    if(Tiles[line, col].selected || Tiles[line, col].overviewed)
                     {
                         _spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(col * tileSize, line * tileSize), Color.White);
-                        Tiles[line, col].selected = false;
+                        Tiles[line, col].overviewed = false;
                     }
                 }
             }

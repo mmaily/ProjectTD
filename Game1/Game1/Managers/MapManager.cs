@@ -39,10 +39,10 @@ namespace Game1.Managers
                     for (int col = 0; col < map.mapWidth; col++)
                     {
                         spriteBatch.Draw(contentManager.Textures[map.Tiles[line, col].TileType.ToString()], new Vector2(col * map.tileSize, line * map.tileSize), Color.White);
-                        if (map.Tiles[line, col].selected)
+                        if (map.Tiles[line, col].selected || map.Tiles[line, col].overviewed)
                         {
                            spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(col * map.tileSize, line * map.tileSize), Color.White);
-                            map.Tiles[line, col].selected = false;
+                            map.Tiles[line, col].overviewed = false;
                         }
                     }
                 }
@@ -104,6 +104,11 @@ namespace Game1.Managers
         public Map GetMap()
         {
            return map;
+        }
+        public Rectangle GetMapZone()
+        {
+            Rectangle rec = new Rectangle(0,0,map.mapWidth*map.tileSize, map.mapHeight * map.tileSize);
+                return rec;
         }
     }
 }

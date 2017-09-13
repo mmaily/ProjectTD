@@ -35,7 +35,16 @@ namespace Game1.Screens
             }
             return instance;
         }
-        public virtual void LoadContent() { }
+        public void SelectScreen(int id)
+        {
+            currentScreen = (Screen)Screens[id];
+            LoadContent();
+
+        }
+        public virtual void LoadContent()
+        {
+            currentScreen.LoadContent();
+        }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             currentScreen.Draw(spriteBatch);

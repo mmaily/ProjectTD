@@ -26,28 +26,37 @@ namespace Game1.Screens
             MapManager mapManager = MapManager.GetInstance();
             //Récupération de la map choisie par le manager (une seule pour l'instant)
             map = mapManager.GetMap();
-            //// Réglage de la taille de l'écran selon la carte
-            graphics.PreferredBackBufferHeight = map.mapHeight * map.tileSize;
-            graphics.PreferredBackBufferWidth = map.mapWidth * map.tileSize;
-            graphics.ApplyChanges();
+            ////// Réglage de la taille de l'écran selon la carte
+            //graphics.PreferredBackBufferHeight = map.mapHeight * map.tileSize;
+            //graphics.PreferredBackBufferWidth = map.mapWidth * map.tileSize;
+            //graphics.ApplyChanges();
         }
         public override void Update(GameTime gameTime)
         {
             UnitsManager.GetInstance().Update(gameTime);
-            //#region Sélection d'une tuile
-            //// Récupération de l'état de la souris
-            //MouseState mouseState = Mouse.GetState();
-            //// Récupération de la position de la souris
-            //Point mousePosition = mouseState.Position;
-            //// Si la souris est dans l'écran
+            #region Sélection d'une tuile
+            // Récupération de l'état de la souris
+            MouseState mouseState = Mouse.GetState();
+            // Récupération de la position de la souris
+            Point mousePosition = mouseState.Position;
+            // Si la souris est dans l'écran
             //if (GetGraphicsDevice().Viewport.Bounds.Contains(mousePosition))
             //{
-            //    // On récupère la tuile visée
-            //    Tile selectedTile = map.Tiles[mousePosition.Y / map.tileSize, mousePosition.X / map.tileSize];
-            //    // On marque la tuile comme sélectionnée
-            //    selectedTile.selected = true;
+            //On check si la souris est dans la zone map
+            if (MapManager.GetInstance().GetMapZone().Contains(mousePosition))
+            { 
+                // On récupère la tuile visée
+                Tile selectedTile = map.Tiles[mousePosition.Y / map.tileSize, mousePosition.X / map.tileSize];
+                // On marque la tuile comme sélectionnée
+                selectedTile.overviewed = true;
+
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                {
+                    selectedTile.selected = !selectedTile.selected;
+                }
+            }
             //}
-            //#endregion
+            #endregion
         }
 
         public override void Draw(SpriteBatch spritebatch)
