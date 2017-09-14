@@ -1,34 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Game1.GameElements;
-using Game1.GameElements.Units;
-using Game1.Managers;
-using Game1.Screens;
+using DowerTefenseGame.GameElements;
+using DowerTefenseGame.GameElements.Units;
 
-namespace Game1.Managers
+namespace DowerTefenseGame.Managers
 {
+
+    /// <summary>
+    /// Gestionnaire d'unité
+    /// </summary>
     class UnitsManager
     {
-        private static UnitsManager instance = null;//L'instance est privée pour empêcher d'autre classe de la modifier. Utiliser le getter GetInstance()
-        private Map map;
-        private int lastSecondSpawned = 0;
-        private List<DemoUnit> mobs;
-        // Indique si le chemin a été calculé
-        private bool pathComputed = false;
 
+        // Instance du gestionnaire d'unité
+        private static UnitsManager instance = null;
+        // Horodatage d'appartition de la dernière unité
+        private int lastSecondSpawned = 0;
+        // Liste des unités courantes
+        private List<DemoUnit> mobs;
+        // Carte en cours
+        public Map CurrentMap { get; set; }
+
+        /// <summary>
+        /// Constructeur du gestionnaire d'unité
+        /// </summary>
         private UnitsManager()
         {
             mobs = new List<DemoUnit>();
-            map = MapManager.GetInstance().GetMap();
+            CurrentMap = MapManager.GetInstance().map;
         }
 
-        //Créé une seule instance du ScreenManager même si il est appelé plusieurs fois
+        /// <summary>
+        /// Récupération de l'instance du gestionnaire d'unité
+        /// </summary>
+        /// <returns></returns>
         public static UnitsManager GetInstance()
         {
             if (instance == null)
@@ -39,29 +46,26 @@ namespace Game1.Managers
             }
             return instance;
         }
-        public void Update(GameTime gameTime)
-        {
-            #region  Calcul du chemin
-            // Si le chemin a besoin d'être calculé
-            if (!pathComputed)
-            {
-                MapManager.GetInstance().ComputePath();
-            }
-            #endregion
 
-            #region Gestion des unitées
-            // Si cela fait plus d'une seconde qu'une unitée n'est pas apparue
-            int enlapsedSeconds = (int)Math.Floor(gameTime.TotalGameTime.TotalSeconds);
+        /// <summary>
+        /// Mise à jour des unités
+        /// </summary>
+        /// <param name="_gameTime"></param>
+        public void Update(GameTime _gameTime)
+        {
+            #region === Gestion du déplacement des unités ===
+            // Si cela fait plus d'une seconde qu'une unité n'est pas apparue
+            int enlapsedSeconds = (int)Math.Floor(_gameTime.TotalGameTime.TotalSeconds);
             if (enlapsedSeconds - lastSecondSpawned > 0)
             {
                 // On sauvegarde le nouveau temps
                 lastSecondSpawned = enlapsedSeconds;
-                // On créé une nouvelle unitée
+                // On créé une nouvelle unité
                 DemoUnit newMob = new DemoUnit();
                 // On définit sa position comme étant celle du spawn
-                newMob.UpdatePosition(map.Spawns[0].getTilePosition() * map.tileSize);
+                newMob.UpdatePosition(CurrentMap.Spawns[0].getTilePosition() * CurrentMap.tileSize);
                 // On définit sa destination comme étant la tuile suivante
-                newMob.DestinationTile = map.Spawns[0].NextTile;
+                newMob.DestinationTile = CurrentMap.Spawns[0].NextTile;
                 // On l'ajoute à la liste des mobs
                 mobs.Add(newMob);
             }
@@ -70,12 +74,13 @@ namespace Game1.Managers
             foreach (DemoUnit mob in mobs)
             {
                 // Quantité de déplacement disponible
-                float movementAvailable = mob.Speed * map.tileSize * gameTime.ElapsedGameTime.Milliseconds / 1000;
-
+                float movementAvailable = mob.Speed * CurrentMap.tileSize * _gameTime.ElapsedGameTime.Milliseconds / 1000;
+                
+                // Tant que l'unité peut encore se déplacer et n'est pas morte
                 while (movementAvailable != 0 && !mob.Dead)
                 {
                     // Destination
-                    Vector2 destinationPosition = mob.DestinationTile.getTilePosition() * map.tileSize;
+                    Vector2 destinationPosition = mob.DestinationTile.getTilePosition() * CurrentMap.tileSize;
                     // Quantité de mouvement nécessaire pour le déplacement
                     Vector2 movement = destinationPosition - mob.Position;
                     // Etude de faisabilité du déplacement
@@ -113,32 +118,32 @@ namespace Game1.Managers
 
                     }
 
+                    // On met à jour la position de cette unité
                     mob.UpdatePosition(Vector2.Add(mob.Position, finalMovement));
 
-                } // Fin du while quantité de mouvement > 0
+                } // Fin du while quantité de mouvement > 0 ou mort
 
             } // Fin de la boucle pour tous les mobs de la liste
 
-            // Suppression de tous les mobs morts
+            // Suppression de toutes les unités mortes
             mobs.RemoveAll(deadMob => deadMob.Dead);
 
             #endregion
-
         }
+
+        /// <summary>
+        /// Affichage des unités
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
             // Pour chaque unité de la liste des mobs
             foreach (DemoUnit mob in mobs)
             {
-
                 // Affichage de l'unité sur la carte
                 spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name],mob.Position, Color.White);
             }
         }
-        public void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
-        {
-        }
-
 
     }
 }

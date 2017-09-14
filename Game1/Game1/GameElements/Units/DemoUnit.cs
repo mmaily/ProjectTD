@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Game1.GameElements.Units
+﻿namespace DowerTefenseGame.GameElements.Units
 {
+    /// <summary>
+    /// Unité de démonstration
+    /// </summary>
     public class DemoUnit : Unit
     {
 
         /// <summary>
-        /// Prochaine tuile de destination de cette unitée
+        /// Prochaine tuile de destination de cette unité
         /// </summary>
         public Tile DestinationTile { get; set; }
 
         /// <summary>
-        /// Constructeur de l'unitée démo
+        /// Constructeur de l'unité démo
         /// </summary>
         public DemoUnit()
         {

@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Game1.GameElements
+namespace DowerTefenseGame.GameElements
 {
-    // Classe fille de tuile
+
+    /// <summary>
+    /// Classe représentant une tuile de la carte
+    /// </summary>
     public class Tile
     {
         // Énumérateur des types de tuiles

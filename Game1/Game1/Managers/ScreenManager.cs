@@ -1,22 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
+﻿using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Game1.Screens
+namespace DowerTefenseGame.Screens
 {
 
+    /// <summary>
+    /// Gestionnaire d'écran
+    /// </summary>
     class ScreenManager
     {
         
-        private static ScreenManager instance=null;//L'instance est privée pour empêcher d'autre classe de la modifier. Utiliser le getter GetInstance()
-        ArrayList Screens; //Stockage de nos différent screen
+        // Instance du gestionnaire d'écran
+        private static ScreenManager instance=null;
+        // Liste des différents écrans
+        ArrayList Screens;
+        // Écran courant
         Screen currentScreen;
 
+        /// <summary>
+        /// Constructeur du gestionnaire d'écrans
+        /// </summary>
         private ScreenManager()
         {
             Screens = new ArrayList();
@@ -24,7 +28,10 @@ namespace Game1.Screens
             currentScreen = (Screen)Screens[0];
         }
 
-        //Créé une seule instance du ScreenManager même si il est appelé plusieurs fois
+        /// <summary>
+        /// Récupération de l'instance du gestionnaire d'écran
+        /// </summary>
+        /// <returns></returns>
         public static ScreenManager GetInstance()
         {
             if (instance == null)
@@ -35,28 +42,63 @@ namespace Game1.Screens
             }
             return instance;
         }
-        public void SelectScreen(int id)
+
+        /// <summary>
+        /// Chargement d'un écran spécifique (temporaire)
+        /// </summary>
+        /// <param name="_id">Identifiant de l'écran à charger</param>
+        public void SelectScreen(int _id)
         {
-            currentScreen = (Screen)Screens[id];
+            currentScreen = (Screen)Screens[_id];
             LoadContent();
 
         }
+
+        /// <summary>
+        /// Chargement du contenu de l'écran
+        /// </summary>
         public virtual void LoadContent()
         {
+            // On charge le contenu de l'écran actuel
             currentScreen.LoadContent();
         }
+
+        /// <summary>
+        /// Affichage de l'écran actuel
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             currentScreen.Draw(spriteBatch);
         }
+
+        /// <summary>
+        /// Affichage de l'écran actuel
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="pos"></param>
+        /// <param name="col"></param>
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col)
         {
             currentScreen.Draw(spriteBatch,pos,col);
         }
+
+        /// <summary>
+        /// Affichage de l'écran actuel
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="pos"></param>
+        /// <param name="col"></param>
+        /// <param name="_what"></param>
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
         {
             currentScreen.Draw(spriteBatch, pos, col, _what);
         }
+
+        /// <summary>
+        /// Mise à jour de l'écran actuel
+        /// </summary>
+        /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime)
         {
             currentScreen.Update(gameTime);

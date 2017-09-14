@@ -1,62 +1,91 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Game1.GameElements;
+using DowerTefenseGame.GameElements;
 
-namespace Game1.Managers
+namespace DowerTefenseGame.Managers
 {
+
+    /// <summary>
+    /// Gestionnaire de carte
+    /// </summary>
     class MapManager
     {
-        private static MapManager instance = null;//L'instance est privée pour empêcher d'autre classe de la modifier. Utiliser le getter GetInstance()
+        // Instance du gestionnaire
+        private static MapManager instance = null;
+        // Carte en cours
         public Map map;
+        // Booléen de calcul du chemin
+        private bool pathComputed = false;
+
+        /// <summary>
+        /// Constructeur du gestionnaire de carte
+        /// </summary>
         private MapManager()
         {
             map = new Map();
         }
 
-        //Créé une seule instance du ScreenManager même si il est appelé plusieurs fois
+        /// <summary>
+        /// Récupération de l'instance du gestionnaire de carte
+        /// </summary>
+        /// <returns>Instance du gestionnaires</returns>
         public static MapManager GetInstance()
         {
+            // Si l'instance n'est pas encore créée
             if (instance == null)
             {
-
                 instance = new MapManager();
-
             }
             return instance;
         }
+
+        /// <summary>
+        /// Affichage des éléments de la carte
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
+            // Récupération de l'instance du gestionnaire de contenu
+            CustomContentManager contentManager = CustomContentManager.GetInstance();
 
-                CustomContentManager contentManager = CustomContentManager.GetInstance();
-
-                for (int line = 0; line < map.mapHeight; line++)
+            // Pour chaque tuile de la carte
+            foreach (Tile tile in map.Tiles)
+            {
+                // On affiche la texture correspondant à la nature de la carte
+                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.column * map.tileSize, tile.line * map.tileSize), Color.White);
+                // Si cette tuile est sélectionnée ou sous le curseur
+                if (tile.selected || tile.overviewed)
                 {
-                    for (int col = 0; col < map.mapWidth; col++)
-                    {
-                        spriteBatch.Draw(contentManager.Textures[map.Tiles[line, col].TileType.ToString()], new Vector2(col * map.tileSize, line * map.tileSize), Color.White);
-                        if (map.Tiles[line, col].selected || map.Tiles[line, col].overviewed)
-                        {
-                           spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(col * map.tileSize, line * map.tileSize), Color.White);
-                            map.Tiles[line, col].overviewed = false;
-                        }
-                    }
+                    // On affiche la texture "sélectionnée" sur cette tuile
+                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.column * map.tileSize, tile.line * map.tileSize), Color.White);
+                    // On reset le boolée "sous le curseur"
+                    tile.overviewed = false;
                 }
 
+            }
             
         }
-        public void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
-        {
-        }
 
+        /// <summary>
+        /// Mise à jour de la carte
+        /// </summary>
+        /// <param name="gameTime">Temps de jeu</param>
         public void Update(GameTime gameTime)
         {
+            #region  === Calcul du chemin ===
+            // Si le chemin a besoin d'être calculé
+            if (!pathComputed)
+            {
+                this.ComputePath();
+            }
+            #endregion
         }
-        internal void ComputePath()
+
+        /// <summary>
+        /// Calcul du chemin
+        /// </summary>
+        private void ComputePath()
         {
             // Création de la liste des tuiles à traiter
             List<Tile> queue = new List<Tile>();
@@ -101,10 +130,20 @@ namespace Game1.Managers
 
 
         }
+
+        /// <summary>
+        /// Récupération de la carte en cours
+        /// </summary>
+        /// <returns></returns>
         public Map GetMap()
         {
            return map;
         }
+
+        /// <summary>
+        /// Zone de la carte
+        /// </summary>
+        /// <returns>Rectangle correspondant à la zone de la carte</returns>
         public Rectangle GetMapZone()
         {
             Rectangle rec = new Rectangle(0,0,map.mapWidth*map.tileSize, map.mapHeight * map.tileSize);

@@ -1,47 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Game1.Managers;
-using Game1.GameElements;
+using DowerTefenseGame.Managers;
+using DowerTefenseGame.GameElements;
 using Microsoft.Xna.Framework.Input;
 
-namespace Game1.Screens
+namespace DowerTefenseGame.Screens
 {
+    /// <summary>
+    /// Classe d'écran de jeu principal
+    /// </summary>
     class GameScreen : Screen
     {
+        // Texture à afficher
         Texture2D textureToDraw;
-        GraphicsDeviceManager graphics;
+        // Carte en cours
         public Map map;
+        
+        /// <summary>
+        /// Constructeur principal
+        /// </summary>
         public GameScreen()
         {
         }
-
+        
+        /// <summary>
+        /// Chargement du contenu
+        /// </summary>
         public override void LoadContent()
         {
-            // Chargement du manager de map
+            // Chargement du gestionnaire de carte
             MapManager mapManager = MapManager.GetInstance();
-            //Récupération de la map choisie par le manager (une seule pour l'instant)
+
+            //Récupération de la carte en cours
             map = mapManager.GetMap();
-            ////// Réglage de la taille de l'écran selon la carte
-            //graphics.PreferredBackBufferHeight = map.mapHeight * map.tileSize;
-            //graphics.PreferredBackBufferWidth = map.mapWidth * map.tileSize;
-            //graphics.ApplyChanges();
         }
-        public override void Update(GameTime gameTime)
+
+        /// <summary>
+        /// Mise à jour de l'écran
+        /// </summary>
+        /// <param name="_gameTime"></param>
+        public override void Update(GameTime _gameTime)
         {
-            UnitsManager.GetInstance().Update(gameTime);
-            #region Sélection d'une tuile
+            // Mise à jour du gestionnaire de carte
+            MapManager.GetInstance().Update(_gameTime);
+            // Mise à jour du gestionnaire d'unités
+            UnitsManager.GetInstance().Update(_gameTime);
+
+
+            #region === Sélection d'une tuile ===
+
             // Récupération de l'état de la souris
             MouseState mouseState = Mouse.GetState();
             // Récupération de la position de la souris
             Point mousePosition = mouseState.Position;
-            // Si la souris est dans l'écran
-            //if (GetGraphicsDevice().Viewport.Bounds.Contains(mousePosition))
-            //{
             //On check si la souris est dans la zone map
             if (MapManager.GetInstance().GetMapZone().Contains(mousePosition))
             { 

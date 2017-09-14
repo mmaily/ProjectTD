@@ -1,49 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using Game1.GameElements;
+using DowerTefenseGame.GameElements;
 
-namespace Game1.Managers
+namespace DowerTefenseGame.Managers
 {
 
+    /// <summary>
+    /// Gestionnaire de contenu
+    /// </summary>
     class CustomContentManager
     {
-        //    public Texture2D unit;
-        //    public SpriteFont font;
-
+        // Instance du gestionnaire de contenu
         private static CustomContentManager instance;
 
+        // Dictionnaire de textures
         public Dictionary<String, Texture2D> Textures;
+        // Dictionnaire de polices
         public Dictionary<String, SpriteFont> Fonts;
-        public ContentManager CM;
+        // Gestionnaire de contenu (parent)
+        private ContentManager contentManager;
 
+        /// <summary>
+        /// Constructeur du gestionnaire de contenu
+        /// </summary>
         private CustomContentManager()
         {
+            // Initialisation des dictionnaires
             Textures = new Dictionary<String, Texture2D>();
             Fonts = new Dictionary<String, SpriteFont>();
-
         }
 
-        //Créé une seule instance du Content_Manager même si il est appelé plusieurs fois
+        /// <summary>
+        /// Récupération de l'instance du gestionnaire de contenu
+        /// Création si n'existe pas encore
+        /// </summary>
+        /// <returns></returns>
         public static CustomContentManager GetInstance()
         {
+            // Si l'instance n'est pas encore crée
             if (instance == null)
             {
                 instance = new CustomContentManager();
-
             }
+            // On retourne l'instance
             return instance;
         }
 
-        public void LoadTextures(ContentManager Content)
+        /// <summary>
+        /// Chargement des textures
+        /// </summary>
+        /// <param name="_content"></param>
+        public void LoadTextures(ContentManager _content)
         {
-            CM = Content;
+
+            this.contentManager = _content;
+
+            // Ajout de la texture d'unité
             AddTexture("Pawn", "unit");
 
             // Pour tous les types de tuile
@@ -53,38 +67,58 @@ namespace Game1.Managers
             }
             // Texture pour tuile sélectionnée
             AddTexture("Maps/Mouseover", "Mouseover");
+            // Texture du curseur
             AddTexture("Cursors/Banana", "cursor");
 
+            // Police par défaut
             AddFonts("defaultFont", "");
 
         }
 
-        public void AddTexture(String file, String name = "")
+        /// <summary>
+        /// Ajout d'une nouvelle texture
+        /// </summary>
+        /// <param name="_file"></param>
+        /// <param name="_name"></param>
+        public void AddTexture(String _file, String _name = "")
         {
-            Texture2D newTexture = CM.Load<Texture2D>(file);
-            if (name == "")
+            // Chargement de la texture demandée
+            Texture2D newTexture = contentManager.Load<Texture2D>(_file);
+            // Le nom est il renseigné ?
+            if (_name == "")
             {
-                Textures.Add(file, newTexture);
+                // Si le fichier est renseigné, on utilise ce critère
+                Textures.Add(_file, newTexture);
             }
             else
             {
-                Textures.Add(name, newTexture);
+                // Sinon, on utilise le nom
+                Textures.Add(_name, newTexture);
             }
         }
-        public void AddFonts(String font, String fontName)
+
+        /// <summary>
+        /// Ajout d'une nouvelle police
+        /// </summary>
+        /// <param name="_font"></param>
+        /// <param name="_fontName"></param>
+        public void AddFonts(String _font, String _fontName)
         {
-            SpriteFont newFont = CM.Load<SpriteFont>(font);
-            if (fontName == "")
+            // Chargement de la police demandée
+            SpriteFont newFont = contentManager.Load<SpriteFont>(_font);
+            // Le nom est il renseigné ?
+            if (_fontName == "")
             {
-                Fonts.Add(font, newFont);
+                // Si le ficihier est renseigné, on utilise ce critère
+                Fonts.Add(_font, newFont);
             }
             else
             {
-                Fonts.Add(fontName, newFont);
+                // Sinon, on utilise le nom
+                Fonts.Add(_fontName, newFont);
             }
         }
     }
-
 
 
 }
