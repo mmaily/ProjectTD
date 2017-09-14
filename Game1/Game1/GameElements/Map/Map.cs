@@ -41,7 +41,7 @@ namespace DowerTefenseGame.GameElements
         public Map()
         {
             // Intialisation du nom de la carte
-            this.Name = "Carte démo";
+            this.Name = "Carte demo";
 
             // Initialisation des listes de spawns et de bases
             Spawns = new List<Tile>();

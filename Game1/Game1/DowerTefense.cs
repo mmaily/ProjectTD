@@ -27,9 +27,9 @@ namespace DowerTefenseGame
             graphics = new GraphicsDeviceManager(this);
             // Dossier racine du contenu
             Content.RootDirectory = "Content";
-            // Récupération du gestionnaire d'écrans
+            // Initialisation du gestionnaire d'écrans
             ScreenManager.GetInstance();
-            // Récupération du gestionnaire de contenu
+            // Initialisation du gestionnaire de contenu
             CustomContentManager.GetInstance();
         }
 
@@ -54,7 +54,7 @@ namespace DowerTefenseGame
 
             // Réglage de la taille de l'écran selon la carte
             graphics.PreferredBackBufferHeight = (MapManager.GetInstance().GetMap().mapHeight) * MapManager.GetInstance().GetMap().tileSize;
-            graphics.PreferredBackBufferWidth = (MapManager.GetInstance().GetMap().mapWidth+2) * MapManager.GetInstance().GetMap().tileSize;
+            graphics.PreferredBackBufferWidth = (MapManager.GetInstance().GetMap().mapWidth+4) * MapManager.GetInstance().GetMap().tileSize;
             graphics.ApplyChanges();
 
             //selectionne le GameScreen (PROVISOIRE)
@@ -97,9 +97,6 @@ namespace DowerTefenseGame
 
             // Début de l'affichage
             spriteBatch.Begin();
-
-            // Affichage du curseur
-            screenManager.Draw(spriteBatch, Mouse.GetState().Position.ToVector2(), Color.White, "cursor");
 
             // Affichage de l'écran en cours
             screenManager.Draw(spriteBatch);

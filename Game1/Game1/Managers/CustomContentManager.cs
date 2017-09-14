@@ -71,7 +71,7 @@ namespace DowerTefenseGame.Managers
             AddTexture("Cursors/Banana", "cursor");
 
             // Police par défaut
-            AddFonts("defaultFont", "");
+            AddFonts("defaultFont", "font");
 
         }
 

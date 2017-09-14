@@ -84,18 +84,6 @@ namespace DowerTefenseGame.Screens
         }
 
         /// <summary>
-        /// Affichage de l'écran actuel
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        /// <param name="pos"></param>
-        /// <param name="col"></param>
-        /// <param name="_what"></param>
-        public virtual void Draw(SpriteBatch spriteBatch, Vector2 pos, Color col, string _what)
-        {
-            currentScreen.Draw(spriteBatch, pos, col, _what);
-        }
-
-        /// <summary>
         /// Mise à jour de l'écran actuel
         /// </summary>
         /// <param name="gameTime"></param>

@@ -11,10 +11,11 @@ namespace DowerTefenseGame.Screens
     /// </summary>
     class GameScreen : Screen
     {
-        // Texture à afficher
-        Texture2D textureToDraw;
         // Carte en cours
-        public Map map;
+        private Map map;
+
+        // Empêche le multiple clic
+        private bool leftClicked = false;
         
         /// <summary>
         /// Constructeur principal
@@ -46,7 +47,6 @@ namespace DowerTefenseGame.Screens
             // Mise à jour du gestionnaire d'unités
             UnitsManager.GetInstance().Update(_gameTime);
 
-
             #region === Sélection d'une tuile ===
 
             // Récupération de l'état de la souris
@@ -55,47 +55,69 @@ namespace DowerTefenseGame.Screens
             Point mousePosition = mouseState.Position;
             //On check si la souris est dans la zone map
             if (MapManager.GetInstance().GetMapZone().Contains(mousePosition))
-            { 
+            {
                 // On récupère la tuile visée
                 Tile selectedTile = map.Tiles[mousePosition.Y / map.tileSize, mousePosition.X / map.tileSize];
                 // On marque la tuile comme sélectionnée
                 selectedTile.overviewed = true;
 
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                // Si le clic gauche est enclenché et que cela n'a pas encore été traité
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && leftClicked == false)
                 {
-                    selectedTile.selected = !selectedTile.selected;
+                    // On signale le clic gauche
+                    leftClicked = true;
+
+                    // Récupération de l'ancienne tuile sélectionnée
+                    Tile oldSelectedTile = UIManager.GetInstance().SelectedTile;
+                    // Si c'est la même tuile qu'auparavant
+                    if (selectedTile.Equals(oldSelectedTile))
+                    {
+                        // On désélectionne la tuile
+                        selectedTile.selected = false;
+                        // On annule la tuile sélectionnée
+                        UIManager.GetInstance().SelectedTile = null;
+                    }
+                    else
+                    {
+                        // Sinon, on déselectionne l'ancienne si elle existe et on sélectionne la nouvelle
+                        if (oldSelectedTile != null)
+                        {
+                            UIManager.GetInstance().SelectedTile.selected = false;
+                        }
+                        selectedTile.selected = true;
+                        // On remplace l'ancienne par la nouvelle
+                        UIManager.GetInstance().SelectedTile = selectedTile;
+                    }
+                }
+                else if (Mouse.GetState().LeftButton == ButtonState.Released && leftClicked == true)
+                {
+                    // Le bouton a été relâché, on peut écouter à nouveau cette information
+                    leftClicked = false;
                 }
             }
             //}
             #endregion
+
+            // Mise à jour du gestionnaire d'interface
+            UIManager.GetInstance().Update(_gameTime);
         }
 
-        public override void Draw(SpriteBatch spritebatch)
+        public override void Draw(SpriteBatch _spriteBatch)
         {
-
             // Affichage de la carte
-            MapManager.GetInstance().Draw(spritebatch);
-            //Draw the unit on the screen using the method in the UnitsManager
-            UnitsManager.GetInstance().Draw(spritebatch);
-            spritebatch.Draw(textureToDraw, Mouse.GetState().Position.ToVector2(), Color.White);
+            MapManager.GetInstance().Draw(_spriteBatch);
+            // Affichage des unités
+            UnitsManager.GetInstance().Draw(_spriteBatch);
+            // Affichage de l'interface
+            UIManager.GetInstance().Draw(_spriteBatch);
 
+            // Affichage du curseur
+            Vector2 lol = Mouse.GetState().Position.ToVector2();
+            Texture2D fap = CustomContentManager.GetInstance().Textures["cursor"];
+            _spriteBatch.Draw(fap, lol, Color.White);
 
+            
         }
-        public override void Draw(SpriteBatch spritebatch, Vector2 pos, Color col, string _what)
-        {
-
-            textureToDraw = CustomContentManager.GetInstance().Textures[_what];
-
-
-
-
-                //spritebatch.Draw(textureToDraw, pos - new Vector2(textureToDraw.Height / 2, textureToDraw.Width / 2), col);
-            //spritebatch.DrawString(CustomContentManager.GetInstance().Fonts["defaultFont"], pos.ToString(), Vector2.Zero, Color.YellowGreen);
-
-        }
-
-
-
 
     }
         
