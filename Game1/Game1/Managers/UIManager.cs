@@ -79,7 +79,29 @@ namespace DowerTefenseGame.Managers
             {
                 // On affiche les infos de la tuile
                 this.DisplaySelectedTile(_spriteBatch);
+
+                // Si la tuile possède un bâtiment
+                if(SelectedTile.building != null)
+                {
+                    DisplayBuildingInfo(_spriteBatch);
+
+                    // Si le bâtiment possède une portée non nulle
+                    if(SelectedTile.building.Range > 0)
+                    {
+                    }
+                }
             }
+
+        }
+
+        /// <summary>
+        /// Affichage des infos du bâtiment
+        /// </summary>
+        /// <param name="_spriteBatch"></param>
+        private void DisplayBuildingInfo(SpriteBatch _spriteBatch)
+        {
+            int offset = 100;
+            _spriteBatch.DrawString(deFaultFont, "Batiment : " + SelectedTile.building.name, new Vector2(leftUIOffset, offset), Color.White);
 
         }
 

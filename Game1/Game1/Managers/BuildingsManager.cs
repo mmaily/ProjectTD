@@ -1,4 +1,5 @@
 ﻿using DowerTefenseGame.GameElements;
+using DowerTefenseGame.GameElements.Units;
 using Game1.GameElements.Units;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -55,8 +56,21 @@ namespace DowerTefenseGame.Managers
         public void Update(GameTime _gameTime)
         {
 
-            
-
+            // Temporaire dégueu
+            // Pour toutes les tours
+            foreach (Building building in BuildingsList)
+            {
+                // Pour toutes les unités
+                foreach (Unit unit in UnitsManager.GetInstance().mobs)
+                {
+                    // Si l'unité est proche
+                    if(Vector2.Distance(unit.Position, building.Position) < building.Range)
+                    {
+                        unit.Damage(building.AttackPower);
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace DowerTefenseGame.GameElements.Units
 {
@@ -51,6 +52,16 @@ namespace DowerTefenseGame.GameElements.Units
         /// Nombre de cibles visées en un seul tir (défaut : 0)
         /// </summary>
         public float TargetNumber { get; protected set; }
+
+        /// <summary>
+        /// Tente d'infliger des dégâtes à l'unité
+        /// </summary>
+        /// <param name="_damage"></param>
+        internal void Damage(float _damage)
+        {
+            this.HealthPoints -= (int)_damage;
+        }
+
         /// <summary>
         /// Type de cibles visées par cette unité  (défaut : None)
         /// </summary>

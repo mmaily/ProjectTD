@@ -19,7 +19,7 @@ namespace DowerTefenseGame.Managers
         // Horodatage d'appartition de la dernière unité
         private int lastSecondSpawned = 0;
         // Liste des unités courantes
-        private List<DemoUnit> mobs;
+        public List<DemoUnit> mobs;
         // Carte en cours
         public Map CurrentMap { get; set; }
 
@@ -73,6 +73,13 @@ namespace DowerTefenseGame.Managers
             // Pour chaque mob de la liste
             foreach (DemoUnit mob in mobs)
             {
+                // Si le mob est mort
+                if(mob.HealthPoints <= 0)
+                {
+                    mob.Dead = true;
+                    continue;
+                }
+
                 // Quantité de déplacement disponible
                 float movementAvailable = mob.Speed * CurrentMap.tileSize * _gameTime.ElapsedGameTime.Milliseconds / 1000;
                 

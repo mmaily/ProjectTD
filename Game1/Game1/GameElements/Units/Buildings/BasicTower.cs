@@ -1,5 +1,6 @@
 ﻿using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
+using DowerTefenseGame.Managers;
 using System.Collections.Generic;
 
 namespace Game1.GameElements.Units.Buildings
@@ -33,6 +34,10 @@ namespace Game1.GameElements.Units.Buildings
         {
             // On sauvegarde la tuile sur laquelle on se positionne
             this.Tile = _tile;
+
+            // On sauvegarde la position
+            // TODO : Attention appel récursif si on remplace le 64 par MapManager.GetInstance().map, puisque c'est de GetInstance que l'on vient ici...
+            this.Position = _tile.getTilePosition() * 64 ;
 
             //On indique à la tuile que l'on a posé un bâtiment dessus
             _tile.building = this;
