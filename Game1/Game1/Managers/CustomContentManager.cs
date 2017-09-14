@@ -69,6 +69,8 @@ namespace DowerTefenseGame.Managers
             AddTexture("Maps/Mouseover", "Mouseover");
             // Texture du curseur
             AddTexture("Cursors/Banana", "cursor");
+            // Texture de la tour
+            AddTexture("Maps/BasicTower", "BasicTower");
 
             // Police par défaut
             AddFonts("defaultFont", "font");

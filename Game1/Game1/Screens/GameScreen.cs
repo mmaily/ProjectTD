@@ -46,6 +46,8 @@ namespace DowerTefenseGame.Screens
             MapManager.GetInstance().Update(_gameTime);
             // Mise à jour du gestionnaire d'unités
             UnitsManager.GetInstance().Update(_gameTime);
+            // Mise à jour du gestionnaire de bâtiments
+            BuildingsManager.GetInstance().Update(_gameTime);
 
             #region === Sélection d'une tuile ===
 
@@ -108,6 +110,8 @@ namespace DowerTefenseGame.Screens
             MapManager.GetInstance().Draw(_spriteBatch);
             // Affichage des unités
             UnitsManager.GetInstance().Draw(_spriteBatch);
+            // Affichage des bâtiments
+            BuildingsManager.GetInstance().Draw(_spriteBatch);
             // Affichage de l'interface
             UIManager.GetInstance().Draw(_spriteBatch);
 

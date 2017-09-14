@@ -73,9 +73,11 @@ namespace DowerTefenseGame.Managers
         {
             // Affichage du nom de la carte
             _spriteBatch.DrawString(deFaultFont, currentMap.Name, new Vector2(leftUIOffset, 5), Color.Wheat);
-
+            
+            // Si une tuile est sélectionnée
             if(SelectedTile != null)
             {
+                // On affiche les infos de la tuile
                 this.DisplaySelectedTile(_spriteBatch);
             }
 

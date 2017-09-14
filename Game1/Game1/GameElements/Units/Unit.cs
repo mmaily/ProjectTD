@@ -67,7 +67,7 @@ namespace DowerTefenseGame.GameElements.Units
         /// <summary>
         /// Contructeur de base d'une unité.
         /// </summary>
-        public void Init()
+        public Unit()
         {
             Position = new Vector2();
             UnitType = UnitTypeEnum.None;

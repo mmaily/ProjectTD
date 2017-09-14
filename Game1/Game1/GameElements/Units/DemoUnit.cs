@@ -14,9 +14,8 @@
         /// <summary>
         /// Constructeur de l'unité démo
         /// </summary>
-        public DemoUnit()
+        public DemoUnit() : base()
         {
-            base.Init();
             // Définition des propriétés différentes de la classe de base
             this.name = "unit";
             this.Speed = 1f;

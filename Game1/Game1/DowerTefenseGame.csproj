@@ -65,8 +65,11 @@
     <Compile Include="DowerTefense.cs" />
     <Compile Include="GameElements\Map\Map.cs" />
     <Compile Include="GameElements\Map\Tile.cs" />
+    <Compile Include="GameElements\Units\Building.cs" />
+    <Compile Include="GameElements\Units\Buildings\BasicTower.cs" />
     <Compile Include="GameElements\Units\DemoUnit.cs" />
     <Compile Include="GameElements\Units\Unit.cs" />
+    <Compile Include="Managers\BuildingsManager.cs" />
     <Compile Include="Managers\CustomContentManager.cs" />
     <Compile Include="Managers\MapManager.cs" />
     <Compile Include="Managers\UIManager.cs" />

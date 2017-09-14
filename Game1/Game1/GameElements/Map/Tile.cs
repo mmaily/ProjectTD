@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game1.GameElements.Units;
+using Microsoft.Xna.Framework;
 
 namespace DowerTefenseGame.GameElements
 {
@@ -35,6 +36,8 @@ namespace DowerTefenseGame.GameElements
         public bool selected = false;
         // Type de la tuile
         public TileTypeEnum TileType { get; set; }
+
+        public Building building;
 
         /// <summary>
         /// Constructeur par défaut d'une tuile bloquée.

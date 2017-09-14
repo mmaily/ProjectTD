@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DowerTefenseGame.Managers;
+using Game1.GameElements.Units.Buildings;
+using System.Collections.Generic;
 
 namespace DowerTefenseGame.GameElements
 {
@@ -83,6 +85,11 @@ namespace DowerTefenseGame.GameElements
             Tiles[4, mapWidth-1].TileType = Tile.TileTypeEnum.Base;
             Bases.Add(Tiles[4, mapWidth - 1]);
 
+            // On définit une tuile comme disponible
+            Tile towerTile = Tiles[5, 7];
+            towerTile.TileType = Tile.TileTypeEnum.Free;
+            // Ajout d'une tour sur cette tuile
+            BuildingsManager.GetInstance().BuildingsList.Add(new BasicTower(towerTile));
 
         }
 
