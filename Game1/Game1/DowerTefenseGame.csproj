@@ -81,6 +81,9 @@
     <Compile Include="Screens\Screen.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="C3.MonoGame.Primitives2D">
+      <HintPath>Libraries\C3.MonoGame.Primitives2D.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>

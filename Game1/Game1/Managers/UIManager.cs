@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.GameElements;
+using C3.MonoGame;
 
 namespace DowerTefenseGame.Managers
 {
@@ -88,6 +89,7 @@ namespace DowerTefenseGame.Managers
                     // Si le bâtiment possède une portée non nulle
                     if(SelectedTile.building.Range > 0)
                     {
+                        _spriteBatch.DrawCircle(SelectedTile.building.Position, SelectedTile.building.Range, 50, Color.Green, 5);
                     }
                 }
             }
