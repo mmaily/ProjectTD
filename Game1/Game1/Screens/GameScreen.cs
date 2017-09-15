@@ -121,12 +121,6 @@ namespace DowerTefenseGame.Screens
 
             
         }
-
-        //Execution du code si une unité est "InRange"
-        static void bd_OnUnitInRange()
-        {
-            
-        }
     }
         
 

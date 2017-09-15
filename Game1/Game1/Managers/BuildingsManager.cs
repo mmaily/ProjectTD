@@ -19,7 +19,8 @@ namespace DowerTefenseGame.Managers
     /// </summary>
     public class BuildingsManager
     {
-
+        //Définiton de l'event "une unité pénétre dans la surface-union" (constituée de l'union de toutes les range)
+        #region
         public event UnitInrangeHandler UnitInRange;
         public delegate void UnitInrangeHandler(BuildingsManager bd, UnitInRangeEventArgs arg);
         public EventArgs e = null;
@@ -29,6 +30,7 @@ namespace DowerTefenseGame.Managers
             { unit = iUnit; }
             public Unit unit { get; set; }
         }
+        #endregion
         // Instance du gestionnaire de bâtiments
         private static BuildingsManager instance;
 
@@ -70,32 +72,12 @@ namespace DowerTefenseGame.Managers
         /// <param name="_gameTime"></param>
         public void Update(GameTime _gameTime)
         {
-
-            // Temporaire dégueu
-            // Pour toutes les tours
-            //foreach (Building building in BuildingsList)
-            //{
-            //    // Pour toutes les unités
-            //    foreach (Unit unit in UnitsManager.GetInstance().mobs)
-            //    {
-            //        // Si l'unité est proche
-            //        if(Vector2.Distance(unit.Position, building.Position) < building.Range)
-            //        {
-            //            unit.Damage(building.AttackPower);
-            //            break;
-            //        }
-            //    }
-            //}
+            //Check si les unités pénétre dans la surface-union
             foreach (Unit unit in UnitsManager.GetInstance().mobs)
-            {
-                //Détection si l'unité est "in range" COMPARAISON TEMPORAIRE
-                //if(Vector2.Distance(unit.Position, MapManager.GetInstance().map.towerTile.getTilePosition())<200)
-                //{
-                
+            {      
                 if (coveredArea.FillContains(new System.Windows.Point((int)unit.Position.X, (int)unit.Position.Y)))
                     {
                         UnitInRangeEventArgs arg = new UnitInRangeEventArgs(unit);
-                    //UnitInRange?.Invoke(this,arg);
                     UnitInRange(this, arg);
                 }
             }
@@ -117,13 +99,13 @@ namespace DowerTefenseGame.Managers
             }
 
         }
-
+        /// <summary>
+        /// Ajoute une cercle géométrique pour les range des tours pour définir la surface-union
+        /// </summary>
+        /// <param name="NewCircle"></param>
         public void AddToArea(EllipseGeometry newCircle)
         {
-
             coveredArea.Children.Add(newCircle);
-           
-
         }
 
     }
