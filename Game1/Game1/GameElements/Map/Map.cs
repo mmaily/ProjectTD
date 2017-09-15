@@ -9,6 +9,9 @@ namespace DowerTefenseGame.GameElements
     /// </summary>
     public class Map
     {
+
+        //TEMPORAIRE
+        public Tile towerTile;
         /// <summary>
         /// Nom de la carte
         /// </summary>
@@ -86,7 +89,7 @@ namespace DowerTefenseGame.GameElements
             Bases.Add(Tiles[4, mapWidth - 1]);
 
             // On définit une tuile comme disponible
-            Tile towerTile = Tiles[5, 7];
+            towerTile = Tiles[5, 7];
             towerTile.TileType = Tile.TileTypeEnum.Free;
             // Ajout d'une tour sur cette tuile
             BuildingsManager.GetInstance().BuildingsList.Add(new BasicTower(towerTile));

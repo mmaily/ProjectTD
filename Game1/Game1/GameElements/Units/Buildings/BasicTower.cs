@@ -2,6 +2,7 @@
 using DowerTefenseGame.GameElements.Units;
 using DowerTefenseGame.Managers;
 using System.Collections.Generic;
+using System;
 
 namespace Game1.GameElements.Units.Buildings
 {
@@ -12,6 +13,7 @@ namespace Game1.GameElements.Units.Buildings
     {
 
         protected List<Unit> targetList;
+        protected Unit Target;
 
         /// <summary>
         /// Constructeur
@@ -28,6 +30,8 @@ namespace Game1.GameElements.Units.Buildings
 
             // Initialisation des cibles potentielles
             targetList = new List<Unit>();
+            CreateOnRangeEventListener();
+            
         }
 
         public BasicTower(Tile _tile) : this()
@@ -37,10 +41,50 @@ namespace Game1.GameElements.Units.Buildings
 
             // On sauvegarde la position
             // TODO : Attention appel récursif si on remplace le 64 par MapManager.GetInstance().map, puisque c'est de GetInstance que l'on vient ici...
+            // Sûr ??? Baic tower est créée à la génération de MAP, on génére pas la map avec MapManager.GetInstance().map
             this.Position = _tile.getTilePosition() * 64 ;
 
             //On indique à la tuile que l'on a posé un bâtiment dessus
             _tile.building = this;
+        }
+
+        //Ecoute l'event 'OnUnitInRange" et add la cible à sa liste
+        public  void CreateOnRangeEventListener()
+        {
+            BuildingsManager bd = BuildingsManager.GetInstance();
+            bd.UnitInRange += new BuildingsManager.UnitInrangeHandler(AddTarget);
+        }
+        public void AddTarget(object sender, BuildingsManager.UnitInRangeEventArgs args)
+        {
+              
+            targetList.Add(args.unit);
+            ChooseTarget();
+        }
+        public int k;
+        public void ChooseTarget()
+        {
+            k++;
+
+            Target = targetList[0];
+            Fire();
+            UpdateTargetList();
+        }
+        public void Fire()
+        {
+            Target.Damage(AttackPower);
+        }
+        public void UpdateTargetList()
+        {
+            //foreach (Unit unit in targetList)
+            //{
+
+            //        targetList.RemoveAll(Unit => unit.Dead);
+            //}
+            for (int i = targetList.Count - 1; i >= 0; i--)
+            {
+                if (targetList[i].Dead==true)
+                    targetList.RemoveAt(i);
+            }
         }
 
     }

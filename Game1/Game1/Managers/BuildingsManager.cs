@@ -17,7 +17,23 @@ namespace DowerTefenseGame.Managers
     /// </summary>
     public class BuildingsManager
     {
+        //Event si une unité est detectée "in range"
+        //public delegate void dgEventRaiser();
+        //public event EventHandler UnitInRange;
+        //public virtual void OnUnitInRange(EventArgs e)
+        //{
+        //    UnitInRange?.Invoke(this, );
+        //}
 
+        public event UnitInrangeHandler UnitInRange;
+        public delegate void UnitInrangeHandler(BuildingsManager bd, UnitInRangeEventArgs arg);
+        public EventArgs e = null;
+        public class UnitInRangeEventArgs : EventArgs
+        {
+            public UnitInRangeEventArgs(Unit iUnit)
+            { unit = iUnit; }
+            public Unit unit { get; set; }
+        }
         // Instance du gestionnaire de bâtiments
         private static BuildingsManager instance;
 
@@ -31,6 +47,7 @@ namespace DowerTefenseGame.Managers
         /// </summary>
         public BuildingsManager()
         {
+           
             BuildingsList = new List<Building>();
         }
 
@@ -58,17 +75,29 @@ namespace DowerTefenseGame.Managers
 
             // Temporaire dégueu
             // Pour toutes les tours
-            foreach (Building building in BuildingsList)
+            //foreach (Building building in BuildingsList)
+            //{
+            //    // Pour toutes les unités
+            //    foreach (Unit unit in UnitsManager.GetInstance().mobs)
+            //    {
+            //        // Si l'unité est proche
+            //        if(Vector2.Distance(unit.Position, building.Position) < building.Range)
+            //        {
+            //            unit.Damage(building.AttackPower);
+            //            break;
+            //        }
+            //    }
+            //}
+            foreach (Unit unit in UnitsManager.GetInstance().mobs)
             {
-                // Pour toutes les unités
-                foreach (Unit unit in UnitsManager.GetInstance().mobs)
-                {
-                    // Si l'unité est proche
-                    if(Vector2.Distance(unit.Position, building.Position) < building.Range)
+                //Détection si l'unité est "in range" COMPARAISON TEMPORAIRE
+                //if(Vector2.Distance(unit.Position, MapManager.GetInstance().map.towerTile.getTilePosition())<200)
+                //{
+                if (Vector2.Distance(unit.Position, BuildingsList[0].Position)< 200)
                     {
-                        unit.Damage(building.AttackPower);
-                        break;
-                    }
+                        UnitInRangeEventArgs arg = new UnitInRangeEventArgs(unit);
+                    //UnitInRange?.Invoke(this,arg);
+                    UnitInRange(this, arg);
                 }
             }
         }

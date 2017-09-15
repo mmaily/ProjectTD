@@ -31,7 +31,6 @@ namespace DowerTefenseGame.Screens
         {
             // Chargement du gestionnaire de carte
             MapManager mapManager = MapManager.GetInstance();
-
             //Récupération de la carte en cours
             map = mapManager.GetMap();
         }
@@ -123,6 +122,11 @@ namespace DowerTefenseGame.Screens
             
         }
 
+        //Execution du code si une unité est "InRange"
+        static void bd_OnUnitInRange()
+        {
+            
+        }
     }
         
 

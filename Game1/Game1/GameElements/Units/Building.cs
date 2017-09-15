@@ -17,5 +17,6 @@ namespace Game1.GameElements.Units
         public Building() : base()
         {
         }
+
     }
 }
