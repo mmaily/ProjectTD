@@ -1,6 +1,7 @@
 ﻿using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
 using Game1.GameElements.Units;
+using Microsoft.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace DowerTefenseGame.Managers
 {
@@ -17,13 +19,6 @@ namespace DowerTefenseGame.Managers
     /// </summary>
     public class BuildingsManager
     {
-        //Event si une unité est detectée "in range"
-        //public delegate void dgEventRaiser();
-        //public event EventHandler UnitInRange;
-        //public virtual void OnUnitInRange(EventArgs e)
-        //{
-        //    UnitInRange?.Invoke(this, );
-        //}
 
         public event UnitInrangeHandler UnitInRange;
         public delegate void UnitInrangeHandler(BuildingsManager bd, UnitInRangeEventArgs arg);
@@ -41,6 +36,8 @@ namespace DowerTefenseGame.Managers
         /// Liste de tous les bâtiments
         /// </summary>
         public List<Building> BuildingsList { get; set; }
+        //public CombinedGeometry coveredArea;
+        public GeometryGroup coveredArea;
 
         /// <summary>
         /// Constructeur
@@ -49,6 +46,7 @@ namespace DowerTefenseGame.Managers
         {
            
             BuildingsList = new List<Building>();
+            coveredArea = new GeometryGroup();
         }
 
         /// <summary>
@@ -93,7 +91,8 @@ namespace DowerTefenseGame.Managers
                 //Détection si l'unité est "in range" COMPARAISON TEMPORAIRE
                 //if(Vector2.Distance(unit.Position, MapManager.GetInstance().map.towerTile.getTilePosition())<200)
                 //{
-                if (Vector2.Distance(unit.Position, BuildingsList[0].Position)< 200)
+                
+                if (coveredArea.FillContains(new System.Windows.Point((int)unit.Position.X, (int)unit.Position.Y)))
                     {
                         UnitInRangeEventArgs arg = new UnitInRangeEventArgs(unit);
                     //UnitInRange?.Invoke(this,arg);
@@ -112,8 +111,18 @@ namespace DowerTefenseGame.Managers
             // Pour chaque bâtiment
             foreach (Building building in BuildingsList)
             {
-                _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name], new Vector2(building.Tile.column * map.tileSize, building.Tile.line * map.tileSize), Color.White);
+                _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name], 
+                                new Vector2(building.Tile.column * map.tileSize, building.Tile.line * map.tileSize),
+                                Microsoft.Xna.Framework.Color.White);
             }
+
+        }
+
+        public void AddToArea(EllipseGeometry newCircle)
+        {
+
+            coveredArea.Children.Add(newCircle);
+           
 
         }
 

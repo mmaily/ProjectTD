@@ -1,8 +1,9 @@
 ﻿using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
 using DowerTefenseGame.Managers;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace Game1.GameElements.Units.Buildings
 {
@@ -14,6 +15,18 @@ namespace Game1.GameElements.Units.Buildings
 
         protected List<Unit> targetList;
         protected Unit Target;
+        protected EllipseGeometry AreatoAdd;
+        protected System.Windows.Point point;
+        //public event RangeUpdatedHandler RangeUpdate;
+        //public event EventHandler RangeUpdate;
+        public delegate void EventHandler();
+        public EventArgs e = null;
+        //public class RangeUpdatedEventArgs : EventArgs
+        //{
+        //    public RangeUpdatedEventArgs(int newRangeRequired)
+        //    { NewRange = newRangeRequired; }
+        //    public int NewRange { get; set; }
+        //}
 
         /// <summary>
         /// Constructeur
@@ -30,7 +43,8 @@ namespace Game1.GameElements.Units.Buildings
 
             // Initialisation des cibles potentielles
             targetList = new List<Unit>();
-            CreateOnRangeEventListener();
+            
+
             
         }
 
@@ -43,9 +57,14 @@ namespace Game1.GameElements.Units.Buildings
             // TODO : Attention appel récursif si on remplace le 64 par MapManager.GetInstance().map, puisque c'est de GetInstance que l'on vient ici...
             // Sûr ??? Baic tower est créée à la génération de MAP, on génére pas la map avec MapManager.GetInstance().map
             this.Position = _tile.getTilePosition() * 64 ;
-
+            point = new System.Windows.Point(this.Position.X, this.Position.Y);
+            AreatoAdd = new EllipseGeometry(point, this.Range, this.Range);
+            BuildingsManager.GetInstance().AddToArea(this.AreatoAdd);
             //On indique à la tuile que l'on a posé un bâtiment dessus
             _tile.building = this;
+
+            //Créé le listener pour les events
+            CreateOnRangeEventListener();
         }
 
         //Ecoute l'event 'OnUnitInRange" et add la cible à sa liste
@@ -53,18 +72,22 @@ namespace Game1.GameElements.Units.Buildings
         {
             BuildingsManager bd = BuildingsManager.GetInstance();
             bd.UnitInRange += new BuildingsManager.UnitInrangeHandler(AddTarget);
+            AreatoAdd.Changed += new System.EventHandler(UpdateRangeCircle);
         }
         public void AddTarget(object sender, BuildingsManager.UnitInRangeEventArgs args)
         {
-              
-            targetList.Add(args.unit);
-            ChooseTarget();
+            //Get the point of the current position (we could move this part in the update Unit)
+            System.Windows.Point unitPosAsPoint = new System.Windows.Point(args.unit.Position.X, args.unit.Position.Y);
+            
+            if (this.AreatoAdd.FillContains(unitPosAsPoint))
+            {
+                targetList.Add(args.unit);
+                ChooseTarget();
+                AreatoAdd.RadiusY = 201;
+            }
         }
-        public int k;
         public void ChooseTarget()
         {
-            k++;
-
             Target = targetList[0];
             Fire();
             UpdateTargetList();
@@ -86,6 +109,13 @@ namespace Game1.GameElements.Units.Buildings
                     targetList.RemoveAt(i);
             }
         }
-
+        public EllipseGeometry getRangeCircle()
+        {
+            return this.AreatoAdd;
+        }
+        public void UpdateRangeCircle(object sender, EventArgs arg)
+        {
+        
+        }
     }
 }
