@@ -56,7 +56,7 @@ namespace DowerTefenseGame.Managers
             #region === Gestion du déplacement des unités ===
             // Si cela fait plus d'une seconde qu'une unité n'est pas apparue
             int enlapsedSeconds = (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
-            if (enlapsedSeconds - lastSecondSpawned > 500)
+            if (enlapsedSeconds - lastSecondSpawned > 200)
             {
                 // On sauvegarde le nouveau temps
                 lastSecondSpawned = enlapsedSeconds;
@@ -69,7 +69,6 @@ namespace DowerTefenseGame.Managers
                 // On l'ajoute à la liste des mobs
                 mobs.Add(newMob);
             }
-
             // Pour chaque mob de la liste
             foreach (DemoUnit mob in mobs)
             {

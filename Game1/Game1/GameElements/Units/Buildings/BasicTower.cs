@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
+using Game1.GameElements.Projectiles;
 
 namespace Game1.GameElements.Units.Buildings
 {
@@ -15,6 +16,7 @@ namespace Game1.GameElements.Units.Buildings
     {
 
         protected List<Unit> targetList; //Liste des cibles
+        private List<SingleTargetProjectile> ProjectileList;//  Liste de ses munitions en vol
         protected Unit Target;//Cible actuelle
         protected EllipseGeometry AreatoAdd; //Cercle qu'on associe la range de la tour
         protected int AreaId; //Index pour retrouver le cercle-range dans la iste totale de la surface-union
@@ -35,6 +37,8 @@ namespace Game1.GameElements.Units.Buildings
             this.UnitType = UnitTypeEnum.Ground;
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
+            this.BulletSpeed = 100f;
+            this.BulletTexture = CustomContentManager.GetInstance().Textures["BasicProjectile"];
 
             // Initialisation des cibles potentielles
             targetList = new List<Unit>();
@@ -126,8 +130,8 @@ namespace Game1.GameElements.Units.Buildings
             {
                 //Enregistre le temps du dernier tir en ms
                 LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
-                //Elle inflige des dégats à sa cible actuelle
-                Target.Damage(AttackPower);
+                //Elle tire sur sa cible
+                ProjectileList.Add(new SingleTargetProjectile(Target, this.AttackPower, BulletSpeed, this.Position));
             }
 
         }
