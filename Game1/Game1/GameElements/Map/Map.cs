@@ -1,6 +1,7 @@
 ﻿using DowerTefenseGame.Managers;
 using Game1.GameElements.Units.Buildings;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace DowerTefenseGame.GameElements
 {
@@ -43,7 +44,7 @@ namespace DowerTefenseGame.GameElements
         /// <summary>
         /// Constructeur de la carte
         /// </summary>
-        public Map()
+        public Map(GameTime gameTime)
         {
             // Intialisation du nom de la carte
             this.Name = "Carte demo";

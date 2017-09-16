@@ -4,6 +4,7 @@ using DowerTefenseGame.Managers;
 using System;
 using System.Collections.Generic;
 using System.Windows.Media;
+using Microsoft.Xna.Framework;
 
 namespace Game1.GameElements.Units.Buildings
 {
@@ -21,8 +22,7 @@ namespace Game1.GameElements.Units.Buildings
         public delegate void EventHandler();
         public EventArgs e = null;
         protected System.Windows.Point point;//Stock la position d'une unité en type Point
-        private int idRemoval=-1; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
-
+        private int idRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -31,21 +31,22 @@ namespace Game1.GameElements.Units.Buildings
             this.name = "BasicTower";
             this.AttackPower = 1;
             this.Range = 200;
-            this.RateOfFire = 1;
+            this.RateOfFire = 0.0008; //En tir/milliseconde
             this.UnitType = UnitTypeEnum.Ground;
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
 
             // Initialisation des cibles potentielles
             targetList = new List<Unit>();
-
+            
         }
 
         public BasicTower(Tile _tile) : this()
         {
             // On sauvegarde la tuile sur laquelle on se positionne
             this.Tile = _tile;
-
+            //On initialise l'index pour remove les unité en dehors de la range à -1 (désactivé au début)
+            this.idRemoval = -1;
             // On sauvegarde la position
             // TODO : Attention appel récursif si on remplace le 64 par MapManager.GetInstance().map, puisque c'est de GetInstance que l'on vient ici...
             this.Position = _tile.getTilePosition() * 64 ;
@@ -59,19 +60,21 @@ namespace Game1.GameElements.Units.Buildings
             AreaId = BuildingsManager.GetInstance().coveredArea.Children.IndexOf(this.AreatoAdd);
             //On indique à la tuile que l'on a posé un bâtiment dessus
             _tile.building = this;
-
+            //On récupère l'objet GameTime
+            //gameTime = BuildingsManager.GetInstance().gameTime;
             //Créé le listener pour les events
-            CreateOnRangeEventListener();
+            CreateOnEventListener();
         }
 
         //Ecoute l'event 'OnUnitInRange" et add la cible à sa liste
-        public  void CreateOnRangeEventListener()
+        public  void CreateOnEventListener()
         {
             //Event qui prévient la tour qu'une unité est dans la surface-union, dans ce cas on déclenche la 
             //méthode AddTarget(), l'argument de l'event c'est l'objet Unit concerné
             BuildingsManager bd = BuildingsManager.GetInstance();
             bd.UnitInRange += new BuildingsManager.UnitInRangeHandler(AddTarget);
             bd.UnitLeaveRange += new BuildingsManager.UnitLeaveRangeHandler(RemoveTarget);
+            bd.BuildingDuty += new BuildingsManager.BuildingDutyHandler(ChooseTarget);
             //Event pour actualiser le cercle associé à la range quand la range augmente/diminue
             AreatoAdd.Changed += new System.EventHandler(UpdateRangeCircle);
         }
@@ -85,12 +88,6 @@ namespace Game1.GameElements.Units.Buildings
             {
                 //Si oui, elle aoute l'unité à sa liste de target
                 targetList.Add(args.unit);
-                if (targetList.Count > 10)
-                {
-                    Fire();
-                }
-                //Elle actualise sa cible actuelle
-                ChooseTarget();
             }
         }
         public void RemoveTarget(object sender, BuildingsManager.UnitRangeEventArgs args)
@@ -102,24 +99,37 @@ namespace Game1.GameElements.Units.Buildings
             {
                 //Si oui, elle flag l'unité pour la remove de sa liste à la prochaine update
                 idRemoval = targetList.IndexOf(args.unit);
-                //Elle actualise sa cible actuelle
-                ChooseTarget();
             }
         }
+        //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok
         public void ChooseTarget()
         {
+            //Update sa liste pour voir si une cible est dispo
             //Elle update sa liste pour virer les cible morte/hors-range
             UpdateTargetList();
-            //Pour l'instant, la cible actuelle est la première de la liste de cible
-            Target = targetList[0];
-            //On tire sur l'unité (méthode à modifier pour inclure le cooldwon de tir etc
-            Fire();
-
+            if (targetList.Count > 0)
+            {
+                //Pour l'instant, la cible actuelle est la première de la liste de cible
+                Target = targetList[0];
+                //On tire sur l'unité (méthode à modifier pour inclure le cooldwon de tir etc
+                Fire();
+            }
+        }
+        public Boolean CanFire()
+        {
+            return BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1/this.RateOfFire;
         }
         public void Fire()
         {
-            //Elle inflige des dégats à sa cible actuelle
-            Target.Damage(AttackPower);
+            //Si le cooldown est bon, on autorise le tir
+            if (CanFire())
+            {
+                //Enregistre le temps du dernier tir en ms
+                LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
+                //Elle inflige des dégats à sa cible actuelle
+                Target.Damage(AttackPower);
+            }
+
         }
         //Méthode pour actualiser la liste des cibles (Remove les cibles morte/hors-range)
         public void UpdateTargetList()
@@ -128,7 +138,7 @@ namespace Game1.GameElements.Units.Buildings
             for (int i = targetList.Count - 1; i >= 0; i--)
             {
                 //Si aucune cible n'es sortie de la range, on enlève juste les cible morte pour cet update
-                if (idRemoval != -1) 
+                if (idRemoval == -1) 
                 {
                     if (targetList[i].Dead == true)
                     {
@@ -138,7 +148,7 @@ namespace Game1.GameElements.Units.Buildings
                 //Si une cible a été detectée en dehors de la range, on cherche la retire aussi
                 else
                 {
-                    if (targetList[i].Dead == true|| i==idRemoval)
+                    if (i==idRemoval)
                     {
                         targetList.RemoveAt(i);
                         idRemoval = -1;

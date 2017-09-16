@@ -17,12 +17,12 @@ namespace DowerTefenseGame.GameElements.Units
         /// </summary>
         public Vector2 Position { get; protected set; }
         /// <summary>
-        /// Type de l'unité (défaut : None)
-        /// </summary>
-        /// <summary>
         /// Flag pour savoir si l'unité est dans la surface-union (défaut : None)
         /// </summary>
         public Boolean isInRange { get; set; }
+        /// <summary>
+        /// Type de l'unité (défaut : None)
+        /// </summary>
         public UnitTypeEnum UnitType { get; protected set; }
         /// <summary>
         /// Nombre de points de vie de l'unité (défaut : 1)
@@ -49,9 +49,13 @@ namespace DowerTefenseGame.GameElements.Units
         /// </summary>
         public float Range { get; protected set; }
         /// <summary>
-        /// Vitesse d'attaque de l'unité en tirs/seconde (défaut : 1)
+        /// Vitesse d'attaque de l'unité en tirs/MILLIseconde  (défaut : 1)
         /// </summary>
-        public float RateOfFire { get; protected set; }
+        public double RateOfFire { get; protected set; }
+        /// <summary>
+        /// Sauvegarde le temps de jeu du dernier tir
+        /// </summary>
+        public double LastShot { get; protected set; }
         /// <summary>
         /// Nombre de cibles visées en un seul tir (défaut : 0)
         /// </summary>

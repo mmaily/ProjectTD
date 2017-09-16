@@ -1,5 +1,8 @@
 ﻿using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
+using Microsoft.Xna.Framework;
+using DowerTefenseGame.Managers;
+
 
 namespace Game1.GameElements.Units
 {

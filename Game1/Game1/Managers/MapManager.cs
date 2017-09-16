@@ -17,13 +17,15 @@ namespace DowerTefenseGame.Managers
         public Map map;
         // Booléen de calcul du chemin
         private bool pathComputed = false;
+        //Récupération de l'objet GameTime
+        private GameTime gameTime;
 
         /// <summary>
         /// Constructeur du gestionnaire de carte
         /// </summary>
         private MapManager()
         {
-            map = new Map();
+            map = new Map(gameTime);
         }
 
         /// <summary>

@@ -19,7 +19,9 @@ namespace DowerTefenseGame.Managers
     /// </summary>
     public class BuildingsManager
     {
-        //Définiton des events "une unité pénétre(ou sors) dans la surface-union" (constituée de l'union de toutes les range)
+        //Définiton des events  
+        //"une unité pénétre(ou sors) dans la surface-union" (constituée de l'union de toutes les range)
+        //"Tous les bâtiments agissent s'ils le peuvent
         #region
         // Event enter range
         public event UnitInRangeHandler UnitInRange;
@@ -27,13 +29,19 @@ namespace DowerTefenseGame.Managers
         //Event leave range
         public event UnitLeaveRangeHandler UnitLeaveRange;
         public delegate void UnitLeaveRangeHandler(BuildingsManager bd, UnitRangeEventArgs arg);
-        public EventArgs e = null;
+        //Argument commun pour enter/leave range qui donne une unité en param
         public class UnitRangeEventArgs : EventArgs
         {
             public UnitRangeEventArgs(Unit iUnit)
             { unit = iUnit; }
             public Unit unit { get; set; }
         }
+        public EventArgs e = null;
+        //Event qui appelle les tours à tirer 
+        public event BuildingDutyHandler BuildingDuty;
+        public delegate void BuildingDutyHandler();
+        //Récupère l'objet GameTime 
+        public GameTime gameTime;
 
       
         #endregion
@@ -55,6 +63,7 @@ namespace DowerTefenseGame.Managers
            
             BuildingsList = new List<Building>();
             coveredArea = new GeometryGroup();
+            // On instancie l'objet GameTime
         }
 
         /// <summary>
@@ -101,6 +110,10 @@ namespace DowerTefenseGame.Managers
                     }
                 }
             }
+            //Update le temps de jeu écoule
+            this.gameTime = _gameTime;
+            //Apelle les bâtiments à faire leur actions respectives
+            BuildingDuty();
         }
 
         /// <summary>
