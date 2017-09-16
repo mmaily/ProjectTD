@@ -62,7 +62,7 @@ namespace DowerTefenseGame.GameElements
             {
                 for (int col = 0; col < mapWidth; col++)
                 {
-                    Tile newTile = new Tile(Tile.TileTypeEnum.Blocked, line, col);
+                    Tile newTile = new Tile(Tile.TileTypeEnum.Free, line, col);
                     // Création d'un chemin horizontal
                     if (line == 4)
                     {
@@ -88,12 +88,6 @@ namespace DowerTefenseGame.GameElements
             Spawns.Add(Tiles[4, 0]);
             Tiles[4, mapWidth-1].TileType = Tile.TileTypeEnum.Base;
             Bases.Add(Tiles[4, mapWidth - 1]);
-
-            // On définit une tuile comme disponible
-            towerTile = Tiles[5, 7];
-            towerTile.TileType = Tile.TileTypeEnum.Free;
-            // Ajout d'une tour sur cette tuile
-            BuildingsManager.GetInstance().BuildingsList.Add(new BasicTower(towerTile));
 
         }
 

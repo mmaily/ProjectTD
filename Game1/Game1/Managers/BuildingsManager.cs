@@ -1,6 +1,7 @@
 ﻿using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
 using Game1.GameElements.Units;
+using Game1.GameElements.Units.Buildings;
 using Microsoft.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -52,6 +53,11 @@ namespace DowerTefenseGame.Managers
         /// Liste de tous les bâtiments
         /// </summary>
         public List<Building> BuildingsList { get; set; }
+        /// <summary>
+        /// Liste de construction en attente pour le prochain update
+        /// </summary>
+        public List<Building> WaitingForConstruction { get; set; }
+        public Boolean BuildingsWaiting;
         //public CombinedGeometry coveredArea;
         public GeometryGroup coveredArea;
 
@@ -63,6 +69,8 @@ namespace DowerTefenseGame.Managers
            
             BuildingsList = new List<Building>();
             coveredArea = new GeometryGroup();
+            WaitingForConstruction = new List<Building>();
+            BuildingsWaiting = false;
             // On instancie l'objet GameTime
         }
 
@@ -112,8 +120,14 @@ namespace DowerTefenseGame.Managers
             }
             //Update le temps de jeu écoule
             this.gameTime = _gameTime;
-            //Apelle les bâtiments à faire leur actions respectives
-            BuildingDuty();
+            if (BuildingsWaiting)
+            {
+                //Ajoute les building en attente de construction à la liste des buildings construit
+                UpdateBuildingList();
+            }
+            //Apelle les bâtiments à faire leur actions respectives (si il y a des buildings)
+             BuildingDuty?.Invoke();
+            
         }
 
         /// <summary>
@@ -140,7 +154,26 @@ namespace DowerTefenseGame.Managers
         {
             coveredArea.Children.Add(newCircle);
         }
-
+        public void AddBuildingToQueue(Tile tile, String request)
+        {
+            if (tile.TileType == Tile.TileTypeEnum.Free)
+            {
+                //Ajoute les buildings en attente d'être construit Si le terrain est libre
+                
+                switch(request){
+                    case "BasicTower":
+                        WaitingForConstruction.Add(new BasicTower(tile));
+                        break;
+                }
+                tile.TileType = Tile.TileTypeEnum.Blocked;
+                BuildingsWaiting = true;
+            }
+        }
+        public void UpdateBuildingList()
+        {
+            BuildingsList.AddRange(WaitingForConstruction);
+            BuildingsWaiting = false;
+        }
     }
 }
 
