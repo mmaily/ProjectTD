@@ -15,7 +15,8 @@ namespace Game1.GameElements.Units.Buildings
 
         protected List<Unit> targetList; //Liste des cibles
         protected Unit Target;//Cible actuelle
-        protected EllipseGeometry AreatoAdd;
+        protected EllipseGeometry AreatoAdd; //Cercle qu'on associe la range de la tour
+        protected int AreaId; //Index pour retrouver le cercle-range dans la iste totale de la surface-union
         //Event à écouter ou faire proc
         public delegate void EventHandler();
         public EventArgs e = null;
@@ -37,9 +38,7 @@ namespace Game1.GameElements.Units.Buildings
 
             // Initialisation des cibles potentielles
             targetList = new List<Unit>();
-            
 
-            
         }
 
         public BasicTower(Tile _tile) : this()
@@ -56,6 +55,8 @@ namespace Game1.GameElements.Units.Buildings
             AreatoAdd = new EllipseGeometry(point, this.Range, this.Range);
             //On ajoute ce cercle à l'union de la "surface-union" constitué de toutes les range
             BuildingsManager.GetInstance().AddToArea(this.AreatoAdd);
+            //On récupère l'index de ce cercle dans la liste totale de la surface-union
+            AreaId = BuildingsManager.GetInstance().coveredArea.Children.IndexOf(this.AreatoAdd);
             //On indique à la tuile que l'on a posé un bâtiment dessus
             _tile.building = this;
 
@@ -157,7 +158,8 @@ namespace Game1.GameElements.Units.Buildings
         //Méthode déclenché quand le cercle géomtrique associé à la range est modifié, actualise la surface-union
         public void UpdateRangeCircle(object sender, EventArgs arg)
         {
-            //int id = BuildingsManager.GetInstance().coveredArea.Children.GetValue(this.AreatoAdd);
+            BuildingsManager.GetInstance().coveredArea.Children[AreaId] = (this.AreatoAdd);
+            AreaId = BuildingsManager.GetInstance().coveredArea.Children.IndexOf(this.AreatoAdd);
         }
     }
 }
