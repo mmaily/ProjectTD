@@ -19,17 +19,23 @@ namespace DowerTefenseGame.Managers
     /// </summary>
     public class BuildingsManager
     {
-        //Définiton de l'event "une unité pénétre dans la surface-union" (constituée de l'union de toutes les range)
+        //Définiton des events "une unité pénétre(ou sors) dans la surface-union" (constituée de l'union de toutes les range)
         #region
-        public event UnitInrangeHandler UnitInRange;
-        public delegate void UnitInrangeHandler(BuildingsManager bd, UnitInRangeEventArgs arg);
+        // Event enter range
+        public event UnitInRangeHandler UnitInRange;
+        public delegate void UnitInRangeHandler(BuildingsManager bd, UnitRangeEventArgs arg);
+        //Event leave range
+        public event UnitLeaveRangeHandler UnitLeaveRange;
+        public delegate void UnitLeaveRangeHandler(BuildingsManager bd, UnitRangeEventArgs arg);
         public EventArgs e = null;
-        public class UnitInRangeEventArgs : EventArgs
+        public class UnitRangeEventArgs : EventArgs
         {
-            public UnitInRangeEventArgs(Unit iUnit)
+            public UnitRangeEventArgs(Unit iUnit)
             { unit = iUnit; }
             public Unit unit { get; set; }
         }
+
+      
         #endregion
         // Instance du gestionnaire de bâtiments
         private static BuildingsManager instance;
@@ -77,8 +83,22 @@ namespace DowerTefenseGame.Managers
             {      
                 if (coveredArea.FillContains(new System.Windows.Point((int)unit.Position.X, (int)unit.Position.Y)))
                     {
-                        UnitInRangeEventArgs arg = new UnitInRangeEventArgs(unit);
-                    UnitInRange(this, arg);
+                    if (!unit.isInRange)
+                    {
+                        unit.isInRange = true;
+                        UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
+                        UnitInRange(this, arg);
+                    }
+
+                }
+                else
+                {
+                    if (unit.isInRange)
+                    {
+                        unit.isInRange = false;
+                        UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
+                        UnitLeaveRange(this, arg);
+                    }
                 }
             }
         }

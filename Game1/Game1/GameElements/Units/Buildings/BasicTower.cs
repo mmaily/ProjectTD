@@ -20,6 +20,7 @@ namespace Game1.GameElements.Units.Buildings
         public delegate void EventHandler();
         public EventArgs e = null;
         protected System.Windows.Point point;//Stock la position d'une unité en type Point
+        private int idRemoval=-1; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
 
         /// <summary>
         /// Constructeur
@@ -68,11 +69,12 @@ namespace Game1.GameElements.Units.Buildings
             //Event qui prévient la tour qu'une unité est dans la surface-union, dans ce cas on déclenche la 
             //méthode AddTarget(), l'argument de l'event c'est l'objet Unit concerné
             BuildingsManager bd = BuildingsManager.GetInstance();
-            bd.UnitInRange += new BuildingsManager.UnitInrangeHandler(AddTarget);
+            bd.UnitInRange += new BuildingsManager.UnitInRangeHandler(AddTarget);
+            bd.UnitLeaveRange += new BuildingsManager.UnitLeaveRangeHandler(RemoveTarget);
             //Event pour actualiser le cercle associé à la range quand la range augmente/diminue
             AreatoAdd.Changed += new System.EventHandler(UpdateRangeCircle);
         }
-        public void AddTarget(object sender, BuildingsManager.UnitInRangeEventArgs args)
+        public void AddTarget(object sender, BuildingsManager.UnitRangeEventArgs args)
         {
             //Get the point of the current position (we could move this part in the update Unit)
             System.Windows.Point unitPosAsPoint = new System.Windows.Point(args.unit.Position.X, args.unit.Position.Y);
@@ -82,38 +84,70 @@ namespace Game1.GameElements.Units.Buildings
             {
                 //Si oui, elle aoute l'unité à sa liste de target
                 targetList.Add(args.unit);
+                if (targetList.Count > 10)
+                {
+                    Fire();
+                }
+                //Elle actualise sa cible actuelle
+                ChooseTarget();
+            }
+        }
+        public void RemoveTarget(object sender, BuildingsManager.UnitRangeEventArgs args)
+        {
+            System.Windows.Point unitPosAsPoint = new System.Windows.Point(args.unit.Position.X, args.unit.Position.Y);
+            
+            //Quand une unité quitte dans la surface-union, la tour check si c'est SA range qui est concernée
+            if (!this.AreatoAdd.FillContains(unitPosAsPoint))
+            {
+                //Si oui, elle flag l'unité pour la remove de sa liste à la prochaine update
+                idRemoval = targetList.IndexOf(args.unit);
                 //Elle actualise sa cible actuelle
                 ChooseTarget();
             }
         }
         public void ChooseTarget()
         {
+            //Elle update sa liste pour virer les cible morte/hors-range
+            UpdateTargetList();
             //Pour l'instant, la cible actuelle est la première de la liste de cible
             Target = targetList[0];
             //On tire sur l'unité (méthode à modifier pour inclure le cooldwon de tir etc
             Fire();
-            //Elle update sa liste pour virer les cible morte/hors-range
-            UpdateTargetList();
+
         }
         public void Fire()
         {
             //Elle inflige des dégats à sa cible actuelle
             Target.Damage(AttackPower);
         }
-
         //Méthode pour actualiser la liste des cibles (Remove les cibles morte/hors-range)
         public void UpdateTargetList()
         {
-            //foreach (Unit unit in targetList)
-            //{
-
-            //        targetList.RemoveAll(Unit => unit.Dead);
-            //}
+            
             for (int i = targetList.Count - 1; i >= 0; i--)
             {
-                if (targetList[i].Dead==true)
-                    targetList.RemoveAt(i);
+                //Si aucune cible n'es sortie de la range, on enlève juste les cible morte pour cet update
+                if (idRemoval != -1) 
+                {
+                    if (targetList[i].Dead == true)
+                    {
+                        targetList.RemoveAt(i);
+                    }
+                }
+                //Si une cible a été detectée en dehors de la range, on cherche la retire aussi
+                else
+                {
+                    if (targetList[i].Dead == true|| i==idRemoval)
+                    {
+                        targetList.RemoveAt(i);
+                        idRemoval = -1;
+                    }
+                }
+
+                
+                    
             }
+
         }
         //Récupère le cercle géométrique associé 
         public EllipseGeometry getRangeCircle()

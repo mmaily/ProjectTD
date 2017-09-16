@@ -19,6 +19,10 @@ namespace DowerTefenseGame.GameElements.Units
         /// <summary>
         /// Type de l'unité (défaut : None)
         /// </summary>
+        /// <summary>
+        /// Flag pour savoir si l'unité est dans la surface-union (défaut : None)
+        /// </summary>
+        public Boolean isInRange { get; set; }
         public UnitTypeEnum UnitType { get; protected set; }
         /// <summary>
         /// Nombre de points de vie de l'unité (défaut : 1)
@@ -35,7 +39,7 @@ namespace DowerTefenseGame.GameElements.Units
         /// <summary>
         /// Vitesse de déplacement en tuiles par seconde (défaut : 0)
         /// </summary>
-        public float Speed { get; protected set; }
+        public float Speed { get; protected set; }  
         /// <summary>
         /// Dégâts infligés par l'unité (défaut : 0)
         /// </summary>
@@ -91,6 +95,7 @@ namespace DowerTefenseGame.GameElements.Units
             RateOfFire = 1;
             TargetNumber = 0;
             TargetType = UnitTypeEnum.None;
+            Dead = false;
         }
 
 
