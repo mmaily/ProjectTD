@@ -155,8 +155,9 @@ namespace DowerTefenseGame.Managers
             coveredArea.Children.Add(newCircle);
         }
         public void AddBuildingToQueue(Tile tile, String request)
-        {
-            if (tile.TileType == Tile.TileTypeEnum.Free)
+        {   
+
+            if (tile!=null && tile.TileType == Tile.TileTypeEnum.Free)
             {
                 //Ajoute les buildings en attente d'être construit Si le terrain est libre
                 
