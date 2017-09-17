@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
+using DowerTefenseGame.GameElements.Projectiles;
+using Game1.GameElements.Units.Buildings;
 
 namespace DowerTefenseGame.Managers
 {
@@ -20,6 +22,8 @@ namespace DowerTefenseGame.Managers
         private int lastSecondSpawned = 0;
         // Liste des unités courantes
         public List<DemoUnit> mobs;
+        //Liste des projectiles ( pour les draw )
+        public List<Projectile> projs;
         // Carte en cours
         public Map CurrentMap { get; set; }
 
@@ -29,6 +33,7 @@ namespace DowerTefenseGame.Managers
         private UnitsManager()
         {
             mobs = new List<DemoUnit>();
+            projs = new List<Projectile>();
             CurrentMap = MapManager.GetInstance().map;
         }
 
@@ -56,7 +61,7 @@ namespace DowerTefenseGame.Managers
             #region === Gestion du déplacement des unités ===
             // Si cela fait plus d'une seconde qu'une unité n'est pas apparue
             int enlapsedSeconds = (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
-            if (enlapsedSeconds - lastSecondSpawned > 200)
+            if (enlapsedSeconds - lastSecondSpawned > 1000)
             {
                 // On sauvegarde le nouveau temps
                 lastSecondSpawned = enlapsedSeconds;
@@ -135,6 +140,13 @@ namespace DowerTefenseGame.Managers
             mobs.RemoveAll(deadMob => deadMob.Dead);
 
             #endregion
+            #region === Récupération de des listes actuelles de Projectile pour Draw==
+            foreach(BasicTower bt in BuildingsManager.GetInstance().BuildingsList)
+            {
+                projs.AddRange(bt.GetProjectileList());
+            }
+            #endregion
+
         }
 
         /// <summary>
@@ -149,7 +161,11 @@ namespace DowerTefenseGame.Managers
                 // Affichage de l'unité sur la carte
                 spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name],mob.Position, Color.White);
             }
+            foreach (Projectile proj in projs)
+            {
+                // Affichage de l'unité sur la carte
+                spriteBatch.Draw(CustomContentManager.GetInstance().Textures[proj.name], proj.position, Color.White);
+            }
         }
-
     }
 }

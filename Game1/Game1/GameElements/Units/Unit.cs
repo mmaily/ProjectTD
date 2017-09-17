@@ -54,10 +54,6 @@ namespace DowerTefenseGame.GameElements.Units
         /// </summary>
         public float BulletSpeed { get; protected set; }
         /// <summary>
-        /// vitesse de déplacement du projectile tiré
-        /// </summary>
-        public Texture2D BulletTexture { get; protected set; }
-        /// <summary>
         /// Vitesse d'attaque de l'unité en tirs/MILLIseconde  (défaut : 1)
         /// </summary>
         public double RateOfFire { get; protected set; }
@@ -99,7 +95,7 @@ namespace DowerTefenseGame.GameElements.Units
         {
             Position = new Vector2();
             UnitType = UnitTypeEnum.None;
-            HealthPoints = 5;
+            HealthPoints = 1;
             Cost = 0;
             Level = 1;
             Speed = 0;
