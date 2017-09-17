@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.Managers;
 using DowerTefenseGame.GameElements;
 using Microsoft.Xna.Framework.Input;
+using Game1.GameElements.Units.Buildings;
 
 namespace DowerTefenseGame.Screens
 {
@@ -95,6 +96,10 @@ namespace DowerTefenseGame.Screens
                     // Le bouton a été relâché, on peut écouter à nouveau cette information
                     leftClicked = false;
                 }
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                {
+                    BuildingsManager.GetInstance().AddBuildingToQueue(UIManager.GetInstance().SelectedTile, "BasicTower");
+            }
             }
             //}
             #endregion

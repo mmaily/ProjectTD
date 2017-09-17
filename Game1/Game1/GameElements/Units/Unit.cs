@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DowerTefenseGame.GameElements.Units
 {
@@ -43,11 +44,15 @@ namespace DowerTefenseGame.GameElements.Units
         /// <summary>
         /// Dégâts infligés par l'unité (défaut : 0)
         /// </summary>
-        public float AttackPower { get; protected set; }
+        public int AttackPower { get; protected set; }
         /// <summary>
         /// Portée des attaques de l'unité (défaut : 0)
         /// </summary>
         public float Range { get; protected set; }
+        /// <summary>
+        /// vitesse de déplacement du projectile tiré
+        /// </summary>
+        public float BulletSpeed { get; protected set; }
         /// <summary>
         /// Vitesse d'attaque de l'unité en tirs/MILLIseconde  (défaut : 1)
         /// </summary>

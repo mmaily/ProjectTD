@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using DowerTefenseGame.GameElements;
+using DowerTefenseGame.GameElements.Projectiles;
 
 namespace DowerTefenseGame.Managers
 {
@@ -65,15 +66,25 @@ namespace DowerTefenseGame.Managers
             {
                 AddTexture("Maps/" + tileType.ToString(), tileType.ToString());
             }
+           
             // Texture pour tuile sélectionnée
             AddTexture("Maps/Mouseover", "Mouseover");
             // Texture du curseur
             AddTexture("Cursors/Banana", "cursor");
             // Texture de la tour
             AddTexture("Maps/BasicTower", "BasicTower");
+            //Texture des projectiles
+            foreach (Projectile.NameEnum Name in Enum.GetValues(typeof(Projectile.NameEnum)))
+            {
+                AddTexture(Name.ToString(), "");
+            }
+            
 
             // Police par défaut
             AddFonts("defaultFont", "font");
+
+
+            
 
         }
 
