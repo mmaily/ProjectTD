@@ -244,7 +244,7 @@ namespace DowerTefenseGame.Managers
         /// <returns>Liste des unités triées</returns>
         public List<Unit> GetSortedUnitList()
         {
-            List<Unit> sortedList = mobs.OrderBy(m => m.DistanceTraveled).ToList<Unit>();
+            List<Unit> sortedList = mobs.OrderByDescending(m => m.DistanceTraveled).ToList<Unit>();
 
             return sortedList;
         }
