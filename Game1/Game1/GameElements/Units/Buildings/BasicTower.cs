@@ -82,7 +82,6 @@ namespace Game1.GameElements.Units.Buildings
             //méthode AddTarget(), l'argument de l'event c'est l'objet Unit concerné
             BuildingsManager bd = BuildingsManager.GetInstance();
             bd.UnitInRange += new BuildingsManager.UnitInRangeHandler(AddTarget);
-            bd.UnitLeaveRange += new BuildingsManager.UnitLeaveRangeHandler(RemoveTarget);
             bd.BuildingDuty += new BuildingsManager.BuildingDutyHandler(OnDuty);
             //Event pour actualiser le cercle associé à la range quand la range augmente/diminue
             AreatoAdd.Changed += new System.EventHandler(UpdateRangeCircle);
@@ -127,21 +126,9 @@ namespace Game1.GameElements.Units.Buildings
                 {
                     //Si oui, elle aoute l'unité à sa liste de target
                     targetList.Add(args.unit);
-
                 }
             }
 
-        }
-        public void RemoveTarget(object sender, BuildingsManager.UnitRangeEventArgs args)
-        {
-            System.Windows.Point unitPosAsPoint = new System.Windows.Point(args.unit.Position.X, args.unit.Position.Y);
-            
-            //Quand une unité quitte dans la surface-union, la tour check si c'est SA range qui est concernée
-            if (!this.AreatoAdd.FillContains(unitPosAsPoint))
-            {
-                //Si oui, elle flag l'unité pour la remove de sa liste à la prochaine update
-                idTargetRemoval = targetList.IndexOf(args.unit);
-            }
         }
         private void RemoveBulletOnImpact(object sender, Projectile.OnHitEventArgs args)
         {

@@ -28,8 +28,6 @@ namespace DowerTefenseGame.Managers
         public event UnitInRangeHandler UnitInRange;
         public delegate void UnitInRangeHandler(BuildingsManager bd, UnitRangeEventArgs arg);
         //Event leave range
-        public event UnitLeaveRangeHandler UnitLeaveRange;
-        public delegate void UnitLeaveRangeHandler(BuildingsManager bd, UnitRangeEventArgs arg);
         //Argument commun pour enter/leave range qui donne une unité en param
         public class UnitRangeEventArgs : EventArgs
         {
@@ -98,16 +96,8 @@ namespace DowerTefenseGame.Managers
             //Check si les unités pénétrent dans la surface-union
             foreach (Unit unit in UnitsManager.GetInstance().mobs)
             {
-                if (coveredArea.FillContains(new System.Windows.Point((int)unit.Position.X, (int)unit.Position.Y)))
-                {
                     UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
-                    UnitInRange(this, arg);
-                }
-                else
-                {
-                    UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
-                    UnitLeaveRange?.Invoke(this, arg);
-                }
+                    UnitInRange?.Invoke(this, arg);
             }
             //Update le temps de jeu écoule
             this.gameTime = _gameTime;

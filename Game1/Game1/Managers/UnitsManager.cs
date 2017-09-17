@@ -139,7 +139,7 @@ namespace DowerTefenseGame.Managers
 
             #endregion
             #region ===Gestion du Spawn d'unité===
-            SpawnUpdate(_gameTime, 1000, 10000);
+            SpawnUpdate(_gameTime, 100, 0);
             #endregion
             #region === Récupération de des listes actuelles de Projectile pour Draw==
             projs.Clear();
