@@ -40,7 +40,7 @@ namespace Game1.GameElements.Units.Buildings
             this.UnitType = UnitTypeEnum.Ground;
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
-            this.BulletSpeed = 4*64;
+            this.BulletSpeed = 5*64;
 
             // Initialisation des cibles potentielles
             targetList = new List<Unit>();
