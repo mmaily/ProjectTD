@@ -95,14 +95,15 @@ namespace Game1.GameElements.Units.Buildings
         //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok
         public Unit ChooseTarget()
         {
+            Unit target;
             if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position)>this.Range){
-                return UnitsManager.GetInstance().GetFirstUnit();
+                target= UnitsManager.GetInstance().GetFirstUnit();
             }
             else
             {
-                return Target;
+                target= Target;
             }
-           
+            return target;
         }
         public Boolean CanFire()
         {
