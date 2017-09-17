@@ -71,7 +71,7 @@ namespace Game1.GameElements.Units.Buildings
         public void OnDuty()
         {
             //Update sa liste de target, choisi sa cible principale et tire
-            ChooseTarget();
+            Fire();
             //Update la liste des projectiles
             UpdateProjectileList();
             //Update ses projectile pour checker les collisions
@@ -95,14 +95,19 @@ namespace Game1.GameElements.Units.Buildings
         //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok
         public Unit ChooseTarget()
         {
-            if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position)>this.Range){
-                return UnitsManager.GetInstance().GetFirstUnit();
-            }
-            else
+
+            Unit target = Target; ;
+            if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position) > this.Range)
             {
-                return Target;
+                foreach (Unit unit in UnitsManager.GetInstance().GetSortedUnitList())
+                {
+                    if (Vector2.Distance(this.Position, unit.Position) > this.Range)
+                        target = unit;
+                }
             }
-           
+            
+
+            return target;
         }
         public Boolean CanFire()
         {
@@ -115,7 +120,7 @@ namespace Game1.GameElements.Units.Buildings
                 //Si le cooldown est bon, elle s'active, sinon c'est déjà fini pour elle
 
                 Target = ChooseTarget();
-                Fire();
+
 
             //Enregistre le temps du dernier tir en ms
             LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
