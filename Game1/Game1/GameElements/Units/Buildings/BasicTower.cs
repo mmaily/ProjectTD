@@ -97,11 +97,11 @@ namespace Game1.GameElements.Units.Buildings
         {
 
             Unit target = Target; ;
-            if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position) > this.Range)
+            if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position) < this.Range)
             {
                 foreach (Unit unit in UnitsManager.GetInstance().GetSortedUnitList())
                 {
-                    if (Vector2.Distance(this.Position, unit.Position) > this.Range)
+                    if (Vector2.Distance(this.Position, unit.Position) < this.Range)
                         target = unit;
                 }
             }
@@ -121,6 +121,9 @@ namespace Game1.GameElements.Units.Buildings
 
                 Target = ChooseTarget();
 
+                if (Target != null)
+                {
+
 
             //Enregistre le temps du dernier tir en ms
             LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
@@ -129,7 +132,7 @@ namespace Game1.GameElements.Units.Buildings
                 Projectile _proj = new SingleTargetProjectile(Target, this.AttackPower, BulletSpeed, this.Position, "BasicShot");
                 projectileList.Add(_proj);
                 CreateHitListener(_proj);
-
+                }
 
             }
         }
