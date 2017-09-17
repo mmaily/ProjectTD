@@ -147,7 +147,7 @@ namespace DowerTefenseGame.Managers
 
             #endregion
             #region === Gestion du Spawn d'unité ===
-            SpawnUpdate(_gameTime, 100, 1000);
+            SpawnUpdate(_gameTime, 100, 100);
             #endregion
             #region === Récupération de des listes actuelles de Projectile pour Draw ==
             projs.Clear();
@@ -167,7 +167,7 @@ namespace DowerTefenseGame.Managers
             //Si une vague doit commencer
             if (_gameTime.TotalGameTime.TotalMilliseconds > _timeBetweenWave + lastWaveBegin)
             {
-                //Si la liste est vide on la remplie, et on on sauvegarde l'horadatage du début de vague
+                //Si la liste est vide on la remplie, et on on sauvegarde l'horodatage du début de vague
                 if (futurMobsString.Count == 0)
                 {
                     futurMobsString = new List<string>(futurMobs.Count);
@@ -244,8 +244,7 @@ namespace DowerTefenseGame.Managers
         /// <returns>Liste des unités triées</returns>
         public List<Unit> GetSortedUnitList()
         {
-            List<Unit> sortedList = mobs.OrderByDescending(m => m.DistanceTraveled).ToList<Unit>();
-
+            List<Unit> sortedList = mobs.OrderBy(m => m.DistanceTraveled).ToList<Unit>();
             return sortedList;
         }
     }
