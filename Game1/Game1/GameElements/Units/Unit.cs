@@ -24,7 +24,20 @@ namespace DowerTefenseGame.GameElements.Units
         /// <summary>
         /// Nombre de points de vie de l'unité (défaut : 1)
         /// </summary>
-        public int HealthPoints { get; protected set; }
+        private int healthPoints;
+        public int HealthPoints
+        {
+            get {
+                // Avec verrouillage pour les accès concurentiels
+                int currentHP;
+                lock (lockHealth)
+                {
+                    currentHP = healthPoints;
+                }
+                    return currentHP; }
+            private set { healthPoints = value; }
+        }
+
         /// <summary>
         /// Coût de construction l'unité (défaut : 0)
         /// </summary>
@@ -66,19 +79,42 @@ namespace DowerTefenseGame.GameElements.Units
         /// </summary>
         public float TargetNumber { get; protected set; }
 
+
+        /// <summary>
+        /// Verrou pour sécuriser les accès à la vie de l'unité
+        /// </summary>
+        private Object lockHealth = new Object();
+
+
         /// <summary>
         /// Tente d'infliger des dégâtes à l'unité
         /// </summary>
-        /// <param name="_damage"></param>
-        internal void Damage(float _damage)
+        /// <param name="_damage">Dégâts à infliger</param>
+        /// <returns>Vrai si les poins de vie ont été enlevés, false si elle est morte</returns>
+        public bool TryDamage(float _damage)
         {
-            this.HealthPoints -= (int)_damage;
+            // L'unité est vivante
+            bool alive = true;
+            // Verrouillage
+            lock (lockHealth)
+            {
+                // Retrait des points de vie (arrondis)
+                this.HealthPoints -= (int)_damage;
+                // Si cela a tué l'unité
+                if(HealthPoints <= 0)
+                {
+                    alive = false;
+                }
+            }
+            //On renvoie l'état de l'unité
+            return alive;
         }
 
         /// <summary>
         /// Type de cibles visées par cette unité  (défaut : None)
         /// </summary>
         public UnitTypeEnum TargetType { get; protected set; }
+
         /// <summary>
         /// Drapeau permettant de marquer l'unité comme détruite
         /// </summary>

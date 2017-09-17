@@ -33,7 +33,7 @@ namespace DowerTefenseGame.Screens
             // Chargement du gestionnaire de carte
             MapManager mapManager = MapManager.GetInstance();
             //Récupération de la carte en cours
-            map = mapManager.GetMap();
+            map = mapManager.CurrentMap;
         }
 
         /// <summary>

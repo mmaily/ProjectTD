@@ -117,7 +117,7 @@ namespace DowerTefenseGame.Managers
         /// <param name="_spriteBatch"></param>
         public void Draw(SpriteBatch _spriteBatch)
         {
-            Map map = MapManager.GetInstance().map;
+            Map map = MapManager.GetInstance().CurrentMap;
             // Pour chaque bâtiment
             foreach (Building building in BuildingsList)
             {

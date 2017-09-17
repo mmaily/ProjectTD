@@ -20,7 +20,7 @@ namespace DowerTefenseGame.GameElements.Projectiles
             this.position = _pos;
         }
 
-        public override void ApplyEffectOnImpact() => target.Damage(damage);
+        public override void ApplyEffectOnImpact() => target.TryDamage(damage);
 
     }
 }

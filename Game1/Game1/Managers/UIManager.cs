@@ -34,7 +34,7 @@ namespace DowerTefenseGame.Managers
         private UIManager()
         {
             // Récupération du décalage gauche de l'interface
-            currentMap = MapManager.GetInstance().map;
+            currentMap = MapManager.GetInstance().CurrentMap;
             leftUIOffset = currentMap.mapWidth * currentMap.tileSize + 5;
 
             // Récupération de la police par défaut

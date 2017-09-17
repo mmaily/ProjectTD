@@ -46,7 +46,7 @@ namespace DowerTefenseGame.Managers
         {
             mobs = new List<DemoUnit>();
             projs = new List<Projectile>();
-            CurrentMap = MapManager.GetInstance().map;
+            CurrentMap = MapManager.GetInstance().CurrentMap;
             futurMobs = new List<string>();
             for (int i = 0; i < 6; i++)
             {
@@ -108,7 +108,7 @@ namespace DowerTefenseGame.Managers
                         // On valide ce mouvement
                         finalMovement = movement;
                         // On ajoute cette distance à la distance totale parcourue par le mob
-                        mob.DistanceTraveled = +movementAvailable;
+                        mob.DistanceTraveled += movementAvailable;
                         // On vide la quantité de mouvement restante
                         movementAvailable = 0;
                     }

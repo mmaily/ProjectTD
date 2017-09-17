@@ -44,7 +44,7 @@ namespace DowerTefenseGame.GameElements
         /// <summary>
         /// Constructeur de la carte
         /// </summary>
-        public Map(GameTime gameTime)
+        public Map()
         {
             // Intialisation du nom de la carte
             this.Name = "Carte demo";

@@ -53,8 +53,8 @@ namespace DowerTefenseGame
             CustomContentManager.GetInstance().LoadTextures(Content);
 
             // Réglage de la taille de l'écran selon la carte
-            graphics.PreferredBackBufferHeight = (MapManager.GetInstance().GetMap().mapHeight) * MapManager.GetInstance().GetMap().tileSize;
-            graphics.PreferredBackBufferWidth = (MapManager.GetInstance().GetMap().mapWidth+4) * MapManager.GetInstance().GetMap().tileSize;
+            graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;
+            graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth+4) * MapManager.GetInstance().CurrentMap.tileSize;
             graphics.ApplyChanges();
 
             //selectionne le GameScreen (PROVISOIRE)

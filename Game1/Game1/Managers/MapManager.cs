@@ -14,18 +14,16 @@ namespace DowerTefenseGame.Managers
         // Instance du gestionnaire
         private static MapManager instance = null;
         // Carte en cours
-        public Map map;
+        public Map CurrentMap { get; set; }
         // Booléen de calcul du chemin
         private bool pathComputed = false;
-        //Récupération de l'objet GameTime
-        private GameTime gameTime;
 
         /// <summary>
         /// Constructeur du gestionnaire de carte
         /// </summary>
         private MapManager()
         {
-            map = new Map(gameTime);
+            this.CurrentMap = new Map();
         }
 
         /// <summary>
@@ -40,33 +38,6 @@ namespace DowerTefenseGame.Managers
                 instance = new MapManager();
             }
             return instance;
-        }
-
-        /// <summary>
-        /// Affichage des éléments de la carte
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            // Récupération de l'instance du gestionnaire de contenu
-            CustomContentManager contentManager = CustomContentManager.GetInstance();
-
-            // Pour chaque tuile de la carte
-            foreach (Tile tile in map.Tiles)
-            {
-                // On affiche la texture correspondant à la nature de la carte
-                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.column * map.tileSize, tile.line * map.tileSize), Color.White);
-                // Si cette tuile est sélectionnée ou sous le curseur
-                if (tile.selected || tile.overviewed)
-                {
-                    // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.column * map.tileSize, tile.line * map.tileSize), Color.White);
-                    // On reset le boolée "sous le curseur"
-                    tile.overviewed = false;
-                }
-
-            }
-            
         }
 
         /// <summary>
@@ -85,6 +56,34 @@ namespace DowerTefenseGame.Managers
         }
 
         /// <summary>
+        /// Affichage des éléments de la carte
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            // Récupération de l'instance du gestionnaire de contenu
+            CustomContentManager contentManager = CustomContentManager.GetInstance();
+
+            // Pour chaque tuile de la carte
+            foreach (Tile tile in CurrentMap.Tiles)
+            {
+                // On affiche la texture correspondant à la nature de la carte
+                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.column * CurrentMap.tileSize, tile.line * CurrentMap.tileSize), Color.White);
+                // Si cette tuile est sélectionnée ou sous le curseur
+                if (tile.selected || tile.overviewed)
+                {
+                    // On affiche la texture "sélectionnée" sur cette tuile
+                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.column * CurrentMap.tileSize, tile.line * CurrentMap.tileSize), Color.White);
+                    // On reset le boolée "sous le curseur"
+                    tile.overviewed = false;
+                }
+
+            }
+            
+        }
+
+
+        /// <summary>
         /// Calcul du chemin
         /// </summary>
         private void ComputePath()
@@ -93,13 +92,13 @@ namespace DowerTefenseGame.Managers
             List<Tile> queue = new List<Tile>();
 
             // Remise à zéro de toutes les tuiles à traiter
-            foreach (Tile tile in map.Paths)
+            foreach (Tile tile in CurrentMap.Paths)
             {
                 tile.explorated = false;
             }
 
             // Ajout de ou des tuiles d'arrivée dans la liste à traiter
-            queue.AddRange(map.Bases);
+            queue.AddRange(CurrentMap.Bases);
 
             // Traitement de toute la queue tant qu'elle n'est pas vide
             while (queue.Count != 0)
@@ -109,10 +108,10 @@ namespace DowerTefenseGame.Managers
 
                 // Ajout de tous les voisins
                 List<Tile> neighbours = new List<Tile>();
-                if (thisTile.line != 0) neighbours.Add(map.Tiles[thisTile.line - 1, thisTile.column]);
-                if (thisTile.line != map.mapHeight - 1) neighbours.Add(map.Tiles[thisTile.line + 1, thisTile.column]);
-                if (thisTile.column != 0) neighbours.Add(map.Tiles[thisTile.line, thisTile.column - 1]);
-                if (thisTile.column != map.mapWidth - 1) neighbours.Add(map.Tiles[thisTile.line, thisTile.column + 1]);
+                if (thisTile.line != 0) neighbours.Add(CurrentMap.Tiles[thisTile.line - 1, thisTile.column]);
+                if (thisTile.line != CurrentMap.mapHeight- 1) neighbours.Add(CurrentMap.Tiles[thisTile.line + 1, thisTile.column]);
+                if (thisTile.column != 0) neighbours.Add(CurrentMap.Tiles[thisTile.line, thisTile.column - 1]);
+                if (thisTile.column != CurrentMap.mapWidth - 1) neighbours.Add(CurrentMap.Tiles[thisTile.line, thisTile.column + 1]);
 
                 // Pour chaque voisin
                 foreach (Tile neigh in neighbours)
@@ -134,21 +133,12 @@ namespace DowerTefenseGame.Managers
         }
 
         /// <summary>
-        /// Récupération de la carte en cours
-        /// </summary>
-        /// <returns></returns>
-        public Map GetMap()
-        {
-           return map;
-        }
-
-        /// <summary>
         /// Zone de la carte
         /// </summary>
         /// <returns>Rectangle correspondant à la zone de la carte</returns>
         public Rectangle GetMapZone()
         {
-            Rectangle rec = new Rectangle(0,0,map.mapWidth*map.tileSize, map.mapHeight * map.tileSize);
+            Rectangle rec = new Rectangle(0,0,this.CurrentMap.mapWidth*CurrentMap.tileSize, CurrentMap.mapHeight * CurrentMap.tileSize);
                 return rec;
         }
     }
