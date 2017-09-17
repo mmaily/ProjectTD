@@ -107,13 +107,30 @@ namespace Game1.GameElements.Units.Buildings
         {
             //Get the point of the current position (we could move this part in the update Unit)
             System.Windows.Point unitPosAsPoint = new System.Windows.Point(args.unit.Position.X, args.unit.Position.Y);
-            
+
             //Quand une unité pénétre dans la surface-union, la tour check si c'est SA range qui est concernée
-            if (this.AreatoAdd.FillContains(unitPosAsPoint))
+            //Est-ce que une unité que je connais?
+            if (targetList.Contains(args.unit))//Oui
             {
-                //Si oui, elle aoute l'unité à sa liste de target
-                targetList.Add(args.unit);
+                //Est-ce qu'elle est sortie de ma range ?
+                if (!this.AreatoAdd.FillContains(unitPosAsPoint))
+                {
+                    //Si oui, elle flag l'unité pour la remove de sa liste à la prochaine update
+                    idTargetRemoval = targetList.IndexOf(args.unit);
+                }
             }
+
+            else//Je ne connais pas cette unité
+            {
+                //Est-ce qu'elle est dans ma range ?
+                if (this.AreatoAdd.FillContains(unitPosAsPoint))
+                {
+                    //Si oui, elle aoute l'unité à sa liste de target
+                    targetList.Add(args.unit);
+
+                }
+            }
+
         }
         public void RemoveTarget(object sender, BuildingsManager.UnitRangeEventArgs args)
         {

@@ -95,27 +95,18 @@ namespace DowerTefenseGame.Managers
         /// <param name="_gameTime"></param>
         public void Update(GameTime _gameTime)
         {
-            //Check si les unités pénétre dans la surface-union
+            //Check si les unités pénétrent dans la surface-union
             foreach (Unit unit in UnitsManager.GetInstance().mobs)
-            {      
+            {
                 if (coveredArea.FillContains(new System.Windows.Point((int)unit.Position.X, (int)unit.Position.Y)))
-                    {
-                    if (!unit.isInRange)
-                    {
-                        unit.isInRange = true;
-                        UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
-                        UnitInRange(this, arg);
-                    }
-
+                {
+                    UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
+                    UnitInRange(this, arg);
                 }
                 else
                 {
-                    if (unit.isInRange)
-                    {
-                        unit.isInRange = false;
-                        UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
-                        UnitLeaveRange(this, arg);
-                    }
+                    UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
+                    UnitLeaveRange?.Invoke(this, arg);
                 }
             }
             //Update le temps de jeu écoule

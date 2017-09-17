@@ -18,10 +18,6 @@ namespace DowerTefenseGame.GameElements.Units
         /// </summary>
         public Vector2 Position { get; protected set; }
         /// <summary>
-        /// Flag pour savoir si l'unité est dans la surface-union (défaut : None)
-        /// </summary>
-        public Boolean isInRange { get; set; }
-        /// <summary>
         /// Type de l'unité (défaut : None)
         /// </summary>
         public UnitTypeEnum UnitType { get; protected set; }
@@ -95,7 +91,7 @@ namespace DowerTefenseGame.GameElements.Units
         {
             Position = new Vector2();
             UnitType = UnitTypeEnum.None;
-            HealthPoints = 3;
+            HealthPoints = 10;
             Cost = 0;
             Level = 1;
             Speed = 0;
