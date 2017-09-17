@@ -36,7 +36,11 @@ namespace DowerTefenseGame.GameElements.Units
         /// <summary>
         /// Vitesse de déplacement en tuiles par seconde (défaut : 0)
         /// </summary>
-        public float Speed { get; protected set; }  
+        public float Speed { get; protected set; }
+        /// <summary>
+        /// Distance totale parcourue par le mob
+        /// </summary>
+        public double DistanceTraveled { get; set; }
         /// <summary>
         /// Dégâts infligés par l'unité (défaut : 0)
         /// </summary>
