@@ -16,7 +16,7 @@ namespace DowerTefenseGame.GameElements.Projectiles
         public float speed; // vitesse du projectile
         public Vector2 position;
         public Vector2 direction;//Direction normalisée
-        public double tol = 1; //Tolérence pour le detection de collision
+        public double tol = 5; //Tolérence pour le detection de collision
         //Use to load all the texture
         public enum NameEnum
         {
@@ -52,7 +52,7 @@ namespace DowerTefenseGame.GameElements.Projectiles
         }
         public void UpdatePosition()
         {
-            position += direction * speed;
+            position += direction * speed*BuildingsManager.GetInstance().gameTime.ElapsedGameTime.Milliseconds/1000;
         }
         public void CheckCollision()
         {
@@ -62,11 +62,10 @@ namespace DowerTefenseGame.GameElements.Projectiles
             if (Vector2.Distance(this.position, target.Position) < tol)
             {
                 ApplyEffectOnImpact();
-                if (OnHit!=null)
-                {
                     OnHitEventArgs arg = new OnHitEventArgs(this);
-                    OnHit(this, arg);
-                }
+                OnHit?.Invoke(this, arg);
+
+
             }
         }
         public virtual void ApplyEffectOnImpact() { }

@@ -141,7 +141,8 @@ namespace DowerTefenseGame.Managers
 
             #endregion
             #region === Récupération de des listes actuelles de Projectile pour Draw==
-            foreach(BasicTower bt in BuildingsManager.GetInstance().BuildingsList)
+            projs.Clear();
+            foreach (BasicTower bt in BuildingsManager.GetInstance().BuildingsList)
             {
                 projs.AddRange(bt.GetProjectileList());
             }
@@ -161,11 +162,13 @@ namespace DowerTefenseGame.Managers
                 // Affichage de l'unité sur la carte
                 spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name],mob.Position, Color.White);
             }
+            
             foreach (Projectile proj in projs)
             {
                 // Affichage de l'unité sur la carte
                 spriteBatch.Draw(CustomContentManager.GetInstance().Textures[proj.name], proj.position, Color.White);
             }
+            
         }
     }
 }

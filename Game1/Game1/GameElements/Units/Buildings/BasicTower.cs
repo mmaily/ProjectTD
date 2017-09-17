@@ -40,7 +40,7 @@ namespace Game1.GameElements.Units.Buildings
             this.UnitType = UnitTypeEnum.Ground;
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
-            this.BulletSpeed = 200;
+            this.BulletSpeed = 4*64;
 
             // Initialisation des cibles potentielles
             targetList = new List<Unit>();
@@ -91,8 +91,10 @@ namespace Game1.GameElements.Units.Buildings
         {
             //Update sa liste de target, choisi sa cible principale et tire
             ChooseTarget();
+            //Update la liste des projectiles
+            UpdateProjectileList();
             //Update ses projectile pour checker les collisions
-            foreach(Projectile projectile in projectileList)
+            foreach (Projectile projectile in projectileList)
             {
                 projectile.Update();
             }
@@ -128,7 +130,7 @@ namespace Game1.GameElements.Units.Buildings
         {
             idBulletRemoval = projectileList.IndexOf(args.proj);
             args.proj.OnHit -= new Projectile.HitHandler(RemoveBulletOnImpact);
-            UpdateProjectileList();
+
             args.proj = null;
         }
         //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok
@@ -157,7 +159,11 @@ namespace Game1.GameElements.Units.Buildings
                 //Enregistre le temps du dernier tir en ms
                 LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
                 //Elle tire sur sa cible
-                projectileList.Add(new SingleTargetProjectile(Target, this.AttackPower, BulletSpeed, this.Position,"BasicShot"));
+
+                Projectile _proj = new SingleTargetProjectile(Target, this.AttackPower, BulletSpeed, this.Position, "BasicShot");
+                projectileList.Add(_proj);
+                CreateHitListener(_proj);
+
             }
 
         }
