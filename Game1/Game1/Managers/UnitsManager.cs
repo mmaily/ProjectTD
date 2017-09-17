@@ -6,6 +6,7 @@ using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
 using DowerTefenseGame.GameElements.Projectiles;
 using Game1.GameElements.Units.Buildings;
+using System.Linq;
 
 namespace DowerTefenseGame.Managers
 {
@@ -18,6 +19,9 @@ namespace DowerTefenseGame.Managers
 
         // Instance du gestionnaire d'unité
         private static UnitsManager instance = null;
+
+        // A VIRER ENSUITE
+
         // Horodatage d'appartition de la dernière unité
         private int lastUnitSpawned = 0;
         //Horodatage du début de la dernier vague
@@ -26,9 +30,11 @@ namespace DowerTefenseGame.Managers
         public List<String> futurMobs;
         //Liste de travail de la fonction SpawnUpdate
         public List<String> futurMobsString;
+
+
         // Liste des unités courantes sur le terrain
         public List<DemoUnit> mobs;
-        //Liste des projectiles ( pour les draw )
+        //Liste des projectiles
         public List<Projectile> projs;
         // Carte en cours
         public Map CurrentMap { get; set; }
@@ -42,7 +48,7 @@ namespace DowerTefenseGame.Managers
             projs = new List<Projectile>();
             CurrentMap = MapManager.GetInstance().map;
             futurMobs = new List<string>();
-            for(int i = 0; i< 6; i++)
+            for (int i = 0; i < 6; i++)
             {
                 futurMobs.Add("unit");
             }
@@ -57,9 +63,7 @@ namespace DowerTefenseGame.Managers
         {
             if (instance == null)
             {
-
                 instance = new UnitsManager();
-
             }
             return instance;
         }
@@ -76,7 +80,7 @@ namespace DowerTefenseGame.Managers
             foreach (DemoUnit mob in mobs)
             {
                 // Si le mob est mort
-                if(mob.HealthPoints <= 0)
+                if (mob.HealthPoints <= 0)
                 {
                     mob.Dead = true;
                     continue;
@@ -84,7 +88,7 @@ namespace DowerTefenseGame.Managers
 
                 // Quantité de déplacement disponible
                 float movementAvailable = mob.Speed * CurrentMap.tileSize * _gameTime.ElapsedGameTime.Milliseconds / 1000;
-                
+
                 // Tant que l'unité peut encore se déplacer et n'est pas morte
                 while (movementAvailable != 0 && !mob.Dead)
                 {
@@ -103,6 +107,8 @@ namespace DowerTefenseGame.Managers
                         movement *= movementAvailable;
                         // On valide ce mouvement
                         finalMovement = movement;
+                        // On ajoute cette distance à la distance totale parcourue par le mob
+                        mob.DistanceTraveled = +movementAvailable;
                         // On vide la quantité de mouvement restante
                         movementAvailable = 0;
                     }
@@ -113,6 +119,8 @@ namespace DowerTefenseGame.Managers
                         finalMovement = movement;
                         // On recalcule la quantité de mouvement restante
                         movementAvailable -= movement.Length();
+                        // On ajoute le déplacement à la quantité totale de déplacement du mob
+                        mob.DistanceTraveled += movement.Length();
                         // On modifie la destination
                         if (mob.DestinationTile.TileType == Tile.TileTypeEnum.Base)
                         {
@@ -138,10 +146,10 @@ namespace DowerTefenseGame.Managers
             mobs.RemoveAll(deadMob => deadMob.Dead);
 
             #endregion
-            #region ===Gestion du Spawn d'unité===
-            SpawnUpdate(_gameTime, 100,1000 );
+            #region === Gestion du Spawn d'unité ===
+            SpawnUpdate(_gameTime, 100, 1000);
             #endregion
-            #region === Récupération de des listes actuelles de Projectile pour Draw==
+            #region === Récupération de des listes actuelles de Projectile pour Draw ==
             projs.Clear();
             foreach (BasicTower bt in BuildingsManager.GetInstance().BuildingsList)
             {
@@ -150,16 +158,17 @@ namespace DowerTefenseGame.Managers
             #endregion
 
         }
+
         ///<summary>
         ///Méthode de Spawn des unités
         ///</summary>
-       public void SpawnUpdate(GameTime _gameTime, int _timeBetweenMobs,int _timeBetweenWave)
+        public void SpawnUpdate(GameTime _gameTime, int _timeBetweenMobs, int _timeBetweenWave)
         {
             //Si une vague doit commencer
             if (_gameTime.TotalGameTime.TotalMilliseconds > _timeBetweenWave + lastWaveBegin)
             {
                 //Si la liste est vide on la remplie, et on on sauvegarde l'horadatage du début de vague
-                if (futurMobsString.Count == 0 )
+                if (futurMobsString.Count == 0)
                 {
                     futurMobsString = new List<string>(futurMobs.Count);
                     for (int i = futurMobs.Count - 1; i >= 0; i--)
@@ -177,15 +186,21 @@ namespace DowerTefenseGame.Managers
                     //Puis on le retire
                     futurMobsString.RemoveAt(futurMobsString.Count - 1);
                     //On sauvegarde ce temps de spawn
-                    lastUnitSpawned= (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
+                    lastUnitSpawned = (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
                 }
 
             }
-       
+
         }
+
+        /// <summary>
+        /// Méthode de spawn
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Unit Spawn(String name)
         {
-            DemoUnit newMob=null;
+            DemoUnit newMob = null;
             switch (name)
             {
                 case "unit":
@@ -200,6 +215,7 @@ namespace DowerTefenseGame.Managers
             mobs.Add(newMob);
             return newMob;
         }
+        
         /// <summary>
         /// Affichage des unités
         /// </summary>
@@ -210,15 +226,27 @@ namespace DowerTefenseGame.Managers
             foreach (DemoUnit mob in mobs)
             {
                 // Affichage de l'unité sur la carte
-                spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name],mob.Position, Color.White);
+                spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name], mob.Position, Color.White);
             }
-            
+
             foreach (Projectile proj in projs)
             {
                 // Affichage de l'unité sur la carte
                 spriteBatch.Draw(CustomContentManager.GetInstance().Textures[proj.name], proj.position, Color.White);
             }
-            
+
+        }
+
+
+        /// <summary>
+        /// Récupère la liste des unités sur la carte triées selon leur avancement sur le chemin
+        /// </summary>
+        /// <returns>Liste des unités triées</returns>
+        public List<Unit> GetSortedUnitList()
+        {
+            List<Unit> sortedList = mobs.OrderBy(m => m.DistanceTraveled).ToList<Unit>();
+
+            return sortedList;
         }
     }
 }
