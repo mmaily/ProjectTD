@@ -97,7 +97,7 @@ namespace Game1.GameElements.Units.Buildings
         {
 
             Unit target = Target; ;
-            if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position) < this.Range)
+            if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position) > this.Range)
             {
                 foreach (Unit unit in UnitsManager.GetInstance().GetSortedUnitList())
                 {
