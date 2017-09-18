@@ -16,7 +16,7 @@ namespace DowerTefenseGame.Units.Buildings
     {
 
         protected List<Projectile> projectileList;//  Liste de ses munitions en vol
-        protected Unit Target;//Cible actuelle
+        protected Unit target;//Cible actuelle
         private int idTargetRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
 
@@ -89,9 +89,9 @@ namespace DowerTefenseGame.Units.Buildings
         public Unit ChooseTarget()
         {
 
-            Unit target = Target; ;
-            if (Target == null || Target.Dead || Vector2.Distance(this.Position, Target.Position) > this.Range)
+            if (this.target == null || this.target.Dead || Vector2.Distance(this.Position, this.target.Position) > this.Range)
             {
+                target = null;
                 foreach (Unit unit in UnitsManager.GetInstance().GetSortedUnitList())
                 {
                     if (Vector2.Distance(this.Position, unit.Position) < this.Range)
@@ -112,9 +112,9 @@ namespace DowerTefenseGame.Units.Buildings
         {
                 //Si le cooldown est bon, elle s'active, sinon c'est déjà fini pour elle
 
-                Target = ChooseTarget();
+                target = ChooseTarget();
 
-                if (Target != null)
+                if (target != null)
                 {
 
 
@@ -122,7 +122,7 @@ namespace DowerTefenseGame.Units.Buildings
             LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
                 //Elle tire sur sa cible
 
-                Projectile _proj = new SingleTargetProjectile(Target, this.AttackPower, BulletSpeed, this.Position, "BasicShot");
+                Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, "BasicShot");
                 projectileList.Add(_proj);
                 CreateHitListener(_proj);
                 }
