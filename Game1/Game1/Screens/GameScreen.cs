@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.Managers;
 using DowerTefenseGame.GameElements;
 using Microsoft.Xna.Framework.Input;
-using Game1.GameElements.Units.Buildings;
 
 namespace DowerTefenseGame.Screens
 {

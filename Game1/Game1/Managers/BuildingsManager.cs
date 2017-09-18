@@ -1,7 +1,7 @@
 ﻿using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
-using Game1.GameElements.Units;
-using Game1.GameElements.Units.Buildings;
+using DowerTefenseGame.Units;
+using DowerTefenseGame.Units.Buildings;
 using Microsoft.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

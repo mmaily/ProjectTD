@@ -7,7 +7,7 @@ using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using DowerTefenseGame.GameElements.Projectiles;
 
-namespace Game1.GameElements.Units.Buildings
+namespace DowerTefenseGame.Units.Buildings
 {
     /// <summary>
     /// Tour de base
@@ -17,7 +17,6 @@ namespace Game1.GameElements.Units.Buildings
 
         protected List<Projectile> projectileList;//  Liste de ses munitions en vol
         protected Unit Target;//Cible actuelle
-        protected System.Windows.Point point;//Stock la position d'une unité en type Point
         private int idTargetRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
 
@@ -57,19 +56,13 @@ namespace Game1.GameElements.Units.Buildings
             //On récupère l'objet GameTime
             //gameTime = BuildingsManager.GetInstance().gameTime;
             //Créé le listener pour les events
-            CreateOnEventListener();
+            
         }
 
-        //Ecoute l'event 'OnUnitInRange" et add la cible à sa liste
-        public void CreateOnEventListener()
+
+        public override void OnDuty()
         {
-            //Event qui prévient la tour qu'une unité est dans la surface-union, dans ce cas on déclenche la 
-            //méthode AddTarget(), l'argument de l'event c'est l'objet Unit concerné
-            BuildingsManager bd = BuildingsManager.GetInstance();
-            bd.BuildingDuty += new BuildingsManager.BuildingDutyHandler(OnDuty);
-        }
-        public void OnDuty()
-        {
+            base.OnDuty();
             //Update sa liste de target, choisi sa cible principale et tire
             Fire();
             //Update la liste des projectiles

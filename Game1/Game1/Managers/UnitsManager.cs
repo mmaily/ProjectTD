@@ -5,8 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
 using DowerTefenseGame.GameElements.Projectiles;
-using Game1.GameElements.Units.Buildings;
 using System.Linq;
+using DowerTefenseGame.Units.Buildings;
 
 namespace DowerTefenseGame.Managers
 {
