@@ -20,20 +20,6 @@ namespace DowerTefenseGame.Managers
         // Instance du gestionnaire d'unité
         private static UnitsManager instance = null;
 
-        // A VIRER ENSUITE
-        SpawnerBuilding sp = new SpawnerBuilding();
-
-
-        // Horodatage d'appartition de la dernière unité
-        private int lastUnitSpawned = 0;
-        //Horodatage du début de la dernier vague
-        private int lastWaveBegin = 0;
-        // Liste des unités pour le prochain spawn (PHASE TEST)
-        public List<String> futurMobs;
-        //Liste de travail de la fonction SpawnUpdate
-        public List<String> futurMobsString;
-
-
         // Liste des unités courantes sur le terrain
         public List<DemoUnit> mobs;
         //Liste des projectiles
@@ -49,12 +35,10 @@ namespace DowerTefenseGame.Managers
             mobs = new List<DemoUnit>();
             projs = new List<Projectile>();
             CurrentMap = MapManager.GetInstance().CurrentMap;
-            futurMobs = new List<string>();
-            for (int i = 0; i < 6; i++)
-            {
-                futurMobs.Add("unit");
-            }
-            futurMobsString = new List<string>();
+            // A VIRER ENSUITE
+            SpawnerBuilding sp = new SpawnerBuilding();
+            sp.NbreOfInstantSpawn = 1;// SI on passe à 2, le batiment spawn les mobs 2 par deux MAIS 
+            //                          comme ils ont exactement la même position on voit pas la différence...
         }
 
         /// <summary>
@@ -162,63 +146,7 @@ namespace DowerTefenseGame.Managers
 
         }
 
-        ///<summary>
-        ///Méthode de Spawn des unités
-        ///</summary>
-        public void SpawnUpdate(GameTime _gameTime, int _timeBetweenMobs, int _timeBetweenWave)
-        {
-            //Si une vague doit commencer
-            if (_gameTime.TotalGameTime.TotalMilliseconds > _timeBetweenWave + lastWaveBegin)
-            {
-                //Si la liste est vide on la remplie, et on on sauvegarde l'horodatage du début de vague
-                if (futurMobsString.Count == 0)
-                {
-                    futurMobsString = new List<string>(futurMobs.Count);
-                    for (int i = futurMobs.Count - 1; i >= 0; i--)
-                    {
-                        futurMobsString.Add(futurMobs[i]);
-                    }
-                    lastWaveBegin = (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
-                }
-
-                //Si le temps entre deux mobs est écoulé, on fait partir le suivant
-                if (_gameTime.TotalGameTime.TotalMilliseconds > lastUnitSpawned + _timeBetweenMobs)
-                {
-                    //On fait spawn le dernier monstre de la liste 
-                    Spawn(futurMobsString[futurMobsString.Count - 1]);
-                    //Puis on le retire
-                    futurMobsString.RemoveAt(futurMobsString.Count - 1);
-                    //On sauvegarde ce temps de spawn
-                    lastUnitSpawned = (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
-                }
-
-            }
-
-        }
-
-        /// <summary>
-        /// Méthode de spawn
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public Unit Spawn(String name)
-        {
-            DemoUnit newMob = null;
-            switch (name)
-            {
-                case "unit":
-                    newMob = new DemoUnit();
-                    break;
-            }
-            // On définit sa position comme étant celle du spawn
-            newMob.UpdatePosition(CurrentMap.Spawns[0].getTilePosition() * CurrentMap.tileSize);
-            // On définit sa destination comme étant la tuile suivante
-            newMob.DestinationTile = CurrentMap.Spawns[0].NextTile;
-            // On l'ajoute à la liste des mobs
-            mobs.Add(newMob);
-            return newMob;
-        }
-        
+       
         /// <summary>
         /// Affichage des unités
         /// </summary>

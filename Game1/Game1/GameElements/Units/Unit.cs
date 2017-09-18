@@ -131,7 +131,7 @@ namespace DowerTefenseGame.GameElements.Units
         {
             Position = new Vector2();
             UnitType = UnitTypeEnum.None;
-            HealthPoints = 10;
+            HealthPoints = 1;
             Cost = 0;
             Level = 1;
             Speed = 0;

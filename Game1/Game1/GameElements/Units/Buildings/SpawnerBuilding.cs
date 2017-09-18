@@ -13,11 +13,13 @@ namespace DowerTefenseGame.Units.Buildings
     {
         protected double SpawnRate; //Number of mobs/second
         protected double lastSpawn; // Time of the last spawned mob
-        protected Boolean locked=true;
-        protected Boolean powered = true;
-        public int PowerNeeded { get; protected set; }
-        protected DemoUnit demoUnit;
+        protected Boolean locked=true; // Le batiment ne spawn qui s'il est lock
+        protected Boolean powered = true; // Le bâtiment ne spawn que s'il est powered
+        public int PowerNeeded { get; protected set; } // Energie requise par le bâtiment
+        public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
+        protected DemoUnit demoUnit;// Type d'unité qu'il spawn
         protected MapManager mapManager = MapManager.GetInstance();
+        
 
         public SpawnerBuilding() : base()
         {
@@ -48,14 +50,18 @@ namespace DowerTefenseGame.Units.Buildings
         }
         public void SpawnUnit()
         {
-            this.demoUnit = new DemoUnit();
-            // On définit sa position comme étant celle du spawn
-            demoUnit.UpdatePosition(mapManager.CurrentMap.Spawns[0].getTilePosition() * mapManager.CurrentMap.tileSize);
-            // On définit sa destination comme étant la tuile suivante
-            demoUnit.DestinationTile = mapManager.CurrentMap.Spawns[0].NextTile;
-            // On l'ajoute à la liste des mobs
-            UnitsManager.GetInstance().mobs.Add(demoUnit);
-            lastSpawn= (int)Math.Floor(BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds); 
+            for(int i = 0; i < NbreOfInstantSpawn; i++)
+            {
+                this.demoUnit = new DemoUnit();
+                // On définit sa position comme étant celle du spawn
+                demoUnit.UpdatePosition(mapManager.CurrentMap.Spawns[0].getTilePosition() * mapManager.CurrentMap.tileSize);
+                // On définit sa destination comme étant la tuile suivante
+                demoUnit.DestinationTile = mapManager.CurrentMap.Spawns[0].NextTile;
+                // On l'ajoute à la liste des mobs
+                UnitsManager.GetInstance().mobs.Add(demoUnit);
+                lastSpawn = (int)Math.Floor(BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds);
+            }
+
         }
         public void TurnPower()
         {
