@@ -40,7 +40,7 @@ namespace DowerTefenseGame.Units.Buildings
         public Boolean CanSpawn()
         {
             Boolean canSpawn = false;
-            if(this.locked && this.powered && BuildingsManager.GetInstance().gameTime.TotalGameTime.Seconds*1000 + BuildingsManager.GetInstance().gameTime.TotalGameTime.Milliseconds>lastSpawn+(1/SpawnRate)*1000)
+            if(this.locked && this.powered && BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds>lastSpawn+(1/SpawnRate)*1000)
             {
                 canSpawn = true;
             }
