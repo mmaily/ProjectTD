@@ -21,6 +21,8 @@ namespace DowerTefenseGame.Managers
         private static UnitsManager instance = null;
 
         // A VIRER ENSUITE
+        SpawnerBuilding sp = new SpawnerBuilding();
+
 
         // Horodatage d'appartition de la dernière unité
         private int lastUnitSpawned = 0;
@@ -147,7 +149,8 @@ namespace DowerTefenseGame.Managers
 
             #endregion
             #region === Gestion du Spawn d'unité ===
-            SpawnUpdate(_gameTime, 100, 100);
+            //SpawnUpdate(_gameTime, 100, 100);
+  
             #endregion
             #region === Récupération de des listes actuelles de Projectile pour Draw ==
             projs.Clear();
