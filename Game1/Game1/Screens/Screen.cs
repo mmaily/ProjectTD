@@ -1,11 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.NuclexGui;
 
 namespace DowerTefenseGame.Screens
 {
 
 
-    class Screen
+    abstract class Screen
     {
         public Screen() { }
 
@@ -25,6 +27,10 @@ namespace DowerTefenseGame.Screens
         }
 
         public virtual void Update(GameTime gameTime)
+        {
+        }
+
+        public virtual void Initialize(GuiManager _gui)
         {
         }
     }

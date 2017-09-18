@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.GameElements;
 using C3.MonoGame;
+using MonoGame.Extended.NuclexGui.Controls.Desktop;
+using MonoGame.Extended.NuclexGui;
 
 namespace DowerTefenseGame.Managers
 {
@@ -28,6 +30,8 @@ namespace DowerTefenseGame.Managers
         // Carte en cours
         private Map currentMap;
 
+        private GuiManager gui;
+
         /// <summary>
         /// Constructeur du gestionnaire d'unité
         /// </summary>
@@ -39,6 +43,8 @@ namespace DowerTefenseGame.Managers
 
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
+
+
         }
 
         /// <summary>
@@ -54,6 +60,33 @@ namespace DowerTefenseGame.Managers
 
             }
             return instance;
+        }
+
+        public void Initialize(GuiManager _gui)
+        {
+
+            this.gui = _gui;
+
+            // Create few controls.
+            var button = new GuiButtonControl
+            {
+                Name = "button",
+                Bounds = new UniRectangle(new UniScalar(0.0f, 20), new UniScalar(0.0f, 20), new UniScalar(0f, 120), new UniScalar(0f, 50)),
+                Text = "Rotate logo"
+            };
+            var button2 = new GuiButtonControl
+            {
+                Name = "button2",
+                Bounds = new UniRectangle(new UniScalar(20), new UniScalar(80), new UniScalar(120), new UniScalar(50)),
+                Text = "Open Window"
+            };
+
+
+
+            // And finally, attach controls to the parent control. In this case, desktop screen.
+            gui.Screen.Desktop.Children.Add(button);
+            gui.Screen.Desktop.Children.Add(button2);
+            // And finally, attach controls to the parent control. In this case, desktop screen.
         }
 
         /// <summary>
@@ -93,6 +126,9 @@ namespace DowerTefenseGame.Managers
                     }
                 }
             }
+
+
+            // Draw GUI on top of everything
 
         }
 

@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DowerTefenseGame.Screens;
 using DowerTefenseGame.Managers;
+using MonoGame.Extended.Input.InputListeners;
+using MonoGame.Extended.NuclexGui;
 
 namespace DowerTefenseGame
 {
@@ -18,6 +20,11 @@ namespace DowerTefenseGame
         // Gestionnaire des sprites
         SpriteBatch spriteBatch;
 
+        // UI
+        private readonly InputListenerComponent inputManager;
+        private readonly GuiManager gui;
+
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -31,6 +38,15 @@ namespace DowerTefenseGame
             ScreenManager.GetInstance();
             // Initialisation du gestionnaire de contenu
             CustomContentManager.GetInstance();
+
+
+            // Manager d'entrées
+            inputManager = new InputListenerComponent(this);
+
+            // Création du GUI
+            var guiInputService = new GuiInputService(inputManager);
+            gui = new GuiManager(Services, guiInputService);
+
         }
 
         /// <summary>
@@ -39,6 +55,8 @@ namespace DowerTefenseGame
         protected override void Initialize()
         {
             base.Initialize();
+
+            ScreenManager.GetInstance().Gui = gui;
         }
 
         /// <summary>
