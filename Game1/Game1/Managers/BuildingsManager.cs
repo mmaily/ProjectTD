@@ -83,7 +83,7 @@ namespace DowerTefenseGame.Managers
         }
 
         /// <summary>
-        /// Récupération de l'instance du gestionnaire d'interface
+        /// Récupération de l'instance du gestionnaire de bâtiments
         /// </summary>
         /// <returns></returns>
         public static BuildingsManager GetInstance()

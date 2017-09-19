@@ -72,6 +72,7 @@
     <Compile Include="GameElements\Units\Buildings\SpawnerBuilding.cs" />
     <Compile Include="GameElements\Units\DemoUnit.cs" />
     <Compile Include="GameElements\Units\Unit.cs" />
+    <Compile Include="Managers\AiManager.cs" />
     <Compile Include="Managers\BuildingsManager.cs" />
     <Compile Include="Managers\CustomContentManager.cs" />
     <Compile Include="Managers\MapManager.cs" />

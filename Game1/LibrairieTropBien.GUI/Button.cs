@@ -20,6 +20,7 @@ namespace LibrairieTropBien.GUI
         private Boolean isActive;
         public Boolean pressed=false;
         public Boolean release = false;
+        public String Text;
         /// <summary>
         /// Activation du bouton
         /// </summary>
@@ -125,8 +126,6 @@ namespace LibrairieTropBien.GUI
         /// <param name="e">Evenement du clic</param>
         protected virtual void OnReleaseHandle(EventArgs e)
         {
-            this.IsActive = !this.IsActive;
-
             EventHandler handler = OnRelease;
             if (handler != null)
                 handler(this, e);
@@ -140,6 +139,7 @@ namespace LibrairieTropBien.GUI
             if (this.isActive)
             {
                 _spriteBatch.DrawRectangle(this.buttonBox, color);
+                //_spriteBatch.DrawString(Fonts["defaultFont"])
             }
         }
     }

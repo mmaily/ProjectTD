@@ -55,6 +55,8 @@ namespace DowerTefenseGame.Screens
             UnitsManager.GetInstance().Update(_gameTime);
             // Mise à jour du gestionnaire de bâtiments
             BuildingsManager.GetInstance().Update(_gameTime);
+            //Mise à jour des tâche de l'IA
+            AiManager.GetInstance().Update(_gameTime);
 
             #region === Sélection d'une tuile ===
 
