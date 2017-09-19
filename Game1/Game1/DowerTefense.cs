@@ -54,9 +54,18 @@ namespace DowerTefenseGame
         /// </summary>
         protected override void Initialize()
         {
+            // Communication de l'instance du GUI
+            ScreenManager.GetInstance().Gui = gui;
+
+            // Création de l'écran
+            gui.Screen = new GuiScreen();
+
+            // Initialisation du GUI
+            gui.Initialize();
+
+            // Initialisation des composants
             base.Initialize();
 
-            ScreenManager.GetInstance().Gui = gui;
         }
 
         /// <summary>
@@ -98,6 +107,10 @@ namespace DowerTefenseGame
 
             // Mise à jour de l'écran actif
             ScreenManager.GetInstance().Update(gameTime);
+
+            // Update both InputManager (which updates states of each device) and GUI
+            inputManager.Update(gameTime);
+            gui.Update(gameTime);
         }
 
 
@@ -121,6 +134,9 @@ namespace DowerTefenseGame
 
             // Fin de l'affichage
             spriteBatch.End();
+
+            // Draw GUI on top of everything
+            gui.Draw(gameTime);
 
             // Affichage de la base
             base.Draw(gameTime);

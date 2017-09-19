@@ -30,7 +30,11 @@ namespace DowerTefenseGame.Managers
         // Carte en cours
         private Map currentMap;
 
+        // GUI
         private GuiManager gui;
+
+        // Bouton
+        GuiButtonControl btnAddBuilding;
 
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -67,26 +71,14 @@ namespace DowerTefenseGame.Managers
 
             this.gui = _gui;
 
-            // Create few controls.
-            var button = new GuiButtonControl
+
+            // Init des boutons
+            btnAddBuilding = new GuiButtonControl
             {
-                Name = "button",
+                Name = "addBuilding",
                 Bounds = new UniRectangle(new UniScalar(0.0f, 20), new UniScalar(0.0f, 20), new UniScalar(0f, 120), new UniScalar(0f, 50)),
-                Text = "Rotate logo"
+                Text = "Construire",
             };
-            var button2 = new GuiButtonControl
-            {
-                Name = "button2",
-                Bounds = new UniRectangle(new UniScalar(20), new UniScalar(80), new UniScalar(120), new UniScalar(50)),
-                Text = "Open Window"
-            };
-
-
-
-            // And finally, attach controls to the parent control. In this case, desktop screen.
-            gui.Screen.Desktop.Children.Add(button);
-            gui.Screen.Desktop.Children.Add(button2);
-            // And finally, attach controls to the parent control. In this case, desktop screen.
         }
 
         /// <summary>
@@ -117,6 +109,9 @@ namespace DowerTefenseGame.Managers
                 // Si la tuile possède un bâtiment
                 if(SelectedTile.building != null)
                 {
+                    // On cache le bouton Construire
+                    gui.Screen.Desktop.Children.Remove(btnAddBuilding);
+
                     DisplayBuildingInfo(_spriteBatch);
 
                     // Si le bâtiment possède une portée non nulle
@@ -124,6 +119,20 @@ namespace DowerTefenseGame.Managers
                     {
                         _spriteBatch.DrawCircle(SelectedTile.building.Position, SelectedTile.building.Range, 50, Color.Green, 5);
                     }
+                }
+                // Sinon si la tuile est libre
+                else if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
+                {
+                    // On ajoute le bouton construire si il n'est pas déjà là
+                    if (!gui.Screen.Desktop.Children.Contains(btnAddBuilding))
+                    {
+                        gui.Screen.Desktop.Children.Add(btnAddBuilding);
+                    }
+                }
+                else
+                {
+                    // Sinon, on cache le bouton
+                    gui.Screen.Desktop.Children.Remove(btnAddBuilding);
                 }
             }
 
