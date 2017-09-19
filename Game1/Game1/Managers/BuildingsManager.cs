@@ -48,9 +48,17 @@ namespace DowerTefenseGame.Managers
         private static BuildingsManager instance;
 
         /// <summary>
-        /// Liste de tous les bâtiments
+        /// Liste de tous les bâtiments "locked"
         /// </summary>
-        public List<Building> BuildingsList { get; set; }
+        public List<Building> LockedBuildingsList { get; set; }
+        /// <summary>
+        /// Liste de tous les bâtiments libre
+        /// </summary>
+        public List<Building> FreeBuildingsList { get; set; }
+        /// <summary>
+        /// Liste de tous les bâtiments libre
+        /// </summary>
+        public List<Building> DefenseBuildingsList { get; set; }
         /// <summary>
         /// Liste de construction en attente pour le prochain update
         /// </summary>
@@ -65,7 +73,9 @@ namespace DowerTefenseGame.Managers
         public BuildingsManager()
         {
            
-            BuildingsList = new List<Building>();
+            LockedBuildingsList = new List<Building>();
+            FreeBuildingsList = new List<Building>();
+            DefenseBuildingsList = new List<Building>();
             coveredArea = new GeometryGroup();
             WaitingForConstruction = new List<Building>();
             BuildingsWaiting = false;
@@ -119,7 +129,7 @@ namespace DowerTefenseGame.Managers
         {
             Map map = MapManager.GetInstance().CurrentMap;
             // Pour chaque bâtiment
-            foreach (Building building in BuildingsList)
+            foreach (Building building in DefenseBuildingsList)
             {
                 _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name], 
                                 new Vector2(building.Tile.column * map.tileSize, building.Tile.line * map.tileSize),
@@ -135,25 +145,29 @@ namespace DowerTefenseGame.Managers
         {
             coveredArea.Children.Add(newCircle);
         }
-        public void AddBuildingToQueue(Tile tile, String request)
+        public void AddBuilding(Tile _tile, String _list, Unit _unit)
         {   
 
-            if (tile!=null && tile.TileType == Tile.TileTypeEnum.Free)
-            {
                 //Ajoute les buildings en attente d'être construit Si le terrain est libre
-                
-                switch(request){
-                    case "BasicTower":
-                        WaitingForConstruction.Add(new BasicTower(tile));
+
+                switch(_list){
+                    case "Defense":
+
+                    if (_tile != null && _tile.TileType == Tile.TileTypeEnum.Free)
+                    {
+                        DefenseBuildingsList.Add((Building)_unit);
+                        _tile.TileType = Tile.TileTypeEnum.Blocked;
+                    }
+                    break;
+                    case "Free":
+                        FreeBuildingsList.Add((Building)_unit);
                         break;
                 }
-                tile.TileType = Tile.TileTypeEnum.Blocked;
-                BuildingsWaiting = true;
-            }
+
         }
         public void UpdateBuildingList()
         {
-            BuildingsList.AddRange(WaitingForConstruction);
+            DefenseBuildingsList.AddRange(WaitingForConstruction);
             BuildingsWaiting = false;
         }
     }

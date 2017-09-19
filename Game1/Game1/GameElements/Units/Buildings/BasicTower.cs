@@ -37,6 +37,7 @@ namespace DowerTefenseGame.Units.Buildings
 
             //Initialisation de la liste des projectile
             projectileList = new List<Projectile>();
+            //S'ajoute automatiquement à la liste des tours
             
         }
 
@@ -50,7 +51,7 @@ namespace DowerTefenseGame.Units.Buildings
             // On sauvegarde la position
             // TODO : Attention appel récursif si on remplace le 64 par MapManager.GetInstance().map, puisque c'est de GetInstance que l'on vient ici...
             this.Position = _tile.getTilePosition() * 64 ;
-           
+            BuildingsManager.GetInstance().AddBuilding(this.Tile, "Defense", this);
             //On indique à la tuile que l'on a posé un bâtiment dessus
             _tile.building = this;
             //On récupère l'objet GameTime

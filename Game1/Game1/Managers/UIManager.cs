@@ -4,6 +4,7 @@ using DowerTefenseGame.GameElements;
 using C3.MonoGame;
 using LibrairieTropBien.GUI;
 using Microsoft.Xna.Framework.Input;
+using DowerTefenseGame.Units.Buildings;
 
 namespace DowerTefenseGame.Managers
 {
@@ -62,13 +63,17 @@ namespace DowerTefenseGame.Managers
 
         public void Initialize()
         {
-            btnBuild = new Button(35, 35, 35, 35);
-            btnBuild.OnClick += BtnBuild_OnClick;
+            btnBuild = new Button(leftUIOffset+30, 35, 35, 35);
+            btnBuild.OnRelease += BtnBuild_OnClick;
         }
 
         private void BtnBuild_OnClick(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            SpawnerBuilding sp = new SpawnerBuilding();
+            sp.NbreOfInstantSpawn = 1;
+            btnBuild.pressed = false;
+            btnBuild.release = false;
+
         }
 
         /// <summary>
@@ -87,6 +92,11 @@ namespace DowerTefenseGame.Managers
         /// <param name="_spriteBatch"></param>
         public void Draw(SpriteBatch _spriteBatch)
         {
+            //Display le nombre de Spawner
+            int offset =400;
+            _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + BuildingsManager.GetInstance().FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
+            offset = 420;
+            _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + BuildingsManager.GetInstance().DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             // Affichage du nom de la carte
             _spriteBatch.DrawString(deFaultFont, currentMap.Name, new Vector2(leftUIOffset, 5), Color.Wheat);
             
@@ -100,7 +110,6 @@ namespace DowerTefenseGame.Managers
                 if(SelectedTile.building != null)
                 {
                     // On cache le bouton Construire
-                    btnBuild.IsActive = false;
 
                     DisplayBuildingInfo(_spriteBatch);
 
@@ -111,16 +120,6 @@ namespace DowerTefenseGame.Managers
                     }
                 }
                 // Sinon si la tuile est libre
-                else if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
-                {
-                    // On ajoute le bouton construire si il n'est pas déjà là
-                    btnBuild.IsActive = true;
-                }
-                else
-                {
-                    // Sinon, on cache le bouton
-                    btnBuild.IsActive = false;
-                }
             }
 
 
@@ -136,7 +135,7 @@ namespace DowerTefenseGame.Managers
         {
             int offset = 100;
             _spriteBatch.DrawString(deFaultFont, "Batiment : " + SelectedTile.building.name, new Vector2(leftUIOffset, offset), Color.White);
-
+           
         }
 
         /// <summary>

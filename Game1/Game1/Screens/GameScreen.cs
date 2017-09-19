@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.Managers;
 using DowerTefenseGame.GameElements;
 using Microsoft.Xna.Framework.Input;
+using DowerTefenseGame.Units.Buildings;
 
 namespace DowerTefenseGame.Screens
 {
@@ -104,8 +105,9 @@ namespace DowerTefenseGame.Screens
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
-                    BuildingsManager.GetInstance().AddBuildingToQueue(UIManager.GetInstance().SelectedTile, "BasicTower");
-            }
+                    //Créé une tour, qui d'ajoute d'elle même à la liste de construction de bâtiment de défense
+                    BasicTower basicTower = new BasicTower(UIManager.GetInstance().SelectedTile);
+                }
             }
             //}
             #endregion

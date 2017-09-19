@@ -36,8 +36,7 @@ namespace DowerTefenseGame.Managers
             projs = new List<Projectile>();
             CurrentMap = MapManager.GetInstance().CurrentMap;
             // A VIRER ENSUITE
-            SpawnerBuilding sp = new SpawnerBuilding();
-            sp.NbreOfInstantSpawn = 1;// SI on passe à 2, le batiment spawn les mobs 2 par deux MAIS 
+            // SI on passe à 2, le batiment spawn les mobs 2 par deux MAIS 
             //                          comme ils ont exactement la même position on voit pas la différence...
         }
 
@@ -132,13 +131,9 @@ namespace DowerTefenseGame.Managers
             mobs.RemoveAll(deadMob => deadMob.Dead);
 
             #endregion
-            #region === Gestion du Spawn d'unité ===
-            //SpawnUpdate(_gameTime, 100, 100);
-  
-            #endregion
             #region === Récupération de des listes actuelles de Projectile pour Draw ==
             projs.Clear();
-            foreach (BasicTower bt in BuildingsManager.GetInstance().BuildingsList)
+            foreach (BasicTower bt in BuildingsManager.GetInstance().DefenseBuildingsList)
             {
                 projs.AddRange(bt.GetProjectileList());
             }
