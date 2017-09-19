@@ -15,12 +15,7 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Bords du bouton
         /// </summary>
-        protected Rectangle buttonBoundingbox;
-
-        /// <summary>
-        /// BoundingBox de la souris
-        /// </summary>
-        protected Rectangle mouseBoundingbox;
+        protected Rectangle buttonBox;
 
         private Boolean isActive;
         /// <summary>
@@ -60,10 +55,9 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Bouton de base
         /// </summary>
-        public Button()
+        public Button(int _x, int _y, int _width, int _height)
         {
-            this.buttonBoundingbox = new Rectangle();
-            this.mouseBoundingbox = new Rectangle(0, 0, 10, 10);
+            this.buttonBox = new Rectangle(_x, _y, _width, _height);
             this.isActive = false;
             this.color = Color.White;
         }
@@ -72,9 +66,9 @@ namespace LibrairieTropBien.GUI
         /// Mise à jour de la boîte de délimitation
         /// </summary>
         /// <param name="buttonBoundingbox">the new bounding box</param>
-        protected void UpdateBoundingbox(Rectangle buttonBoundingbox)
+        protected void UpdateBoundingbox(Rectangle _buttonBox)
         {
-            this.buttonBoundingbox = buttonBoundingbox;
+            this.buttonBox = _buttonBox;
         }
 
         /// <summary>
@@ -85,28 +79,27 @@ namespace LibrairieTropBien.GUI
         {
 
             // Si on écoute le clic, on regarde si la souris est sur le bouton
-            //if (this.onClick != null && this.onClick.GetInvocationList().Length > 0)
-            //{
-            this.mouseBoundingbox.X = mouseState.X;
-            this.mouseBoundingbox.Y = mouseState.Y;
-
-            if (this.buttonBoundingbox.Intersects(this.mouseBoundingbox))
+            if (this.OnClick != null && this.OnClick.GetInvocationList().Length > 0)
             {
-                this.color = defaultHover;
 
-                if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                if (this.buttonBox.Contains(mouseState.Position))
                 {
-                    this.OnClickHandle(new EventArgs());
+                    this.color = defaultHover;
+
+                    if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                    {
+                        this.OnClickHandle(new EventArgs());
+                    }
                 }
-            }
-            else
-            {
-                if (this.isActive)
-                    this.color = defaultActive;
                 else
-                    this.color = defaultColor;
+                {
+                    if (this.isActive)
+                        this.color = defaultActive;
+                    else
+                        this.color = defaultColor;
+                }
+
             }
-            //}
         }
 
         /// <summary>

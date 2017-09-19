@@ -62,7 +62,13 @@ namespace DowerTefenseGame.Managers
 
         public void Initialize()
         {
-            btnBuild = new Button();
+            btnBuild = new Button(35, 35, 35, 35);
+            btnBuild.OnClick += BtnBuild_OnClick;
+        }
+
+        private void BtnBuild_OnClick(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
