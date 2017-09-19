@@ -2,7 +2,6 @@
 using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.NuclexGui;
 
 namespace DowerTefenseGame.Screens
 {
@@ -19,8 +18,6 @@ namespace DowerTefenseGame.Screens
         ArrayList Screens;
         // Écran courant
         Screen currentScreen;
-        // GUI Manager
-        public GuiManager Gui { get; set; }
 
         /// <summary>
         /// Constructeur du gestionnaire d'écrans
@@ -65,7 +62,7 @@ namespace DowerTefenseGame.Screens
         private void Initialize()
         {
             // Init de l'écran
-            currentScreen.Initialize(Gui);
+            currentScreen.Initialize();
         }
 
         /// <summary>

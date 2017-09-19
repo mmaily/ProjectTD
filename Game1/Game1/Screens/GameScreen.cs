@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.Managers;
 using DowerTefenseGame.GameElements;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.NuclexGui;
 
 namespace DowerTefenseGame.Screens
 {
@@ -18,9 +17,6 @@ namespace DowerTefenseGame.Screens
         // Empêche le multiple clic
         private bool leftClicked = false;
 
-        // Gui Manager
-        private GuiManager gui;
-        
         /// <summary>
         /// Constructeur principal
         /// </summary>
@@ -28,11 +24,11 @@ namespace DowerTefenseGame.Screens
         {
         }
         
-        public override void Initialize(GuiManager _gui)
+        public override void Initialize()
         {
-            this.gui = _gui;
-            // Init du GUI
-            UIManager.GetInstance().Initialize(_gui);
+
+            // Init de l'UI
+            UIManager.GetInstance().Initialize();
         }
 
         /// <summary>

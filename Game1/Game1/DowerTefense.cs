@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using DowerTefenseGame.Screens;
 using DowerTefenseGame.Managers;
-using MonoGame.Extended.Input.InputListeners;
-using MonoGame.Extended.NuclexGui;
 
 namespace DowerTefenseGame
 {
@@ -20,11 +18,6 @@ namespace DowerTefenseGame
         // Gestionnaire des sprites
         SpriteBatch spriteBatch;
 
-        // UI
-        private readonly InputListenerComponent inputManager;
-        private readonly GuiManager gui;
-
-
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -39,14 +32,6 @@ namespace DowerTefenseGame
             // Initialisation du gestionnaire de contenu
             CustomContentManager.GetInstance();
 
-
-            // Manager d'entrées
-            inputManager = new InputListenerComponent(this);
-
-            // Création du GUI
-            var guiInputService = new GuiInputService(inputManager);
-            gui = new GuiManager(Services, guiInputService);
-
         }
 
         /// <summary>
@@ -54,15 +39,6 @@ namespace DowerTefenseGame
         /// </summary>
         protected override void Initialize()
         {
-            // Communication de l'instance du GUI
-            ScreenManager.GetInstance().Gui = gui;
-
-            // Création de l'écran
-            gui.Screen = new GuiScreen();
-
-            // Initialisation du GUI
-            gui.Initialize();
-
             // Initialisation des composants
             base.Initialize();
 
@@ -108,9 +84,6 @@ namespace DowerTefenseGame
             // Mise à jour de l'écran actif
             ScreenManager.GetInstance().Update(gameTime);
 
-            // Update both InputManager (which updates states of each device) and GUI
-            inputManager.Update(gameTime);
-            gui.Update(gameTime);
         }
 
 
@@ -134,9 +107,6 @@ namespace DowerTefenseGame
 
             // Fin de l'affichage
             spriteBatch.End();
-
-            // Draw GUI on top of everything
-            gui.Draw(gameTime);
 
             // Affichage de la base
             base.Draw(gameTime);

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.NuclexGui;
 
 namespace DowerTefenseGame.Screens
 {
@@ -30,7 +29,7 @@ namespace DowerTefenseGame.Screens
         {
         }
 
-        public virtual void Initialize(GuiManager _gui)
+        public virtual void Initialize()
         {
         }
     }

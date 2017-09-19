@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.GameElements;
 using C3.MonoGame;
-using MonoGame.Extended.NuclexGui.Controls.Desktop;
-using MonoGame.Extended.NuclexGui;
+using LibrairieTropBien.GUI;
+using Microsoft.Xna.Framework.Input;
 
 namespace DowerTefenseGame.Managers
 {
@@ -30,11 +30,7 @@ namespace DowerTefenseGame.Managers
         // Carte en cours
         private Map currentMap;
 
-        // GUI
-        private GuiManager gui;
-
-        // Bouton
-        GuiButtonControl btnAddBuilding;
+        private Button btnBuild;
 
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -47,8 +43,6 @@ namespace DowerTefenseGame.Managers
 
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
-
-
         }
 
         /// <summary>
@@ -66,19 +60,9 @@ namespace DowerTefenseGame.Managers
             return instance;
         }
 
-        public void Initialize(GuiManager _gui)
+        public void Initialize()
         {
-
-            this.gui = _gui;
-
-
-            // Init des boutons
-            btnAddBuilding = new GuiButtonControl
-            {
-                Name = "addBuilding",
-                Bounds = new UniRectangle(new UniScalar(0.0f, 20), new UniScalar(0.0f, 20), new UniScalar(0f, 120), new UniScalar(0f, 50)),
-                Text = "Construire",
-            };
+            btnBuild = new Button();
         }
 
         /// <summary>
@@ -87,7 +71,7 @@ namespace DowerTefenseGame.Managers
         /// <param name="_gameTime"></param>
         public void Update(GameTime _gameTime)
         {
-
+            btnBuild.Update(Mouse.GetState());
 
         }
 
@@ -110,7 +94,7 @@ namespace DowerTefenseGame.Managers
                 if(SelectedTile.building != null)
                 {
                     // On cache le bouton Construire
-                    gui.Screen.Desktop.Children.Remove(btnAddBuilding);
+                    btnBuild.IsActive = true;
 
                     DisplayBuildingInfo(_spriteBatch);
 
@@ -124,21 +108,18 @@ namespace DowerTefenseGame.Managers
                 else if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
                 {
                     // On ajoute le bouton construire si il n'est pas déjà là
-                    if (!gui.Screen.Desktop.Children.Contains(btnAddBuilding))
-                    {
-                        gui.Screen.Desktop.Children.Add(btnAddBuilding);
-                    }
+                    btnBuild.IsActive = true;
                 }
                 else
                 {
                     // Sinon, on cache le bouton
-                    gui.Screen.Desktop.Children.Remove(btnAddBuilding);
+                    btnBuild.IsActive = false;
                 }
             }
 
 
             // Draw GUI on top of everything
-
+            btnBuild.Draw(_spriteBatch);
         }
 
         /// <summary>
