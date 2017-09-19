@@ -35,7 +35,7 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Handler des clics
         /// </summary>
-        public event EventHandler onClick;
+        public event EventHandler OnClick;
 
         /// <summary>
         /// Couleur du bouton
@@ -85,39 +85,39 @@ namespace LibrairieTropBien.GUI
         {
 
             // Si on écoute le clic, on regarde si la souris est sur le bouton
-            if (this.onClick != null && this.onClick.GetInvocationList().Length > 0)
+            //if (this.onClick != null && this.onClick.GetInvocationList().Length > 0)
+            //{
+            this.mouseBoundingbox.X = mouseState.X;
+            this.mouseBoundingbox.Y = mouseState.Y;
+
+            if (this.buttonBoundingbox.Intersects(this.mouseBoundingbox))
             {
-                this.mouseBoundingbox.X = mouseState.X;
-                this.mouseBoundingbox.Y = mouseState.Y;
+                this.color = defaultHover;
 
-                if (this.buttonBoundingbox.Intersects(this.mouseBoundingbox))
+                if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                 {
-                    this.color = defaultHover;
-
-                    if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
-                    {
-                        this.OnClick(new EventArgs());
-                    }
-                }
-                else
-                {
-                    if (this.isActive)
-                        this.color = defaultActive;
-                    else
-                        this.color = defaultColor;
+                    this.OnClickHandle(new EventArgs());
                 }
             }
+            else
+            {
+                if (this.isActive)
+                    this.color = defaultActive;
+                else
+                    this.color = defaultColor;
+            }
+            //}
         }
 
         /// <summary>
         /// Handler de clic
         /// </summary>
         /// <param name="e">Evenement du clic</param>
-        protected virtual void OnClick(EventArgs e)
+        protected virtual void OnClickHandle(EventArgs e)
         {
             this.IsActive = !this.IsActive;
 
-            EventHandler handler = onClick;
+            EventHandler handler = OnClick;
             if (handler != null)
                 handler(this, e);
         }
@@ -129,7 +129,7 @@ namespace LibrairieTropBien.GUI
         {
             if (this.isActive)
             {
-                _spriteBatch.DrawRectangle(new Vector2(35,35), new Vector2(35,35), color);
+                _spriteBatch.DrawRectangle(new Vector2(35, 35), new Vector2(35, 35), color);
             }
         }
     }

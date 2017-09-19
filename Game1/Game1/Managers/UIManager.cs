@@ -94,7 +94,7 @@ namespace DowerTefenseGame.Managers
                 if(SelectedTile.building != null)
                 {
                     // On cache le bouton Construire
-                    btnBuild.IsActive = true;
+                    btnBuild.IsActive = false;
 
                     DisplayBuildingInfo(_spriteBatch);
 
