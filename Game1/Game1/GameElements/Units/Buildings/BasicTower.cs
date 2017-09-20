@@ -33,7 +33,7 @@ namespace DowerTefenseGame.Units.Buildings
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
             this.BulletSpeed = 5*64;
-            //this.Cost = 100;
+            this.Cost = 100;
 
             //Initialisation de la liste des projectile
             projectileList = new List<Projectile>();

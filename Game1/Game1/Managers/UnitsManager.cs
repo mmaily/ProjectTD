@@ -68,6 +68,8 @@ namespace DowerTefenseGame.Managers
                 if (mob.HealthPoints <= 0)
                 {
                     mob.Dead = true;
+                    UIManager.GetInstance().Player.totalGold += mob.GoldValue;
+
                     continue;
                 }
 

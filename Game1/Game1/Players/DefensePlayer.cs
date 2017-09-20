@@ -10,11 +10,11 @@ namespace DowerTefenseGame.Players
     class DefensePlayer
     {
         public int startingGold=200;
-        public int totalGold;
+        public int totalGold { get; set; }
 
         public DefensePlayer()
         {
-            totalGold = startingGold;
+            this.totalGold = startingGold;
         }
         public void Update(GameTime gameTime)
         {

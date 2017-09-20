@@ -4,6 +4,7 @@ using DowerTefenseGame.Managers;
 using DowerTefenseGame.GameElements;
 using Microsoft.Xna.Framework.Input;
 using DowerTefenseGame.Units.Buildings;
+using DowerTefenseGame.Players;
 
 namespace DowerTefenseGame.Screens
 {
@@ -17,12 +18,15 @@ namespace DowerTefenseGame.Screens
 
         // Empêche le multiple clic
         private bool leftClicked = false;
+        //Joueur (défenseur pour l'instant)
+        public DefensePlayer Player;
 
         /// <summary>
         /// Constructeur principal
         /// </summary>
         public GameScreen()
         {
+            Player = new DefensePlayer();
         }
         
         public override void Initialize()
@@ -57,6 +61,7 @@ namespace DowerTefenseGame.Screens
             BuildingsManager.GetInstance().Update(_gameTime);
             //Mise à jour des tâche de l'IA
             AiManager.GetInstance().Update(_gameTime);
+            //Mise à jour de l'objet Player
 
             #region === Sélection d'une tuile ===
 

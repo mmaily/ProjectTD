@@ -47,7 +47,7 @@ namespace DowerTefenseGame.Managers
         private Button btnMode;
 
         //Joueur (défenseur pour l'instant)
-        protected DefensePlayer Player;
+        public DefensePlayer Player;
 
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -106,7 +106,7 @@ namespace DowerTefenseGame.Managers
             {
                 Button btn = (Button)sender;
                 //On check l'or du joueur
-                if (BuildingsManager.GetInstance().Price[btn.Tag] < Player.totalGold)
+                if (BuildingsManager.GetInstance().Price[btn.Tag] <= Player.totalGold)
                 { 
 
                     if (btn.Action.Equals("build") && SelectedTile != null)
@@ -117,6 +117,8 @@ namespace DowerTefenseGame.Managers
                             Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.Units.Buildings." + btn.Tag));
                             // Que l'on place sur une tuile
                             building.SetTile(SelectedTile);
+                            Player.totalGold -= building.Cost;
+
 
                         }
                     }
@@ -156,7 +158,9 @@ namespace DowerTefenseGame.Managers
         public void Draw(SpriteBatch _spriteBatch)
         {
             //Display le nombre de Spawner
-            int offset =400;
+            int offset = 380;
+            _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + Player.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+            offset = 400;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + BuildingsManager.GetInstance().FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             offset = 420;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + BuildingsManager.GetInstance().DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
