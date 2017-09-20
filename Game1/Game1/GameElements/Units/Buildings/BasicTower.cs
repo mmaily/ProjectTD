@@ -37,29 +37,31 @@ namespace DowerTefenseGame.Units.Buildings
 
             //Initialisation de la liste des projectile
             projectileList = new List<Projectile>();
-            //S'ajoute automatiquement à la liste des tours
             
-        }
-
-        public BasicTower(Tile _tile) : this()
-        {
-            // On sauvegarde la tuile sur laquelle on se positionne
-            this.Tile = _tile;
             //On initialise l'index pour remove les unité en dehors de la range à -1 (désactivé au début)
             this.idTargetRemoval = -1;
             this.idBulletRemoval = -1;
-            // On sauvegarde la position
-            // TODO : Attention appel récursif si on remplace le 64 par MapManager.GetInstance().map, puisque c'est de GetInstance que l'on vient ici...
-            this.Position = _tile.getTilePosition() * 64 ;
-            BuildingsManager.GetInstance().AddBuilding(this.Tile, "Defense", this);
-            //On indique à la tuile que l'on a posé un bâtiment dessus
-            _tile.building = this;
-            //On récupère l'objet GameTime
-            //gameTime = BuildingsManager.GetInstance().gameTime;
-            //Créé le listener pour les events
-            
         }
 
+        /// <summary>
+        /// Constructeur avec tuile de position
+        /// </summary>
+        /// <param name="_tile">Tuile de position</param>
+        public BasicTower(Tile _tile) : this()
+        {
+            this.SetTile(_tile);
+        }
+
+        /// <summary>
+        /// Réglage de la tuile de position
+        /// </summary>
+        /// <param name="_tile">Tuile</param>
+        public override void SetTile(Tile _tile)
+        {
+            base.SetTile(_tile);
+            // En plus de la méthode de base, on ajoute ce batiment à la liste des 
+            BuildingsManager.GetInstance().DefenseBuildingsList.Add(this);
+        }
 
         public override void OnDuty()
         {

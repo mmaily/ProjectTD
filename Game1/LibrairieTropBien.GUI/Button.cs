@@ -17,18 +17,23 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         protected Rectangle buttonBox;
 
-        private Boolean isActive;
-        public Boolean pressed=false;
-        public Boolean release = false;
+        public Boolean pressed = false;
         public String Text;
+
         /// <summary>
-        /// Activation du bouton
+        /// Bouton à dessiner ou pas
         /// </summary>
-        public Boolean IsActive
-        {
-            get { return isActive; }
-            set { isActive = value; }
-        }
+        public Boolean Enabled { get; set; }
+
+        /// <summary>
+        /// Action à réaliser
+        /// </summary>
+        public string Action { get; set; }
+
+        /// <summary>
+        /// Tag du bouton
+        /// </summary>
+        public string Tag { get; set; }
 
         /// <summary>
         /// Handler des clics
@@ -61,7 +66,7 @@ namespace LibrairieTropBien.GUI
         public Button(int _x, int _y, int _width, int _height)
         {
             this.buttonBox = new Rectangle(_x, _y, _width, _height);
-            this.isActive = true;
+            this.Enabled = true;
             this.color = Color.White;
         }
 
@@ -80,38 +85,43 @@ namespace LibrairieTropBien.GUI
         /// <param name="mouseState">Etat actuel de la souris</param>
         public void Update(Microsoft.Xna.Framework.Input.MouseState mouseState)
         {
+            // Si le bouton n'est pas activé, ce n'est pas la peine
+            if (!this.Enabled)
+            {
+                return;
+            }
 
             // Si on écoute le clic, on regarde si la souris est sur le bouton
             if (this.OnRelease != null && this.OnRelease.GetInvocationList().Length > 0)
             {
 
-                
-
+                // Si la souris est sur le bouton
                 if (this.buttonBox.Contains(mouseState.Position))
                 {
-                    //Méhode chiasse pour ne proc l'event qu'une fois par click..
-
-                    if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
-                    {
-                        pressed = true;
-                    }
-
-                    if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released&&pressed)
-                    {
-                        release = true;
-                    }
+                    // On change la couleur
                     this.color = defaultHover;
 
-                    if (pressed && release)
-                    {                       
-                        this.OnReleaseHandle(new EventArgs());
-
-
+                    // Si on clique gauche une première fois
+                    if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                    {
+                        // Etat appuyé
+                        pressed = true;
                     }
+                    // Si on relâche alors qu'on avait appuyé
+                    else if (pressed && mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
+                    {
+                        // On lance l'évènement
+                        pressed = false;
+                        this.OnReleaseHandle(new EventArgs());
+                    }
+
                 }
                 else
                 {
-                    if (this.isActive)
+                    // On oublie qu'on l'on a cliqué
+                    pressed = false;
+
+                    if (this.Enabled)
                         this.color = defaultActive;
                     else
                         this.color = defaultColor;
@@ -136,10 +146,9 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         public virtual void Draw(SpriteBatch _spriteBatch)
         {
-            if (this.isActive)
+            if (this.Enabled)
             {
                 _spriteBatch.DrawRectangle(this.buttonBox, color);
-                //_spriteBatch.DrawString(Fonts["defaultFont"])
             }
         }
     }

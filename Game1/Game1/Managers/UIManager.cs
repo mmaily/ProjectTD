@@ -5,6 +5,8 @@ using C3.MonoGame;
 using LibrairieTropBien.GUI;
 using Microsoft.Xna.Framework.Input;
 using DowerTefenseGame.Units.Buildings;
+using System;
+using DowerTefenseGame.Units;
 
 namespace DowerTefenseGame.Managers
 {
@@ -22,8 +24,6 @@ namespace DowerTefenseGame.Managers
         /// </summary>
         public Tile SelectedTile { get; set; }
 
-        // SpriteBatch
-        private SpriteBatch spriteBatch;
         // Police par défaut
         private SpriteFont deFaultFont;
         // Décalage de l'interface
@@ -64,15 +64,29 @@ namespace DowerTefenseGame.Managers
         public void Initialize()
         {
             btnBuild = new Button(leftUIOffset+30, 35, 35, 35);
+            btnBuild.Tag = "BasicTower";
+            btnBuild.Action = "build";
             btnBuild.OnRelease += BtnBuild_OnClick;
         }
 
         private void BtnBuild_OnClick(object sender, System.EventArgs e)
         {
-            SpawnerBuilding sp = new SpawnerBuilding();
-            sp.NbreOfInstantSpawn = 1;
-            btnBuild.pressed = false;
-            btnBuild.release = false;
+            if(sender.GetType() == typeof(Button))
+            {
+                Button btn = (Button)sender;
+
+                if (btn.Action.Equals("build") && SelectedTile != null)
+                {
+                    if(SelectedTile.TileType == Tile.TileTypeEnum.Free && SelectedTile.building == null)
+                    {
+                        // On créé un bâtiment de ce type
+                        Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.Units.Buildings." + btn.Tag));
+                        // Que l'on place sur une tuile
+                        building.SetTile(SelectedTile);
+
+                    }
+                }
+            }
 
         }
 
@@ -97,6 +111,7 @@ namespace DowerTefenseGame.Managers
             _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + BuildingsManager.GetInstance().FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             offset = 420;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + BuildingsManager.GetInstance().DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
+            
             // Affichage du nom de la carte
             _spriteBatch.DrawString(deFaultFont, currentMap.Name, new Vector2(leftUIOffset, 5), Color.Wheat);
             
@@ -110,7 +125,9 @@ namespace DowerTefenseGame.Managers
                 if(SelectedTile.building != null)
                 {
                     // On cache le bouton Construire
+                    btnBuild.Enabled = false;
 
+                    // On affiche les infos du batiment
                     DisplayBuildingInfo(_spriteBatch);
 
                     // Si le bâtiment possède une portée non nulle
@@ -119,9 +136,23 @@ namespace DowerTefenseGame.Managers
                         _spriteBatch.DrawCircle(SelectedTile.building.Position, SelectedTile.building.Range, 50, Color.Green, 5);
                     }
                 }
-                // Sinon si la tuile est libre
-            }
+                else if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
+                {
+                    // Sinon si la tuile est libre
+                    btnBuild.Enabled = true;
+                }
+                else
+                {
+                    // On cache le bouton Construire
+                    btnBuild.Enabled = false;
+                }
 
+            }
+            else
+            {
+                // On cache le bouton Construire
+                btnBuild.Enabled = false;
+            }
 
             // Draw GUI on top of everything
             btnBuild.Draw(_spriteBatch);

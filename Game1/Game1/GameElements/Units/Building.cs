@@ -15,7 +15,7 @@ namespace DowerTefenseGame.Units
         /// <summary>
         /// Tuile sur laquelle est positionné le bâtiment
         /// </summary>
-        public Tile Tile { get; set; }
+        private Tile tile;
 
         public Building() : base()
         {
@@ -34,5 +34,24 @@ namespace DowerTefenseGame.Units
 
         }
 
+        /// <summary>
+        /// Récupération de la tuile de position
+        /// </summary>
+        /// <returns>Tuile</returns>
+        public Tile GetTile()
+        { return tile; }
+
+        /// <summary>
+        /// Réglage de la tuile de position. Informe cette dernière qu'un bâtiment est posé dessus.
+        /// </summary>
+        /// <param name="_tile">Tuile</param>
+        public virtual void SetTile(Tile _tile)
+        {
+            tile = _tile;
+            // On informe la tuile qu'un bâtiment est dessus
+            tile.building = this;
+            // Attention au 64, TODO
+            this.Position = tile.getTilePosition() * 64;
+        }
     }
 }

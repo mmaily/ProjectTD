@@ -63,7 +63,6 @@ namespace DowerTefenseGame.Managers
         /// Liste de construction en attente pour le prochain update
         /// </summary>
         public List<Building> WaitingForConstruction { get; set; }
-        public Boolean BuildingsWaiting;
         //public CombinedGeometry coveredArea;
         public GeometryGroup coveredArea;
 
@@ -78,7 +77,6 @@ namespace DowerTefenseGame.Managers
             DefenseBuildingsList = new List<Building>();
             coveredArea = new GeometryGroup();
             WaitingForConstruction = new List<Building>();
-            BuildingsWaiting = false;
             // On instancie l'objet GameTime
         }
 
@@ -111,11 +109,7 @@ namespace DowerTefenseGame.Managers
             }
             //Update le temps de jeu écoule
             this.gameTime = _gameTime;
-            if (BuildingsWaiting)
-            {
-                //Ajoute les building en attente de construction à la liste des buildings construit
-                UpdateBuildingList();
-            }
+
             //Apelle les bâtiments à faire leur actions respectives (si il y a des buildings)
              BuildingDuty?.Invoke();
             
@@ -132,7 +126,7 @@ namespace DowerTefenseGame.Managers
             foreach (Building building in DefenseBuildingsList)
             {
                 _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name], 
-                                new Vector2(building.Tile.column * map.tileSize, building.Tile.line * map.tileSize),
+                                new Vector2(building.GetTile().column * map.tileSize, building.GetTile().line * map.tileSize),
                                 Microsoft.Xna.Framework.Color.White);
             }
 
@@ -144,31 +138,6 @@ namespace DowerTefenseGame.Managers
         public void AddToArea(EllipseGeometry newCircle)
         {
             coveredArea.Children.Add(newCircle);
-        }
-        public void AddBuilding(Tile _tile, String _list, Unit _unit)
-        {   
-
-                //Ajoute les buildings en attente d'être construit Si le terrain est libre
-
-                switch(_list){
-                    case "Defense":
-
-                    if (_tile != null && _tile.TileType == Tile.TileTypeEnum.Free)
-                    {
-                        DefenseBuildingsList.Add((Building)_unit);
-                        _tile.TileType = Tile.TileTypeEnum.Blocked;
-                    }
-                    break;
-                    case "Free":
-                        FreeBuildingsList.Add((Building)_unit);
-                        break;
-                }
-
-        }
-        public void UpdateBuildingList()
-        {
-            DefenseBuildingsList.AddRange(WaitingForConstruction);
-            BuildingsWaiting = false;
         }
     }
 }
