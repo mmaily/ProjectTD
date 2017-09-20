@@ -110,11 +110,6 @@ namespace DowerTefenseGame.Screens
                     // Le bouton a été relâché, on peut écouter à nouveau cette information
                     leftClicked = false;
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.A))
-                {
-                    //Créé une tour, qui d'ajoute d'elle même à la liste de construction de bâtiment de défense
-                    BasicTower basicTower = new BasicTower(UIManager.GetInstance().SelectedTile);
-                }
             }
             //}
             #endregion
