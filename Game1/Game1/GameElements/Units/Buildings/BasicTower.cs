@@ -20,7 +20,6 @@ namespace DowerTefenseGame.Units.Buildings
         private int idTargetRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
 
-
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -34,6 +33,7 @@ namespace DowerTefenseGame.Units.Buildings
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
             this.BulletSpeed = 5*64;
+            //this.Cost = 100;
 
             //Initialisation de la liste des projectile
             projectileList = new List<Projectile>();

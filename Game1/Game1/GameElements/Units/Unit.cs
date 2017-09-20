@@ -39,6 +39,10 @@ namespace DowerTefenseGame.GameElements.Units
         }
 
         /// <summary>
+        /// Gain à la destruction de l'unité (défaut : 0)
+        /// </summary>
+        public int GoldValue { get; protected set; }
+        /// <summary>
         /// Coût de construction l'unité (défaut : 0)
         /// </summary>
         public int Cost { get; protected set; }

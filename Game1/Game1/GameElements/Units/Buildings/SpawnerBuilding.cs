@@ -26,6 +26,7 @@ namespace DowerTefenseGame.Units.Buildings
             this.SpawnRate = 2;
             this.PowerNeeded = 1;
             BuildingsManager.GetInstance().FreeBuildingsList.Add(this);
+            this.Cost = 100;
         }
         public override void OnDuty()
         {

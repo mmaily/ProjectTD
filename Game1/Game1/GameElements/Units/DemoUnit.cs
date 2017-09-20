@@ -20,6 +20,7 @@
             this.name = "unit";
             this.Speed = 1f;
             this.UnitType = UnitTypeEnum.Ground;
+            this.GoldValue = 10;
         }
     }
 }

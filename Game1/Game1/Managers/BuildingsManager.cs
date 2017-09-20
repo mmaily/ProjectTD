@@ -63,6 +63,10 @@ namespace DowerTefenseGame.Managers
         /// Liste de construction en attente pour le prochain update
         /// </summary>
         public List<Building> WaitingForConstruction { get; set; }
+        /// <summary>
+        /// Dictionnaire des prix des bâtiments
+        /// </summary>
+        public Dictionary<String, int> Price;
         //public CombinedGeometry coveredArea;
         public GeometryGroup coveredArea;
 
@@ -77,6 +81,8 @@ namespace DowerTefenseGame.Managers
             DefenseBuildingsList = new List<Building>();
             coveredArea = new GeometryGroup();
             WaitingForConstruction = new List<Building>();
+            Price = new Dictionary<string, int>();
+            SetPrice();
             // On instancie l'objet GameTime
         }
 
@@ -132,13 +138,14 @@ namespace DowerTefenseGame.Managers
 
         }
         /// <summary>
-        /// Ajoute une cercle géométrique pour les range des tours pour définir la surface-union
+        /// Méthode pour ajouter les prix des bâtiments au dictionnaire
         /// </summary>
-        /// <param name="NewCircle"></param>
-        public void AddToArea(EllipseGeometry newCircle)
+        public void SetPrice()
         {
-            coveredArea.Children.Add(newCircle);
+            Price.Add("BasicTower", 100);
+            Price.Add("SpawnerBuidling", 100);
         }
     }
+
 }
 
