@@ -17,14 +17,22 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         protected Rectangle buttonBox;
 
-        public Boolean pressed = false;
-        public String Text;
+        #region === Etat du bouton ===
 
+        // Bouton cliqué
+        public Boolean pressed = false;
+        // Bouton sous la souris
+        private Boolean hovered = false;
         /// <summary>
         /// Bouton à dessiner ou pas
         /// </summary>
         public Boolean Enabled { get; set; }
 
+        #endregion
+
+        #region === Propriétés du bouton
+
+        public String Text;
         /// <summary>
         /// Action à réaliser
         /// </summary>
@@ -35,11 +43,17 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         public string Tag { get; set; }
 
+        #endregion
+
         /// <summary>
         /// Handler des clics
         /// </summary>
         public event EventHandler OnRelease;
-        
+
+        #region === Affichage ===
+
+        private Texture2D texture;
+
         /// <summary>
         /// Couleur du bouton
         /// </summary>
@@ -59,6 +73,8 @@ namespace LibrairieTropBien.GUI
         /// Si actif
         /// </summary>
         private Color defaultActive = Microsoft.Xna.Framework.Color.LightBlue;
+
+        #endregion
 
         /// <summary>
         /// Bouton de base
@@ -98,6 +114,9 @@ namespace LibrairieTropBien.GUI
                 // Si la souris est sur le bouton
                 if (this.buttonBox.Contains(mouseState.Position))
                 {
+                    // On l'enregistre
+                    hovered = true;
+
                     // On change la couleur
                     this.color = defaultHover;
 
@@ -116,8 +135,12 @@ namespace LibrairieTropBien.GUI
                     }
 
                 }
+                // Sinon si on n'est pas sous la souris
                 else
                 {
+                    // On l'enregistre
+                    hovered = false;
+
                     // On oublie qu'on l'on a cliqué
                     pressed = false;
 
@@ -146,10 +169,45 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         public virtual void Draw(SpriteBatch _spriteBatch)
         {
+            // Si le bouton est activé
             if (this.Enabled)
             {
-                _spriteBatch.DrawRectangle(this.buttonBox, color);
+                // Si la texture est définie
+                if(texture != null)
+                {
+                    _spriteBatch.Draw(texture, buttonBox, Color.White);
+
+                    // Si on est sous la souris
+                    if (hovered)
+                    {
+                        _spriteBatch.DrawRectangle(buttonBox, Color.White, 2);
+                    }
+
+                }
+                else
+                {
+                    _spriteBatch.DrawRectangle(this.buttonBox, color);
+                }
             }
         }
+
+
+        /// <summary>
+        /// Permet de modifier la texture du bouton
+        /// </summary>
+        /// <param name="_texture">Texture à appliquer</param>
+        /// <param name="_resize">Recadrage du bouton ou non</param>
+        public void SetTexture(Texture2D _texture, bool _resize = true)
+        {
+            this.texture = _texture;
+
+            // Si on doit recadrer le bouton et si la textur est définie
+            if(_resize && _texture != null)
+            {
+                this.buttonBox.Width = _texture.Width;
+                this.buttonBox.Height = _texture.Height;
+            }
+        }
+
     }
 }
