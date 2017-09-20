@@ -21,6 +21,7 @@
             this.Speed = 1f;
             this.UnitType = UnitTypeEnum.Ground;
             this.GoldValue = 10;
+            this.AttackPower = 1;
         }
     }
 }

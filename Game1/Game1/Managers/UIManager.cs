@@ -158,7 +158,10 @@ namespace DowerTefenseGame.Managers
         public void Draw(SpriteBatch _spriteBatch)
         {
             //Display le nombre de Spawner
-            int offset = 380;
+            int offset = 360;
+            _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + Player.lives, new Vector2(leftUIOffset, offset), Color.White);
+
+            offset = 380;
             _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + Player.totalGold, new Vector2(leftUIOffset, offset), Color.White);
             offset = 400;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + BuildingsManager.GetInstance().FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);

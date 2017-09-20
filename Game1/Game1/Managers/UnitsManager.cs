@@ -113,6 +113,7 @@ namespace DowerTefenseGame.Managers
                         {
                             // Si la tuile destination était une base, on détruit le mob et on recommence
                             mob.Dead = true;
+                            UIManager.GetInstance().Player.lives -= mob.AttackPower;
                         }
                         else
                         {
