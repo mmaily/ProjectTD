@@ -17,7 +17,7 @@ namespace DowerTefenseGame.Units.Buildings
         protected Boolean powered = true; // Le bâtiment ne spawn que s'il est powered
         public int PowerNeeded { get; protected set; } // Energie requise par le bâtiment
         public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
-        protected DemoUnit demoUnit;// Type d'unité qu'il spawn
+        protected Unit Unit;// Type d'unité qu'il spawn
         protected MapManager mapManager = MapManager.GetInstance();
         
 
@@ -54,13 +54,13 @@ namespace DowerTefenseGame.Units.Buildings
         {
             for(int i = 0; i < NbreOfInstantSpawn; i++)
             {
-                this.demoUnit = new DemoUnit();
+                this.unit = new Unit();
                 // On définit sa position comme étant celle du spawn
-                demoUnit.UpdatePosition(mapManager.CurrentMap.Spawns[0].getTilePosition() * mapManager.CurrentMap.tileSize);
+                unit.UpdatePosition(mapManager.CurrentMap.Spawns[0].getTilePosition() * mapManager.CurrentMap.tileSize);
                 // On définit sa destination comme étant la tuile suivante
-                demoUnit.DestinationTile = mapManager.CurrentMap.Spawns[0].NextTile;
+                unit.DestinationTile = mapManager.CurrentMap.Spawns[0].NextTile;
                 // On l'ajoute à la liste des mobs
-                UnitsManager.GetInstance().mobs.Add(demoUnit);
+                UnitsManager.GetInstance().mobs.Add(unit);
                 lastSpawn = (int)Math.Floor(BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds);
             }
 

@@ -73,7 +73,7 @@ namespace DowerTefenseGame.Managers
             // Texture du curseur
             AddTexture("Cursors/Banana", "cursor");
             // Texture des tours
-            foreach (Towers.NameEnum Name in Enum.GetValues(typeof(Towers.NameEnum)))
+            foreach (Tower.NameEnum Name in Enum.GetValues(typeof(Tower.NameEnum)))
             {
                 AddTexture("Maps/"+Name.ToString(), Name.ToString());
             }

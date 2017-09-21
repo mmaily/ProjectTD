@@ -4,9 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game1.Players
+namespace DowerTefenseGame.Players
 {
     class AttackPlayer
     {
+        int totalEnergy;
+        int usedEnergy;
+        public AttackPlayer()
+        {
+            this.totalEnergy = 10;
+
+        }
+
     }
 }

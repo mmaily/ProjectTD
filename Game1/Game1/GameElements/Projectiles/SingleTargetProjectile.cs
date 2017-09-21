@@ -11,7 +11,7 @@ namespace DowerTefenseGame.GameElements.Projectiles
     class SingleTargetProjectile : Projectile
     {
 
-        public SingleTargetProjectile(Unit _target, int _damage, float _speed, Vector2 _pos, String _name) : base()
+        public SingleTargetProjectile(Entity _target, int _damage, float _speed, Vector2 _pos, String _name) : base()
         {
             this.name = _name;
             this.target = _target;

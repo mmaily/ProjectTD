@@ -9,7 +9,7 @@ namespace DowerTefenseGame.Units
     /// <summary>
     /// Classe mère des bâtiments
     /// </summary>
-    public abstract class Building : Unit
+    public abstract class Building : Entity
     {
 
         /// <summary>

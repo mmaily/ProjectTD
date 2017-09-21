@@ -31,9 +31,9 @@ namespace DowerTefenseGame.Managers
         //Argument commun pour enter/leave range qui donne une unité en param
         public class UnitRangeEventArgs : EventArgs
         {
-            public UnitRangeEventArgs(Unit iUnit)
+            public UnitRangeEventArgs(Entity iUnit)
             { unit = iUnit; }
-            public Unit unit { get; set; }
+            public Entity unit { get; set; }
         }
         public EventArgs e = null;
         //Event qui appelle les tours à tirer 
@@ -108,7 +108,7 @@ namespace DowerTefenseGame.Managers
         public void Update(GameTime _gameTime)
         {
             //Check si les unités pénétrent dans la surface-union
-            foreach (Unit unit in UnitsManager.GetInstance().mobs)
+            foreach (Entity unit in UnitsManager.GetInstance().mobs)
             {
                     UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
                     UnitInRange?.Invoke(this, arg);

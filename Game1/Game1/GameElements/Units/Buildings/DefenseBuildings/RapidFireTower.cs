@@ -10,7 +10,7 @@ using DowerTefenseGame.Units;
 
 namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
 {
-    class RapidFireTower :Towers
+    class RapidFireTower :Tower
     {
         /// <summary>
         /// Constructeur

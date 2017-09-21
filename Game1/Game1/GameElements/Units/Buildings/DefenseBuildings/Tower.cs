@@ -10,11 +10,11 @@ using DowerTefenseGame.Units;
 
 namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
 {
-    public class Towers : Building
+    public class Tower : Building
     {
 
         protected List<Projectile> projectileList;//  Liste de ses munitions en vol
-        protected Unit target;//Cible actuelle
+        protected Entity target;//Cible actuelle
         private int idTargetRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
         protected String projectileName;
@@ -27,7 +27,7 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
         /// <summary>
         /// Constructeur, préciser AttackPower,Range,RateOfFire,UnitType,TargetType,BulletSpeed
         /// </summary>
-        public Towers() : base()
+        public Tower() : base()
         {
             this.AttackPower = 1;
             this.Range = 200;
@@ -51,7 +51,7 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
         /// Constructeur avec tuile de position
         /// </summary>
         /// <param name="_tile">Tuile de position</param>
-        public Towers(Tile _tile) : this()
+        public Tower(Tile _tile) : this()
         {
             this.SetTile(_tile);
 
@@ -94,13 +94,13 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
             args.proj = null;
         }
         //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok
-        public Unit ChooseTarget()
+        public Entity ChooseTarget()
         {
 
             if (this.target == null || this.target.Dead || Vector2.Distance(this.Position, this.target.Position) > this.Range)
             {
                 target = null;
-                foreach (Unit unit in UnitsManager.GetInstance().GetSortedUnitList())
+                foreach (Entity unit in UnitsManager.GetInstance().GetSortedUnitList())
                 {
                     if (Vector2.Distance(this.Position, unit.Position) < this.Range)
                         target = unit;

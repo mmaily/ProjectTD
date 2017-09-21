@@ -22,18 +22,20 @@ namespace DowerTefenseGame.Managers
         private static UnitsManager instance = null;
 
         // Liste des unités courantes sur le terrain
-        public List<DemoUnit> mobs;
+        public List<Unit> mobs;
         //Liste des projectiles
         public List<Projectile> projs;
         // Carte en cours
         public Map CurrentMap { get; set; }
+        //Dictionnaire qui associe unité spawné et tours ensemble
+        public Dictionary<SpawnerBuilding, Unit> UnitSpawned;
 
         /// <summary>
         /// Constructeur du gestionnaire d'unité
         /// </summary>
         private UnitsManager()
         {
-            mobs = new List<DemoUnit>();
+            mobs = new List<Unit>();
             projs = new List<Projectile>();
             CurrentMap = MapManager.GetInstance().CurrentMap;
             // A VIRER ENSUITE
@@ -63,7 +65,7 @@ namespace DowerTefenseGame.Managers
             #region === Gestion du déplacement des unités ===
 
             // Pour chaque mob de la liste
-            foreach (DemoUnit mob in mobs)
+            foreach (Unit mob in mobs)
             {
                 // Si le mob est mort
                 if (mob.HealthPoints <= 0)
@@ -137,7 +139,7 @@ namespace DowerTefenseGame.Managers
             #endregion
             #region === Récupération de des listes actuelles de Projectile pour Draw ==
             projs.Clear();
-            foreach (Towers bt in BuildingsManager.GetInstance().DefenseBuildingsList)
+            foreach (Tower bt in BuildingsManager.GetInstance().DefenseBuildingsList)
             {
                 projs.AddRange(bt.GetProjectileList());
             }
@@ -153,7 +155,7 @@ namespace DowerTefenseGame.Managers
         public void Draw(SpriteBatch spriteBatch)
         {
             // Pour chaque unité de la liste des mobs
-            foreach (DemoUnit mob in mobs)
+            foreach (Unit mob in mobs)
             {
                 // Affichage de l'unité sur la carte
                 spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name], mob.Position, Color.White);
@@ -172,9 +174,9 @@ namespace DowerTefenseGame.Managers
         /// Récupère la liste des unités sur la carte triées selon leur avancement sur le chemin
         /// </summary>
         /// <returns>Liste des unités triées</returns>
-        public List<Unit> GetSortedUnitList()
+        public List<Entity> GetSortedUnitList()
         {
-            List<Unit> sortedList = mobs.OrderBy(m => m.DistanceTraveled).ToList<Unit>();
+            List<Entity> sortedList = mobs.OrderBy(m => m.DistanceTraveled).ToList<Entity>();
             return sortedList;
         }
     }

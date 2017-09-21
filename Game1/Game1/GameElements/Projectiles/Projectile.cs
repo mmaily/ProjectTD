@@ -11,7 +11,7 @@ namespace DowerTefenseGame.GameElements.Projectiles
     public class Projectile
     {
         public String name;
-        public Unit target; // Suit cette unité
+        public Entity target; // Suit cette unité
         public int damage; //Fais ce nombre de dégats à l'impact
         public float speed; // vitesse du projectile
         public Vector2 position;

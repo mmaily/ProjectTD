@@ -12,7 +12,7 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
     /// <summary>
     /// Tour de base
     /// </summary>
-    public class BasicTower : Towers
+    public class BasicTower : Tower
     {
         /// <summary>
         /// Constructeur
