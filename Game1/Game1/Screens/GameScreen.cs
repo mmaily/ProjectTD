@@ -15,9 +15,11 @@ namespace DowerTefenseGame.Screens
     {
         // Carte en cours
         private Map map;
+        // Variables liées aux vagues
+        private double lastWaveTick;
+        private int waveCount;
+        public static int waveLength = 10000;
 
-        // Empêche le multiple clic
-        private bool leftClicked = false;
         //Joueur (défenseur pour l'instant)
         public DefensePlayer Player;
 
@@ -27,6 +29,10 @@ namespace DowerTefenseGame.Screens
         public GameScreen()
         {
             Player = new DefensePlayer();
+
+            // Init des vagues
+            lastWaveTick = 0;
+            waveCount = 0;
         }
         
         public override void Initialize()
@@ -48,11 +54,29 @@ namespace DowerTefenseGame.Screens
         }
 
         /// <summary>
-        /// Mise à jour de l'écran
+        /// Mise à jour du jeu
         /// </summary>
         /// <param name="_gameTime"></param>
         public override void Update(GameTime _gameTime)
         {
+            #region === Calcul des vagues ===
+
+            // Calcul du cycle de 30 secondes
+            bool newWave = false;
+            // Durée depuis ancien tic
+            int timeSince = (int)(_gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
+            // Si le tic est vieux de 30 secondes
+            if(timeSince > waveLength)
+            {
+                // Vague suivante
+                waveCount++;
+                // Sauvegarde horodatage
+                lastWaveTick = _gameTime.TotalGameTime.TotalMilliseconds;
+                // Nouvelle vague
+                newWave = true;
+            }
+            #endregion
+
             // Mise à jour du gestionnaire de carte
             MapManager.GetInstance().Update(_gameTime);
             // Mise à jour du gestionnaire d'unités
@@ -60,62 +84,9 @@ namespace DowerTefenseGame.Screens
             // Mise à jour du gestionnaire de bâtiments
             BuildingsManager.GetInstance().Update(_gameTime);
             //Mise à jour des tâche de l'IA
-            AiManager.GetInstance().Update(_gameTime);
-            //Mise à jour de l'objet Player
-
-            #region === Sélection d'une tuile ===
-
-            // Récupération de l'état de la souris
-            MouseState mouseState = Mouse.GetState();
-            // Récupération de la position de la souris
-            Point mousePosition = mouseState.Position;
-            //On check si la souris est dans la zone map
-            if (MapManager.GetInstance().GetMapZone().Contains(mousePosition))
-            {
-                // On récupère la tuile visée
-                Tile selectedTile = map.Tiles[mousePosition.Y / map.tileSize, mousePosition.X / map.tileSize];
-                // On marque la tuile comme sélectionnée
-                selectedTile.overviewed = true;
-
-                // Si le clic gauche est enclenché et que cela n'a pas encore été traité
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed && leftClicked == false)
-                {
-                    // On signale le clic gauche
-                    leftClicked = true;
-
-                    // Récupération de l'ancienne tuile sélectionnée
-                    Tile oldSelectedTile = UIManager.GetInstance().SelectedTile;
-                    // Si c'est la même tuile qu'auparavant
-                    if (selectedTile.Equals(oldSelectedTile))
-                    {
-                        // On désélectionne la tuile
-                        selectedTile.selected = false;
-                        // On annule la tuile sélectionnée
-                        UIManager.GetInstance().SelectedTile = null;
-                    }
-                    else
-                    {
-                        // Sinon, on déselectionne l'ancienne si elle existe et on sélectionne la nouvelle
-                        if (oldSelectedTile != null)
-                        {
-                            UIManager.GetInstance().SelectedTile.selected = false;
-                        }
-                        selectedTile.selected = true;
-                        // On remplace l'ancienne par la nouvelle
-                        UIManager.GetInstance().SelectedTile = selectedTile;
-                    }
-                }
-                else if (Mouse.GetState().LeftButton == ButtonState.Released && leftClicked == true)
-                {
-                    // Le bouton a été relâché, on peut écouter à nouveau cette information
-                    leftClicked = false;
-                }
-            }
-            //}
-            #endregion
-
+            AiManager.GetInstance().Update(_gameTime, newWave);
             // Mise à jour du gestionnaire d'interface
-            UIManager.GetInstance().Update(_gameTime);
+            UIManager.GetInstance().Update(_gameTime, newWave, timeSince);
         }
 
         public override void Draw(SpriteBatch _spriteBatch)

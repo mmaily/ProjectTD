@@ -23,7 +23,7 @@ namespace DowerTefenseGame.Units.Buildings
 
         public SpawnerBuilding() : base()
         {
-            this.SpawnRate = 2;
+            this.SpawnRate = 0.2;
             this.PowerNeeded = 1;
             BuildingsManager.GetInstance().FreeBuildingsList.Add(this);
             this.Cost = 100;

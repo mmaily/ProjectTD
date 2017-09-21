@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using C3.MonoGame;
+using Microsoft.Xna.Framework.Input;
 
 /// <summary>
 /// Bouton de base. Par ce que les autres libraires m'ont fait CH§D%SM-Perdre du temps.
@@ -9,24 +10,17 @@ using C3.MonoGame;
 /// </summary>
 namespace LibrairieTropBien.GUI
 {
-    public class Button
+    /// <summary>
+    /// Classe de base de tous les boutons
+    /// </summary>
+    public class Button : GuiElement
     {
-
-        /// <summary>
-        /// Bords du bouton
-        /// </summary>
-        protected Rectangle buttonBox;
-
         #region === Etat du bouton ===
 
         // Bouton cliqué
         public Boolean pressed = false;
         // Bouton sous la souris
         private Boolean hovered = false;
-        /// <summary>
-        /// Bouton à dessiner ou pas
-        /// </summary>
-        public Boolean Enabled { get; set; }
 
         #endregion
 
@@ -38,11 +32,6 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         public string Action { get; set; }
 
-        /// <summary>
-        /// Tag du bouton
-        /// </summary>
-        public string Tag { get; set; }
-
         #endregion
 
         /// <summary>
@@ -53,11 +42,6 @@ namespace LibrairieTropBien.GUI
         #region === Affichage ===
 
         private Texture2D texture;
-
-        /// <summary>
-        /// Couleur du bouton
-        /// </summary>
-        protected Color color;
 
         /// <summary>
         /// Défaut
@@ -79,11 +63,9 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Bouton de base
         /// </summary>
-        public Button(int _x, int _y, int _width, int _height)
+        public Button(int _x, int _y, int _width, int _height) : base(_x, _y, _width, _height)
         {
-            this.buttonBox = new Rectangle(_x, _y, _width, _height);
-            this.Enabled = true;
-            this.color = Color.White;
+            this.ElementColor = Color.White;
         }
 
         /// <summary>
@@ -92,14 +74,14 @@ namespace LibrairieTropBien.GUI
         /// <param name="buttonBoundingbox">the new bounding box</param>
         protected void UpdateBoundingbox(Rectangle _buttonBox)
         {
-            this.buttonBox = _buttonBox;
+            this.elementBox = _buttonBox;
         }
 
         /// <summary>
         /// Mise à jour du bouton
         /// </summary>
         /// <param name="mouseState">Etat actuel de la souris</param>
-        public void Update(Microsoft.Xna.Framework.Input.MouseState mouseState)
+        public override void Update()
         {
             // Si le bouton n'est pas activé, ce n'est pas la peine
             if (!this.Enabled)
@@ -107,18 +89,21 @@ namespace LibrairieTropBien.GUI
                 return;
             }
 
+            // Récupération de l'état de la souris
+            MouseState mouseState = Mouse.GetState();
+
             // Si on écoute le clic, on regarde si la souris est sur le bouton
             if (this.OnRelease != null && this.OnRelease.GetInvocationList().Length > 0)
             {
 
                 // Si la souris est sur le bouton
-                if (this.buttonBox.Contains(mouseState.Position))
+                if (this.elementBox.Contains(mouseState.Position))
                 {
                     // On l'enregistre
                     hovered = true;
 
                     // On change la couleur
-                    this.color = defaultHover;
+                    this.ElementColor = defaultHover;
 
                     // Si on clique gauche une première fois
                     if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
@@ -145,9 +130,9 @@ namespace LibrairieTropBien.GUI
                     pressed = false;
 
                     if (this.Enabled)
-                        this.color = defaultActive;
+                        this.ElementColor = defaultActive;
                     else
-                        this.color = defaultColor;
+                        this.ElementColor = defaultColor;
                 }
 
             }
@@ -167,27 +152,29 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Affichage du bouton
         /// </summary>
-        public virtual void Draw(SpriteBatch _spriteBatch)
+        public override void Draw(SpriteBatch _spriteBatch)
         {
-            // Si le bouton est activé
-            if (this.Enabled)
+            // Si le bouton n'est pas activé, sortie rapide
+            if (!this.Enabled)
             {
-                // Si la texture est définie
-                if(texture != null)
-                {
-                    _spriteBatch.Draw(texture, buttonBox, Color.White);
+                return;
+            }
 
-                    // Si on est sous la souris
-                    if (hovered)
-                    {
-                        _spriteBatch.DrawRectangle(buttonBox, Color.White, 2);
-                    }
+            // Si la texture est définie
+            if (texture != null)
+            {
+                _spriteBatch.Draw(texture, elementBox, Color.White);
 
-                }
-                else
+                // Si on est sous la souris
+                if (hovered)
                 {
-                    _spriteBatch.DrawRectangle(this.buttonBox, color);
+                    _spriteBatch.DrawRectangle(elementBox, Color.White, 2);
                 }
+
+            }
+            else
+            {
+                _spriteBatch.DrawRectangle(this.elementBox, ElementColor);
             }
         }
 
@@ -202,10 +189,10 @@ namespace LibrairieTropBien.GUI
             this.texture = _texture;
 
             // Si on doit recadrer le bouton et si la textur est définie
-            if(_resize && _texture != null)
+            if (_resize && _texture != null)
             {
-                this.buttonBox.Width = _texture.Width;
-                this.buttonBox.Height = _texture.Height;
+                this.elementBox.Width = _texture.Width;
+                this.elementBox.Height = _texture.Height;
             }
         }
 

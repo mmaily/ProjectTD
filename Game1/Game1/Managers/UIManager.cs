@@ -8,6 +8,9 @@ using DowerTefenseGame.Units.Buildings;
 using System;
 using DowerTefenseGame.Units;
 using DowerTefenseGame.Players;
+using System.Collections.Generic;
+using DowerTefenseGame.Screens;
+using System.Threading.Tasks;
 
 namespace DowerTefenseGame.Managers
 {
@@ -25,6 +28,7 @@ namespace DowerTefenseGame.Managers
         /// Tuile sélectionnée
         /// </summary>
         public Tile SelectedTile { get; set; }
+        private bool leftClicked = false;
 
         #region Paramètres d'affichage
 
@@ -43,8 +47,11 @@ namespace DowerTefenseGame.Managers
         // Carte en cours
         private Map currentMap;
 
-        private Button btnBuild;
-        private Button btnMode;
+        // Éléments d'interface
+        private List<GuiElement> UIElementsList;
+        // Exception pour la barre de progression
+        private ProgressBar progressBarWaves;
+
 
         //Joueur (défenseur pour l'instant)
         public DefensePlayer Player;
@@ -61,6 +68,9 @@ namespace DowerTefenseGame.Managers
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
             Player = new DefensePlayer();
+
+            // Initialisation de la liste des éléments d'interface
+            UIElementsList = new List<GuiElement>();
         }
 
         /// <summary>
@@ -80,23 +90,37 @@ namespace DowerTefenseGame.Managers
 
         public void Initialize()
         {
-            btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
+            // Bouton de contruction
+            Button btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
             {
-                Tag = "BasicTower",
-                Action = "build"
+                Name = "BasicTower",
+                Tag = "build"
             };
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Tag], false);
+            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
             btnBuild.OnRelease += Btn_OnClick;
 
-            btnMode = new Button(leftUIOffset + 30, currentMap.mapHeight * currentMap.tileSize - btnSize - 10, btnSize, btnSize)
+            UIElementsList.Add(btnBuild);
+
+            // Bouton de changement de mode
+            Button btnMode = new Button(leftUIOffset + 30, currentMap.mapHeight * currentMap.tileSize - btnSize - 10, btnSize, btnSize)
             {
-                Tag = "ModeSwitch",
-                Action = "UI",
+                Name = "ModeSwitch",
+                Tag = "UI",
                 Enabled = true
             };
             btnMode.OnRelease += Btn_OnClick;
-            //Créé l'instance de joueur
 
+            UIElementsList.Add(btnMode);
+
+            // Barre de progression des vagues
+            progressBarWaves = new ProgressBar(15, 15, (int)(currentMap.mapWidth * currentMap.tileSize * 0.90) - 15, 15)
+            {
+                Name = "ProgressBarWave",
+                Max = GameScreen.waveLength,
+                Tag = "UI",
+            };
+
+            UIElementsList.Add(progressBarWaves);
         }
 
         private void Btn_OnClick(object sender, System.EventArgs e)
@@ -106,15 +130,15 @@ namespace DowerTefenseGame.Managers
             {
                 Button btn = (Button)sender;
                 //On check l'or du joueur
-                if (BuildingsManager.GetInstance().Price[btn.Tag] <= Player.totalGold)
+                if (BuildingsManager.GetInstance().Price[btn.Name] <= Player.totalGold)
                 { 
 
-                    if (btn.Action.Equals("build") && SelectedTile != null)
+                    if (btn.Tag.Equals("build") && SelectedTile != null)
                     {
                         if (SelectedTile.TileType == Tile.TileTypeEnum.Free && SelectedTile.building == null)
                         {
                             // On créé un bâtiment de ce type
-                            Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.Units.Buildings." + btn.Tag));
+                            Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.Units.Buildings." + btn.Name));
                             // Que l'on place sur une tuile
                             building.SetTile(SelectedTile);
                             Player.totalGold -= building.Cost;
@@ -122,9 +146,9 @@ namespace DowerTefenseGame.Managers
 
                         }
                     }
-                    else if (btn.Action.Equals("UI"))
+                    else if (btn.Tag.Equals("UI"))
                     {
-                        if (btn.Tag.Equals("ModeSwitch"))
+                        if (btn.Name.Equals("ModeSwitch"))
                         {
                             if (mode.Equals("defense"))
                             {
@@ -145,10 +169,75 @@ namespace DowerTefenseGame.Managers
         /// Mise à jour de l'interface
         /// </summary>
         /// <param name="_gameTime"></param>
-        public void Update(GameTime _gameTime)
+        public void Update(GameTime _gameTime, bool _newWave, int _timeSince)
         {
-            btnBuild.Update(Mouse.GetState());
-            btnMode.Update(Mouse.GetState());
+            // Mise à jour de la sélection de tuile
+            UpdateSelectedTile();
+
+            // Mise à jour de l'état de la bar de vague
+            progressBarWaves.State = _timeSince;
+
+            // Mise à jour de tous les élémets d'interface
+            Parallel.ForEach(UIElementsList, element =>
+            {
+                element.Update();
+            });
+        }
+
+        /// <summary>
+        /// Mise à jour de la tuile sélectionnée
+        /// </summary>
+        private void UpdateSelectedTile()
+        {
+            #region === Sélection d'une tuile ===
+
+            // Récupération de l'état de la souris
+            MouseState mouseState = Mouse.GetState();
+            // Récupération de la position de la souris
+            Point mousePosition = mouseState.Position;
+            //On check si la souris est dans la zone map
+            if (MapManager.GetInstance().GetMapZone().Contains(mousePosition))
+            {
+                // On récupère la tuile visée
+                Tile selectedTile = currentMap.Tiles[mousePosition.Y / currentMap.tileSize, mousePosition.X / currentMap.tileSize];
+                // On marque la tuile comme sélectionnée
+                selectedTile.overviewed = true;
+
+                // Si le clic gauche est enclenché et que cela n'a pas encore été traité
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && leftClicked == false)
+                {
+                    // On signale le clic gauche
+                    leftClicked = true;
+
+                    // Récupération de l'ancienne tuile sélectionnée
+                    Tile oldSelectedTile = this.SelectedTile;
+                    // Si c'est la même tuile qu'auparavant
+                    if (selectedTile.Equals(oldSelectedTile))
+                    {
+                        // On désélectionne la tuile
+                        selectedTile.selected = false;
+                        // On annule la tuile sélectionnée
+                        this.SelectedTile = null;
+                    }
+                    else
+                    {
+                        // Sinon, on déselectionne l'ancienne si elle existe et on sélectionne la nouvelle
+                        if (oldSelectedTile != null)
+                        {
+                            this.SelectedTile.selected = false;
+                        }
+                        selectedTile.selected = true;
+                        // On remplace l'ancienne par la nouvelle
+                        this.SelectedTile = selectedTile;
+                    }
+                }
+                else if (Mouse.GetState().LeftButton == ButtonState.Released && leftClicked == true)
+                {
+                    // Le bouton a été relâché, on peut écouter à nouveau cette information
+                    leftClicked = false;
+                }
+            }
+            #endregion
         }
 
         /// <summary>
@@ -157,6 +246,8 @@ namespace DowerTefenseGame.Managers
         /// <param name="_spriteBatch"></param>
         public void Draw(SpriteBatch _spriteBatch)
         {
+            #region === Infos globales ===
+
             //Display le nombre de Spawner
             int offset = 360;
             _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + Player.lives, new Vector2(leftUIOffset, offset), Color.White);
@@ -170,7 +261,14 @@ namespace DowerTefenseGame.Managers
             
             // Affichage du nom de la carte
             _spriteBatch.DrawString(deFaultFont, currentMap.Name + " -- Mode : " + mode, new Vector2(leftUIOffset, 5), Color.Wheat);
-            
+
+            #endregion
+
+            #region === Infos tuile et construction ===
+
+            // Booléen d'affichage de l'interface de construction
+            bool drawBuildUI = false;
+
             // Si une tuile est sélectionnée
             if(SelectedTile != null)
             {
@@ -188,9 +286,6 @@ namespace DowerTefenseGame.Managers
 
                     if (mode.Equals("defense"))
                     {
-                        // On cache le bouton Construire
-                        btnBuild.Enabled = false;
-
                         // On affiche les infos du batiment
                         DisplayBuildingInfo(_spriteBatch);
                     }
@@ -201,26 +296,26 @@ namespace DowerTefenseGame.Managers
                     if (mode.Equals("defense"))
                     {
                         // Sinon si la tuile est libre
-                        btnBuild.Enabled = true;
+                        drawBuildUI = true;
                     }
                 }
-                else
-                {
-                    // On cache le bouton Construire
-                    btnBuild.Enabled = false;
-                }
-
             }
-            else
+
+            // Récupération de tous les éléments liés à la construction
+            List<GuiElement> buildElements = UIElementsList.FindAll(element => element.Tag.Equals("build"));
+            // Activation de tous les éléments d'inteface liés à la construction
+            Parallel.ForEach(buildElements, element =>
             {
-                // On cache le bouton Construire
-                btnBuild.Enabled = false;
-            }
+                element.Enabled = drawBuildUI;
+            });
 
+            #endregion
 
-            // Draw GUI on top of everything
-            btnBuild.Draw(_spriteBatch);
-            btnMode.Draw(_spriteBatch);
+            // Affichage de tous les éléments d'interface
+            Parallel.ForEach(UIElementsList, element =>
+            {
+                element.Draw(_spriteBatch);
+            });
         }
 
         /// <summary>

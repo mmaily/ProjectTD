@@ -10,12 +10,9 @@ namespace DowerTefenseGame.Managers
 {
     class AiManager
     {
-        public int WaveNumber = 0;
-        public double WaveTime;
         private static AiManager instance;
         public AiManager()
         {
-            this.WaveTime = 15;
         }
         /// <summary>
         /// Récupération de l'instance du gestionnaire d'Ai
@@ -31,13 +28,14 @@ namespace DowerTefenseGame.Managers
             }
             return instance;
         }
-        public void Update(GameTime _gameTime)
+        public void Update(GameTime _gameTime, bool _newWave)
         {
-            if ((int)_gameTime.TotalGameTime.TotalSeconds / WaveTime > WaveNumber)
+            if (_newWave)
             {
-                SpawnerBuilding sp = new SpawnerBuilding();
-                sp.NbreOfInstantSpawn = 1;
-                WaveNumber++;
+                SpawnerBuilding sp = new SpawnerBuilding
+                {
+                    NbreOfInstantSpawn = 1
+                };
             }
 
         }
