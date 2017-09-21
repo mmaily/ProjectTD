@@ -33,6 +33,10 @@ namespace LibrairieTropBien.GUI
         public string Action { get; set; }
 
         #endregion
+        #region==Dimension du bouton==
+        int width;
+        int height;
+        #endregion
 
         /// <summary>
         /// Handler des clics

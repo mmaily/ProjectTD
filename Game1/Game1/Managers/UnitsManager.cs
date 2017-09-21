@@ -7,6 +7,7 @@ using DowerTefenseGame.GameElements.Units;
 using DowerTefenseGame.GameElements.Projectiles;
 using System.Linq;
 using DowerTefenseGame.Units.Buildings;
+using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 
 namespace DowerTefenseGame.Managers
 {
@@ -136,7 +137,7 @@ namespace DowerTefenseGame.Managers
             #endregion
             #region === Récupération de des listes actuelles de Projectile pour Draw ==
             projs.Clear();
-            foreach (BasicTower bt in BuildingsManager.GetInstance().DefenseBuildingsList)
+            foreach (Towers bt in BuildingsManager.GetInstance().DefenseBuildingsList)
             {
                 projs.AddRange(bt.GetProjectileList());
             }

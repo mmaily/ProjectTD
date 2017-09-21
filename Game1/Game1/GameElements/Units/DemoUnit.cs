@@ -22,6 +22,7 @@
             this.UnitType = UnitTypeEnum.Ground;
             this.GoldValue = 10;
             this.AttackPower = 1;
+            this.HealthPoints = 10;
         }
     }
 }

@@ -93,10 +93,10 @@ namespace DowerTefenseGame.Screens
         {
             // Affichage de la carte
             MapManager.GetInstance().Draw(_spriteBatch);
-            // Affichage des unités
-            UnitsManager.GetInstance().Draw(_spriteBatch);
             // Affichage des bâtiments
             BuildingsManager.GetInstance().Draw(_spriteBatch);
+            // Affichage des unités
+            UnitsManager.GetInstance().Draw(_spriteBatch);
             // Affichage de l'interface
             UIManager.GetInstance().Draw(_spriteBatch);
 

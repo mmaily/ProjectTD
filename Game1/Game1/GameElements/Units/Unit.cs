@@ -35,7 +35,7 @@ namespace DowerTefenseGame.GameElements.Units
                     currentHP = healthPoints;
                 }
                     return currentHP; }
-            private set { healthPoints = value; }
+            protected set { healthPoints = value; }
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Rectange définissant l'élément
         /// </summary>
-        protected Rectangle elementBox;
+        public Rectangle elementBox;
 
         /// <summary>
         /// Element à dessiner ou pas

@@ -6,50 +6,55 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using DowerTefenseGame.GameElements.Projectiles;
+using DowerTefenseGame.Units;
 
-namespace DowerTefenseGame.Units.Buildings
+namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
 {
-    /// <summary>
-    /// Tour de base
-    /// </summary>
-    public class BasicTower : Building
+    public class Towers : Building
     {
 
         protected List<Projectile> projectileList;//  Liste de ses munitions en vol
         protected Unit target;//Cible actuelle
         private int idTargetRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
+        protected String projectileName;
+        public enum NameEnum
+        {
+            BasicTower, // Tour de base
+            RapidFireTower,// Tour d'essaie (tir rapide, courte portée)
+        }
 
         /// <summary>
-        /// Constructeur
+        /// Constructeur, préciser AttackPower,Range,RateOfFire,UnitType,TargetType,BulletSpeed
         /// </summary>
-        public BasicTower() : base()
+        public Towers() : base()
         {
-            this.name = "BasicTower";
             this.AttackPower = 1;
             this.Range = 200;
             this.RateOfFire = 0.0008; //En tir/milliseconde
             this.UnitType = UnitTypeEnum.Ground;
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
-            this.BulletSpeed = 5*64;
-            this.Cost = 100;
+            this.BulletSpeed = 5 * 64;
+
 
             //Initialisation de la liste des projectile
             projectileList = new List<Projectile>();
-            
+
             //On initialise l'index pour remove les unité en dehors de la range à -1 (désactivé au début)
             this.idTargetRemoval = -1;
             this.idBulletRemoval = -1;
         }
+        
 
         /// <summary>
         /// Constructeur avec tuile de position
         /// </summary>
         /// <param name="_tile">Tuile de position</param>
-        public BasicTower(Tile _tile) : this()
+        public Towers(Tile _tile) : this()
         {
             this.SetTile(_tile);
+
         }
 
         /// <summary>
@@ -80,7 +85,7 @@ namespace DowerTefenseGame.Units.Buildings
         {
             projectile.OnHit += new Projectile.HitHandler(RemoveBulletOnImpact);
         }
-       
+
         private void RemoveBulletOnImpact(object sender, Projectile.OnHitEventArgs args)
         {
             idBulletRemoval = projectileList.IndexOf(args.proj);
@@ -101,18 +106,18 @@ namespace DowerTefenseGame.Units.Buildings
                         target = unit;
                 }
             }
-            
+
 
             return target;
         }
         public Boolean CanFire()
         {
-            return BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1/this.RateOfFire;
+            return BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1 / this.RateOfFire;
         }
         public void Fire()
         {
-        if (CanFire())
-        {
+            if (CanFire())
+            {
                 //Si le cooldown est bon, elle s'active, sinon c'est déjà fini pour elle
 
                 target = ChooseTarget();
@@ -121,13 +126,13 @@ namespace DowerTefenseGame.Units.Buildings
                 {
 
 
-            //Enregistre le temps du dernier tir en ms
-            LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
-                //Elle tire sur sa cible
+                    //Enregistre le temps du dernier tir en ms
+                    LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
+                    //Elle tire sur sa cible
 
-                Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, "BasicShot");
-                projectileList.Add(_proj);
-                CreateHitListener(_proj);
+                    Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, this.projectileName);
+                    projectileList.Add(_proj);
+                    CreateHitListener(_proj);
                 }
 
             }
@@ -137,12 +142,12 @@ namespace DowerTefenseGame.Units.Buildings
             for (int i = projectileList.Count - 1; i >= 0; i--)
             {
                 //Si aucune cible n'es sortie de la range, on enlève juste les cible morte pour cet update
- 
-                    if (i == idBulletRemoval)
-                    {
-                        projectileList.RemoveAt(i);
-                        idBulletRemoval = -1;
-                    }
+
+                if (i == idBulletRemoval)
+                {
+                    projectileList.RemoveAt(i);
+                    idBulletRemoval = -1;
+                }
             }
         }
 

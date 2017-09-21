@@ -90,10 +90,19 @@ namespace DowerTefenseGame.Managers
 
         public void Initialize()
         {
-            // Bouton de contruction
+            // Bouton de contruction de tour basique
             Button btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
             {
                 Name = "BasicTower",
+                Tag = "build"
+            };
+            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+            btnBuild.OnRelease += Btn_OnClick;
+            UIElementsList.Add(btnBuild);
+            //Bouton de construction de tour rapide
+            btnBuild = new Button(30+leftUIOffset+btnBuild.elementBox.Width, 100, btnSize, btnSize)
+            {
+                Name = "RapidFireTower",
                 Tag = "build"
             };
             btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
@@ -129,22 +138,22 @@ namespace DowerTefenseGame.Managers
             if (sender.GetType() == typeof(Button))
             {
                 Button btn = (Button)sender;
-                //On check l'or du joueur
-                if (BuildingsManager.GetInstance().Price[btn.Name] <= Player.totalGold)
-                { 
 
-                    if (btn.Tag.Equals("build") && SelectedTile != null)
+
+
+                    if (btn.Tag.Equals("build") && SelectedTile != null && BuildingsManager.GetInstance().Price[btn.Name] <= Player.totalGold)
                     {
-                        if (SelectedTile.TileType == Tile.TileTypeEnum.Free && SelectedTile.building == null)
-                        {
-                            // On créé un bâtiment de ce type
-                            Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.Units.Buildings." + btn.Name));
-                            // Que l'on place sur une tuile
-                            building.SetTile(SelectedTile);
-                            Player.totalGold -= building.Cost;
+                            if (SelectedTile.TileType == Tile.TileTypeEnum.Free && SelectedTile.building == null)
+                            {
+                                // On créé un bâtiment de ce type
+                                Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + btn.Name));
+                                // Que l'on place sur une tuile
+                                building.SetTile(SelectedTile);
+                                Player.totalGold -= building.Cost;
 
 
-                        }
+                            }
+                        
                     }
                     else if (btn.Tag.Equals("UI"))
                     {
@@ -160,7 +169,7 @@ namespace DowerTefenseGame.Managers
                             }
                         }
                     }
-                }
+                
             }
 
         }
