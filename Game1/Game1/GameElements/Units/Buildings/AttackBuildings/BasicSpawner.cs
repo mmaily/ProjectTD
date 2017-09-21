@@ -13,5 +13,9 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings
         {
 
         }
+        public override void setName()
+        {
+            this.name = "BasicSpawner";
+        }
     }
 }

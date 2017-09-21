@@ -8,6 +8,7 @@ using DowerTefenseGame.GameElements.Projectiles;
 using System.Linq;
 using DowerTefenseGame.Units.Buildings;
 using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
+using DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings;
 
 namespace DowerTefenseGame.Managers
 {
@@ -28,7 +29,7 @@ namespace DowerTefenseGame.Managers
         // Carte en cours
         public Map CurrentMap { get; set; }
         //Dictionnaire qui associe unité spawné et tours ensemble
-        public Dictionary<SpawnerBuilding, Unit> UnitSpawned;
+        public Dictionary<String, String> UnitSpawned;
 
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -38,9 +39,7 @@ namespace DowerTefenseGame.Managers
             mobs = new List<Unit>();
             projs = new List<Projectile>();
             CurrentMap = MapManager.GetInstance().CurrentMap;
-            // A VIRER ENSUITE
-            // SI on passe à 2, le batiment spawn les mobs 2 par deux MAIS 
-            //                          comme ils ont exactement la même position on voit pas la différence...
+            SetSpawnerDictionnary();
         }
 
         /// <summary>
@@ -178,6 +177,11 @@ namespace DowerTefenseGame.Managers
         {
             List<Entity> sortedList = mobs.OrderBy(m => m.DistanceTraveled).ToList<Entity>();
             return sortedList;
+        }
+        public void SetSpawnerDictionnary()
+        {
+            UnitSpawned = new Dictionary<String, String>();
+            UnitSpawned.Add("BasicSpawner", "Unit");
         }
     }
 }

@@ -189,6 +189,13 @@ namespace DowerTefenseGame.Managers
             // Mise à jour de tous les élémets d'interface
             Parallel.ForEach(UIElementsList, element =>
             {
+
+                    if (element.GetType().Equals(typeof(Button)) && element.Tag=="build" && BuildingsManager.GetInstance().Price[element.Name] <= Player.totalGold) element.NeedDim = false;
+                    if (element.GetType().Equals(typeof(Button)) && element.Tag == "build" && BuildingsManager.GetInstance().Price[element.Name] > Player.totalGold)
+                    {
+                        element.NeedDim = true;
+                    }
+
                 element.Update();
             });
         }

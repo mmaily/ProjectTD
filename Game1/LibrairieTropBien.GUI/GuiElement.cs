@@ -18,7 +18,10 @@ namespace LibrairieTropBien.GUI
         /// Rectange définissant l'élément
         /// </summary>
         public Rectangle elementBox;
-
+        //Griser l'élément
+        public Boolean NeedDim = false;
+        //Valeur du grisage
+        public float Dim = 0.5f;
         /// <summary>
         /// Element à dessiner ou pas
         /// </summary>

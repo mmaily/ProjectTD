@@ -27,6 +27,7 @@ namespace DowerTefenseGame.Units.Buildings
             this.PowerNeeded = 1;
             BuildingsManager.GetInstance().FreeBuildingsList.Add(this);
             this.Cost = 100;
+            setName();
         }
         public override void OnDuty()
         {
@@ -54,13 +55,13 @@ namespace DowerTefenseGame.Units.Buildings
         {
             for(int i = 0; i < NbreOfInstantSpawn; i++)
             {
-                this.unit = new Unit();
+                this.Unit = (Unit)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units." + UnitsManager.GetInstance().UnitSpawned[this.name]));
                 // On définit sa position comme étant celle du spawn
-                unit.UpdatePosition(mapManager.CurrentMap.Spawns[0].getTilePosition() * mapManager.CurrentMap.tileSize);
+                Unit.UpdatePosition(mapManager.CurrentMap.Spawns[0].getTilePosition() * mapManager.CurrentMap.tileSize);
                 // On définit sa destination comme étant la tuile suivante
-                unit.DestinationTile = mapManager.CurrentMap.Spawns[0].NextTile;
+                Unit.DestinationTile = mapManager.CurrentMap.Spawns[0].NextTile;
                 // On l'ajoute à la liste des mobs
-                UnitsManager.GetInstance().mobs.Add(unit);
+                UnitsManager.GetInstance().mobs.Add(Unit);
                 lastSpawn = (int)Math.Floor(BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds);
             }
 
@@ -68,6 +69,10 @@ namespace DowerTefenseGame.Units.Buildings
         public void TurnPower()
         {
             powered = !powered;
+        }
+        public virtual void setName()
+        {
+
         }
     }
 }

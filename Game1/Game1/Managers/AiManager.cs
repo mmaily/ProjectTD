@@ -1,4 +1,5 @@
-﻿using DowerTefenseGame.Units.Buildings;
+﻿using DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings;
+using DowerTefenseGame.Units.Buildings;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace DowerTefenseGame.Managers
         {
             if (_newWave)
             {
-                SpawnerBuilding sp = new SpawnerBuilding
+                BasicSpawner sp = new BasicSpawner()
                 {
                     NbreOfInstantSpawn = 1
                 };

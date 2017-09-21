@@ -22,6 +22,8 @@ namespace LibrairieTropBien.GUI
         // Bouton sous la souris
         private Boolean hovered = false;
 
+
+
         #endregion
 
         #region === Propriétés du bouton
@@ -33,10 +35,7 @@ namespace LibrairieTropBien.GUI
         public string Action { get; set; }
 
         #endregion
-        #region==Dimension du bouton==
-        int width;
-        int height;
-        #endregion
+
 
         /// <summary>
         /// Handler des clics
@@ -140,6 +139,14 @@ namespace LibrairieTropBien.GUI
                 }
 
             }
+            if (NeedDim)
+            {
+                Dim = 0.5f;
+            }
+            else
+            {
+               Dim = 1f;
+            }
         }
 
         /// <summary>
@@ -167,12 +174,12 @@ namespace LibrairieTropBien.GUI
             // Si la texture est définie
             if (texture != null)
             {
-                _spriteBatch.Draw(texture, elementBox, Color.White);
+                _spriteBatch.Draw(texture, elementBox, Color.White*Dim);
 
                 // Si on est sous la souris
                 if (hovered)
                 {
-                    _spriteBatch.DrawRectangle(elementBox, Color.White, 2);
+                    _spriteBatch.DrawRectangle(elementBox, Color.White*Dim, 2);
                 }
 
             }
