@@ -27,10 +27,9 @@ namespace DowerTefenseGame
             graphics = new GraphicsDeviceManager(this);
             // Dossier racine du contenu
             Content.RootDirectory = "Content";
-            // Initialisation du gestionnaire d'écrans
-            ScreenManager.GetInstance();
             // Initialisation du gestionnaire de contenu
             CustomContentManager.GetInstance();
+
 
         }
 
@@ -59,9 +58,9 @@ namespace DowerTefenseGame
             graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;
             graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth+4) * MapManager.GetInstance().CurrentMap.tileSize;
             graphics.ApplyChanges();
+            // Création du gestionnaire d'écrans
+            ScreenManager.GetInstance();
 
-            //selectionne le GameScreen (PROVISOIRE)
-            ScreenManager.GetInstance().SelectScreen(0);
         }
 
         /// <summary>

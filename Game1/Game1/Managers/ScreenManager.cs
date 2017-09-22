@@ -2,6 +2,8 @@
 using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using owerTefenseGame.Screens;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DowerTefenseGame.Screens
 {
@@ -26,7 +28,9 @@ namespace DowerTefenseGame.Screens
         {
             Screens = new ArrayList();
             Screens.Add(new GameScreen());
-            currentScreen = (Screen)Screens[0];
+            Screens.Add(new EntranceScreen());
+            currentScreen = (Screen)Screens[1];
+            this.Initialize();
         }
 
         /// <summary>
