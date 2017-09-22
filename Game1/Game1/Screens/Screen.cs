@@ -9,7 +9,7 @@ namespace DowerTefenseGame.Screens
     abstract class Screen
     {
         public Screen() { }
-
+        public GraphicsDeviceManager Graphics;
         public virtual void LoadContent()
         {
 
@@ -29,7 +29,7 @@ namespace DowerTefenseGame.Screens
         {
         }
 
-        public virtual void Initialize()
+        public virtual void Initialize(GraphicsDeviceManager _graphics)
         {
         }
     }

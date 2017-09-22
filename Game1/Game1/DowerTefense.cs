@@ -38,8 +38,12 @@ namespace DowerTefenseGame
         /// </summary>
         protected override void Initialize()
         {
+            //Envoie le graphic au screenManager
+            ScreenManager.GetInstance().SetGraphics(this.graphics);
             // Initialisation des composants
             base.Initialize();
+
+
 
         }
 
@@ -58,8 +62,8 @@ namespace DowerTefenseGame
             graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;
             graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth+4) * MapManager.GetInstance().CurrentMap.tileSize;
             graphics.ApplyChanges();
-            // Création du gestionnaire d'écrans
-            ScreenManager.GetInstance();
+            //Demande le chargement du premier écran
+            ScreenManager.GetInstance().SelectScreen(1);
 
         }
 

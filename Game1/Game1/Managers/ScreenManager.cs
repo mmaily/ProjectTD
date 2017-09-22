@@ -3,7 +3,6 @@ using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using owerTefenseGame.Screens;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace DowerTefenseGame.Screens
 {
@@ -16,6 +15,7 @@ namespace DowerTefenseGame.Screens
         
         // Instance du gestionnaire d'écran
         private static ScreenManager instance=null;
+        private GraphicsDeviceManager Graphics;
         // Liste des différents écrans
         ArrayList Screens;
         // Écran courant
@@ -30,7 +30,7 @@ namespace DowerTefenseGame.Screens
             Screens.Add(new GameScreen());
             Screens.Add(new EntranceScreen());
             currentScreen = (Screen)Screens[1];
-            this.Initialize();
+
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace DowerTefenseGame.Screens
         private void Initialize()
         {
             // Init de l'écran
-            currentScreen.Initialize();
+            currentScreen.Initialize(Graphics);
         }
 
         /// <summary>
@@ -106,7 +106,10 @@ namespace DowerTefenseGame.Screens
         {
             currentScreen.Update(gameTime);
         }
-
+        public void SetGraphics(GraphicsDeviceManager _graphics)
+        {
+            this.Graphics = _graphics;
+        }
     }   
 
 }

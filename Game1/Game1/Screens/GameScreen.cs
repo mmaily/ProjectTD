@@ -35,9 +35,9 @@ namespace DowerTefenseGame.Screens
             waveCount = 0;
         }
         
-        public override void Initialize()
+        public override void Initialize(GraphicsDeviceManager _graphics)
         {
-
+            this.Graphics = _graphics;
             // Init de l'UI
             UIManager.GetInstance().Initialize();
         }

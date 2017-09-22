@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using C3.MonoGame;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 /// <summary>
 /// Bouton de base. Par ce que les autres libraires m'ont fait CH§D%SM-Perdre du temps.
@@ -10,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 /// </summary>
 namespace LibrairieTropBien.GUI
 {
+    
     /// <summary>
     /// Classe de base de tous les boutons
     /// </summary>
@@ -28,7 +30,9 @@ namespace LibrairieTropBien.GUI
 
         #region === Propriétés du bouton
 
-        public String Text;
+        public String text = null;
+        public SpriteFont font = null;
+        private Boolean HasText = false;
         /// <summary>
         /// Action à réaliser
         /// </summary>
@@ -49,12 +53,12 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Défaut
         /// </summary>
-        private Color defaultColor = new Color(140, 140, 140);
+        private Microsoft.Xna.Framework.Color defaultColor = new Color(140, 140, 140);
 
         /// <summary>
         /// Si sous la souris
         /// </summary>
-        private Color defaultHover = new Color(0, 133, 188);
+        private Color defaultHover = new Microsoft.Xna.Framework.Color(0, 133, 188);
 
         /// <summary>
         /// Si actif
@@ -68,14 +72,14 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         public Button(int _x, int _y, int _width, int _height) : base(_x, _y, _width, _height)
         {
-            this.ElementColor = Color.White;
+            this.ElementColor = Microsoft.Xna.Framework.Color.White;
         }
 
         /// <summary>
         /// Mise à jour de la boîte de délimitation
         /// </summary>
         /// <param name="buttonBoundingbox">the new bounding box</param>
-        protected void UpdateBoundingbox(Rectangle _buttonBox)
+        protected void UpdateBoundingbox(Microsoft.Xna.Framework.Rectangle _buttonBox)
         {
             this.elementBox = _buttonBox;
         }
@@ -187,6 +191,17 @@ namespace LibrairieTropBien.GUI
             {
                 _spriteBatch.DrawRectangle(this.elementBox, ElementColor);
             }
+            if (HasText)
+            {
+
+
+                //// Measure string.
+                //System.Drawing.SizeF stringSize = new System.Drawing.SizeF();
+                //stringSize = this.Graphics.MeasureString(text, font);
+                _spriteBatch.DrawString(font, text, new Vector2(this.elementBox.X, this.elementBox.X) + 
+                                        new Vector2(20,40), Color.Azure);
+            }
+
         }
 
 
@@ -205,6 +220,13 @@ namespace LibrairieTropBien.GUI
                 this.elementBox.Width = _texture.Width;
                 this.elementBox.Height = _texture.Height;
             }
+        }
+        public void SetText(String _text, SpriteFont _font)
+        {
+            this.text = _text;
+            
+            this.font= _font;
+            HasText = true;
         }
 
     }

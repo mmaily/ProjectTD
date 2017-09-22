@@ -13,7 +13,7 @@ namespace LibrairieTropBien.GUI
     /// </summary>
     public abstract class GuiElement
     {
-
+        GraphicsDeviceManager Graphics;
         /// <summary>
         /// Rectange définissant l'élément
         /// </summary>
@@ -48,6 +48,7 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         public GuiElement()
         {
+            //this.Graphics = new GraphicsDeviceManager();
         }
 
         /// <summary>
