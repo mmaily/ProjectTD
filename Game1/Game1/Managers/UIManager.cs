@@ -54,7 +54,9 @@ namespace DowerTefenseGame.Managers
 
 
         //Joueur (défenseur pour l'instant)
-        public DefensePlayer Player;
+        public DefensePlayer defensePlayer;
+        //Joueur attaquand
+        public AttackPlayer attackPlayer;
 
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -67,7 +69,9 @@ namespace DowerTefenseGame.Managers
 
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
-            Player = new DefensePlayer();
+            //Instanciation des joueurs
+            defensePlayer = new DefensePlayer();
+            attackPlayer = new AttackPlayer();
 
             // Initialisation de la liste des éléments d'interface
             UIElementsList = new List<GuiElement>();
@@ -90,11 +94,13 @@ namespace DowerTefenseGame.Managers
 
         public void Initialize()
         {
+
+            #region Interface de construction de défense
             // Bouton de contruction de tour basique
             Button btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
             {
                 Name = "BasicTower",
-                Tag = "build"
+                Tag = "defenseBuild"
             };
             btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
             btnBuild.OnRelease += Btn_OnClick;
@@ -103,13 +109,23 @@ namespace DowerTefenseGame.Managers
             btnBuild = new Button(30+leftUIOffset+btnBuild.elementBox.Width, 100, btnSize, btnSize)
             {
                 Name = "RapidFireTower",
-                Tag = "build"
+                Tag = "defenseBuild"
             };
             btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
             btnBuild.OnRelease += Btn_OnClick;
-
             UIElementsList.Add(btnBuild);
-
+            #endregion
+            #region Interface de construction en défense
+            // Bouton de contruction de tour basique
+            btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
+            {
+                Name = "BasicSpawner",
+                Tag = "attackBuild"
+            };
+            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+            btnBuild.OnRelease += Btn_OnClick;
+            UIElementsList.Add(btnBuild);
+            #endregion 
             // Bouton de changement de mode
             Button btnMode = new Button(leftUIOffset + 30, currentMap.mapHeight * currentMap.tileSize - btnSize - 10, btnSize, btnSize)
             {
@@ -141,7 +157,7 @@ namespace DowerTefenseGame.Managers
 
 
 
-                    if (btn.Tag.Equals("build") && SelectedTile != null && BuildingsManager.GetInstance().Price[btn.Name] <= Player.totalGold)
+                    if (btn.Tag.Equals("defenseBuild") && SelectedTile != null && BuildingsManager.GetInstance().Price[btn.Name] <= defensePlayer.totalGold)
                     {
                             if (SelectedTile.TileType == Tile.TileTypeEnum.Free && SelectedTile.building == null)
                             {
@@ -149,13 +165,23 @@ namespace DowerTefenseGame.Managers
                                 Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + btn.Name));
                                 // Que l'on place sur une tuile
                                 building.SetTile(SelectedTile);
-                                Player.totalGold -= building.Cost;
+                                defensePlayer.totalGold -= building.Cost;
 
 
                             }
                         
                     }
-                    else if (btn.Tag.Equals("UI"))
+                    if(btn.Tag.Equals("attackBuild") && BuildingsManager.GetInstance().Price[btn.Name] <= attackPlayer.totalGold)
+                    {
+                    SpawnerBuilding building = (SpawnerBuilding)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + btn.Name));
+                    attackPlayer.totalGold -= building.Cost;
+                    if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (building.PowerNeeded))
+                        {
+                        building.powered = true;
+                        attackPlayer.usedEnergy += building.PowerNeeded;
+                        }
+                    }
+                else if (btn.Tag.Equals("UI"))
                     {
                         if (btn.Name.Equals("ModeSwitch"))
                         {
@@ -189,13 +215,13 @@ namespace DowerTefenseGame.Managers
             // Mise à jour de tous les élémets d'interface
             Parallel.ForEach(UIElementsList, element =>
             {
-
-                    if (element.GetType().Equals(typeof(Button)) && element.Tag=="build" && BuildingsManager.GetInstance().Price[element.Name] <= Player.totalGold) element.NeedDim = false;
-                    if (element.GetType().Equals(typeof(Button)) && element.Tag == "build" && BuildingsManager.GetInstance().Price[element.Name] > Player.totalGold)
+            #region ===Grise les boutons de construction en attaque====
+                if (element.GetType().Equals(typeof(Button)) && element.Tag=="defenseBuild" && BuildingsManager.GetInstance().Price[element.Name] <= defensePlayer.totalGold) element.NeedDim = false;
+                    if (element.GetType().Equals(typeof(Button)) && element.Tag == "defenseBuild" && BuildingsManager.GetInstance().Price[element.Name] > defensePlayer.totalGold)
                     {
                         element.NeedDim = true;
                     }
-
+            #endregion
                 element.Update();
             });
         }
@@ -266,10 +292,17 @@ namespace DowerTefenseGame.Managers
 
             //Display le nombre de Spawner
             int offset = 360;
-            _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + Player.lives, new Vector2(leftUIOffset, offset), Color.White);
-
-            offset = 380;
-            _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + Player.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+            _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + defensePlayer.lives, new Vector2(leftUIOffset, offset), Color.White);
+            if (mode.Equals("defense"))
+            {
+                offset = 380;
+                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+            }
+            if (mode.Equals("attack"))
+            {
+                offset = 380;
+                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+            }
             offset = 400;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + BuildingsManager.GetInstance().FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             offset = 420;
@@ -282,9 +315,13 @@ namespace DowerTefenseGame.Managers
 
             #region === Infos tuile et construction ===
 
-            // Booléen d'affichage de l'interface de construction
-            bool drawBuildUI = false;
 
+            //Display les info de bases en mode attaque
+            if (mode.Equals("attack"))
+            {
+                offset = 340;
+                _spriteBatch.DrawString(deFaultFont, "Energie du joueur : " + (attackPlayer.totalEnergy - attackPlayer.usedEnergy) + "/" + attackPlayer.totalEnergy, new Vector2(leftUIOffset, offset), Color.White);
+            }
             // Si une tuile est sélectionnée
             if(SelectedTile != null)
             {
@@ -307,24 +344,38 @@ namespace DowerTefenseGame.Managers
                     }
 
                 }
-                else if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
-                {
-                    if (mode.Equals("defense"))
-                    {
-                        // Sinon si la tuile est libre
-                        drawBuildUI = true;
-                    }
-                }
             }
-
-            // Récupération de tous les éléments liés à la construction
-            List<GuiElement> buildElements = UIElementsList.FindAll(element => element.Tag.Equals("build"));
-            // Activation de tous les éléments d'inteface liés à la construction
+            // Booléen d'affichage de l'interface de construction
+            bool drawButton = false;
+            // Récupération de tous les éléments liés à la construction en défense
+            List<GuiElement> buildElements = UIElementsList.FindAll(element => element.Tag.Equals("defenseBuild"));
+            // Activation de tous les éléments d'inteface liés à la construction en défense
             Parallel.ForEach(buildElements, element =>
             {
-                element.Enabled = drawBuildUI;
-            });
+                if (SelectedTile != null)
+                {
+                    if (mode.Equals("defense") && SelectedTile.TileType == Tile.TileTypeEnum.Free)
+                    {
+                        //element.Enabled = drawBuildUI;
+                        drawButton=true;
+                    }
+                }//Si une tile est séléctionné+mode défense le booléen passe true
+                element.Enabled = drawButton;
 
+            });
+            buildElements = UIElementsList.FindAll(element => element.Tag.Equals("attackBuild"));
+            drawButton = false;
+            Parallel.ForEach(buildElements, element =>
+            {
+
+                    if (mode.Equals("attack"))
+                    {
+                        //element.Enabled = drawBuildUI;
+                        drawButton = true;
+                    }
+                element.Enabled = drawButton;
+
+            });
             #endregion
 
             // Affichage de tous les éléments d'interface

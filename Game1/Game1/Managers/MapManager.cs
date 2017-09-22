@@ -73,7 +73,7 @@ namespace DowerTefenseGame.Managers
                 if (tile.selected || tile.overviewed)
                 {
                     // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.column * CurrentMap.tileSize, tile.line * CurrentMap.tileSize), Color.White);
+                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.column * CurrentMap.tileSize, tile.line * CurrentMap.tileSize),null,null,null,0f, Vector2.One, Color.White);
                     // On reset le boolée "sous le curseur"
                     tile.overviewed = false;
                 }

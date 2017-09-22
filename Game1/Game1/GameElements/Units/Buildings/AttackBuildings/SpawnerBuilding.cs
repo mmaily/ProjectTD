@@ -14,12 +14,16 @@ namespace DowerTefenseGame.Units.Buildings
         protected double SpawnRate; //Number of mobs/second
         protected double lastSpawn; // Time of the last spawned mob
         protected Boolean locked=true; // Le batiment ne spawn qui s'il est lock
-        protected Boolean powered = true; // Le bâtiment ne spawn que s'il est powered
+        public Boolean powered = true; // Le bâtiment ne spawn que s'il est powered
         public int PowerNeeded { get; protected set; } // Energie requise par le bâtiment
         public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
         protected Unit Unit;// Type d'unité qu'il spawn
         protected MapManager mapManager = MapManager.GetInstance();
-        
+        public enum NameEnum
+        {
+            BasicSpawner, // Spawner d'unité de base
+        }
+
 
         public SpawnerBuilding() : base()
         {

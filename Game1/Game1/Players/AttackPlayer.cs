@@ -8,11 +8,14 @@ namespace DowerTefenseGame.Players
 {
     class AttackPlayer
     {
-        int totalEnergy;
-        int usedEnergy;
+        public int totalEnergy;
+        public int usedEnergy;
+        public int totalGold;
         public AttackPlayer()
         {
             this.totalEnergy = 10;
+            this.usedEnergy = 0;
+            this.totalGold = 1000;
 
         }
 

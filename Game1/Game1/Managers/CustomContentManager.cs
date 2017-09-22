@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Projectiles;
 using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
+using DowerTefenseGame.Units.Buildings;
 
 namespace DowerTefenseGame.Managers
 {
@@ -76,6 +77,10 @@ namespace DowerTefenseGame.Managers
             foreach (Tower.NameEnum Name in Enum.GetValues(typeof(Tower.NameEnum)))
             {
                 AddTexture("Maps/"+Name.ToString(), Name.ToString());
+            }
+            foreach (SpawnerBuilding.NameEnum Name in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
+            {
+                AddTexture("Maps/" + Name.ToString(), Name.ToString());
             }
             //Texture des projectiles
             foreach (Projectile.NameEnum Name in Enum.GetValues(typeof(Projectile.NameEnum)))

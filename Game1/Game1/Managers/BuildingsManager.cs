@@ -144,7 +144,7 @@ namespace DowerTefenseGame.Managers
         {
             Price.Add("BasicTower", 100);
             Price.Add("RapidFireTower", 50);
-            Price.Add("SpawnerBuidling", 100);
+            Price.Add("BasicSpawner", 100);
         }
     }
 
