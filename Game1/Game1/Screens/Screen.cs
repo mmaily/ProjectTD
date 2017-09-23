@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using LibrairieTropBien.GUI;
 
 namespace DowerTefenseGame.Screens
 {
@@ -10,6 +12,7 @@ namespace DowerTefenseGame.Screens
     {
         public Screen() { }
         public GraphicsDeviceManager Graphics;
+        public List<GuiElement> UIElementsList;
         public virtual void LoadContent()
         {
 

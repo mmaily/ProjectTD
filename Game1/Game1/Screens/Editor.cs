@@ -13,10 +13,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DowerTefenseGame.Screens
 {
-    class EntranceScreen : Screen
+    class Editor : Screen
     {
-
-        public EntranceScreen()
+        public Editor()
         {
 
         }
@@ -26,9 +25,7 @@ namespace DowerTefenseGame.Screens
             UIElementsList = new List<GuiElement>();
             #region Création du bouton JOUER
             // Bouton de contruction de tour basique
-            int height = 100;
-            int width = 150;
-            Button btnBuild = new Button((_graphics.PreferredBackBufferWidth-width) / 2, (_graphics.PreferredBackBufferHeight/2-height) / 2, width, height)
+            Button btnBuild = new Button(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2, 100, 100)
             {
                 Name = "BasicSpawner",
                 Tag = "horsLigne"
@@ -40,26 +37,14 @@ namespace DowerTefenseGame.Screens
             UIElementsList.Add(btnBuild);
             #endregion
             #region Création du se connecter au compte
-            btnBuild = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight/2 - height) / 2+height, width, height)
+            // Bouton de contruction de tour basique
+            btnBuild = new Button(0, 0, 150, 100)
             {
                 Name = "BasicSpawner",
-                Tag = "connexion"
+                Tag = "horsLigne"
 
             };
             btnBuild.SetText("SE CONNECTER", CustomContentManager.GetInstance().Fonts["font"]);
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
-            #endregion
-            #region Création du bouton pour aller sur l'éditeur
-            // Bouton pour aller à l'éditeur
-            btnBuild = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight/2 - height) / 2 + 2*height, width, height)
-            {
-                Name = "BasicSpawner",
-                Tag = "editor"
-
-            };
-            btnBuild.SetText("EDITEUR MAP", CustomContentManager.GetInstance().Fonts["font"]);
             btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
             btnBuild.OnRelease += Btn_OnClick;
             UIElementsList.Add(btnBuild);
@@ -69,27 +54,7 @@ namespace DowerTefenseGame.Screens
 
         private void Btn_OnClick(object sender, EventArgs e)
         {
-            if (sender.GetType() == typeof(Button))
-            {
-                Button btn = (Button)sender;
-
-
-
-                if (btn.Tag.Equals("horsLigne") )
-                {
-                    ScreenManager.GetInstance().SelectScreen(0);
-                }
-                if (btn.Tag.Equals("connexion"))
-                {
-                    ScreenManager.GetInstance().SelectScreen(0);
-                }
-                if (btn.Tag.Equals("editor"))
-                {
-                    ScreenManager.GetInstance().SelectScreen(2);
-                }
-
-            }
-
+            ScreenManager.GetInstance().SelectScreen(0);
         }
         public override void Update(GameTime _gameTime)
         {
@@ -113,3 +78,4 @@ namespace DowerTefenseGame.Screens
         }
     }
 }
+   

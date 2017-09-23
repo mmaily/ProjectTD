@@ -198,7 +198,7 @@ namespace LibrairieTropBien.GUI
                 //// Measure string.
                 //System.Drawing.SizeF stringSize = new System.Drawing.SizeF();
                 //stringSize = this.Graphics.MeasureString(text, font);
-                _spriteBatch.DrawString(font, text, new Vector2(this.elementBox.X, this.elementBox.X) + 
+                _spriteBatch.DrawString(font, text, new Vector2(this.elementBox.X, this.elementBox.Y) + 
                                         new Vector2(20,40), Color.Azure);
             }
 

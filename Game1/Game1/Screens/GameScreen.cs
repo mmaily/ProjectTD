@@ -40,6 +40,9 @@ namespace DowerTefenseGame.Screens
             this.Graphics = _graphics;
             // Init de l'UI
             UIManager.GetInstance().Initialize();
+            Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;
+            Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth + 4) * MapManager.GetInstance().CurrentMap.tileSize;
+            Graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -91,20 +94,22 @@ namespace DowerTefenseGame.Screens
 
         public override void Draw(SpriteBatch _spriteBatch)
         {
+            SpriteBatch spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
+            spriteBatch.Begin();
             // Affichage de la carte
-            MapManager.GetInstance().Draw(_spriteBatch);
+            MapManager.GetInstance().Draw(spriteBatch);
             // Affichage des bâtiments
-            BuildingsManager.GetInstance().Draw(_spriteBatch);
+            BuildingsManager.GetInstance().Draw(spriteBatch);
             // Affichage des unités
-            UnitsManager.GetInstance().Draw(_spriteBatch);
+            UnitsManager.GetInstance().Draw(spriteBatch);
             // Affichage de l'interface
-            UIManager.GetInstance().Draw(_spriteBatch);
+            UIManager.GetInstance().Draw(spriteBatch);
 
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
             Texture2D fap = CustomContentManager.GetInstance().Textures["cursor"];
-            _spriteBatch.Draw(fap, lol, Color.White);
-
+            spriteBatch.Draw(fap, lol, Color.White);
+            spriteBatch.End();
             
         }
     }
