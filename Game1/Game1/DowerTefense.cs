@@ -29,6 +29,7 @@ namespace DowerTefenseGame
             Content.RootDirectory = "Content";
             // Initialisation du gestionnaire de contenu
             CustomContentManager.GetInstance();
+            IsFixedTimeStep = false;
 
 
         }

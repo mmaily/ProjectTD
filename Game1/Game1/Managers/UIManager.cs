@@ -38,7 +38,7 @@ namespace DowerTefenseGame.Managers
         // Police par défaut
         private SpriteFont deFaultFont;
         // Décalage de l'interface
-        private int leftUIOffset;
+        public int leftUIOffset;
         // Taille des boutons
         private byte btnSize = 35;
 

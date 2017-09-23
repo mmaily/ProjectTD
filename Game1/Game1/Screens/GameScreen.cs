@@ -5,6 +5,7 @@ using DowerTefenseGame.GameElements;
 using Microsoft.Xna.Framework.Input;
 using DowerTefenseGame.Units.Buildings;
 using DowerTefenseGame.Players;
+using System;
 
 namespace DowerTefenseGame.Screens
 {
@@ -19,7 +20,8 @@ namespace DowerTefenseGame.Screens
         private double lastWaveTick;
         private int waveCount;
         public static int waveLength = 10000;
-
+        public double millisecPerFrame=1000;
+        public double time;
         //Joueur (défenseur pour l'instant)
         public DefensePlayer Player;
 
@@ -62,6 +64,10 @@ namespace DowerTefenseGame.Screens
         /// <param name="_gameTime"></param>
         public override void Update(GameTime _gameTime)
         {
+
+            millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
+
+            time = _gameTime.TotalGameTime.TotalMilliseconds;
             #region === Calcul des vagues ===
 
             // Calcul du cycle de 30 secondes
@@ -94,6 +100,12 @@ namespace DowerTefenseGame.Screens
 
         public override void Draw(SpriteBatch _spriteBatch)
         {
+            if (millisecPerFrame != 0)
+            {
+                int offset = 340;
+                _spriteBatch.DrawString(CustomContentManager.GetInstance().Fonts["font"], Math.Ceiling(1000 / (millisecPerFrame)).ToString(), new Vector2(UIManager.GetInstance().leftUIOffset, offset), Color.White);
+            }
+           
             SpriteBatch spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             spriteBatch.Begin();
             // Affichage de la carte
