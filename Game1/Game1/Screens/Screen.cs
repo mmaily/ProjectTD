@@ -10,9 +10,13 @@ namespace DowerTefenseGame.Screens
 
     abstract class Screen
     {
-        public Screen() { }
         public GraphicsDeviceManager Graphics;
         public List<GuiElement> UIElementsList;
+        public Screen()
+        {
+            UIElementsList = new List<GuiElement>();
+        }
+
         public virtual void LoadContent()
         {
 

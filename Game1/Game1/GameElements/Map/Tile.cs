@@ -26,7 +26,8 @@ namespace DowerTefenseGame.GameElements
         public Tile NextTile { get; set; }
         // Permet de ne pas passer deux fois sur la même tuile lors du calcul du chemin
         public bool explorated = false;
-
+        // Taille d'une tuile en pixels
+        public static byte tileSize = 32;
         // Position de la tuile
         public int line;
         public int column;
