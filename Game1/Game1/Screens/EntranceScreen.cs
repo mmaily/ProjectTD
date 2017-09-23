@@ -1,12 +1,8 @@
-﻿using DowerTefenseGame.Screens;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using LibrairieTropBien.GUI;
-using Microsoft.Xna;
 using DowerTefenseGame.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -15,6 +11,8 @@ namespace DowerTefenseGame.Screens
 {
     class EntranceScreen : Screen
     {
+        // Etat de la connexion au serveur d'authentification
+        private bool connected = false;
 
         public EntranceScreen()
         {
@@ -28,41 +26,52 @@ namespace DowerTefenseGame.Screens
             // Bouton de contruction de tour basique
             int height = 100;
             int width = 150;
-            Button btnBuild = new Button((_graphics.PreferredBackBufferWidth-width) / 2, (_graphics.PreferredBackBufferHeight/2-height) / 2, width, height)
+            Button newButton = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight / 2 - height) / 2, width, height)
             {
                 Name = "BasicSpawner",
                 Tag = "horsLigne"
 
             };
-            btnBuild.SetText("JOUER", CustomContentManager.GetInstance().Fonts["font"]);
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
+            newButton.SetText("JOUER", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
             #endregion
             #region Création du se connecter au compte
-            btnBuild = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight/2 - height) / 2+height, width, height)
+            newButton = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight / 2 - height) / 2 + height, width, height)
             {
                 Name = "BasicSpawner",
                 Tag = "connexion"
 
             };
-            btnBuild.SetText("SE CONNECTER", CustomContentManager.GetInstance().Fonts["font"]);
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
+            newButton.SetText("SE CONNECTER", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
             #endregion
             #region Création du bouton pour aller sur l'éditeur
             // Bouton pour aller à l'éditeur
-            btnBuild = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight/2 - height) / 2 + 2*height, width, height)
+            newButton = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight / 2 - height) / 2 + 2 * height, width, height)
             {
                 Name = "BasicSpawner",
                 Tag = "editor"
 
             };
-            btnBuild.SetText("EDITEUR MAP", CustomContentManager.GetInstance().Fonts["font"]);
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
+            newButton.SetText("EDITEUR MAP", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
+            #endregion
+
+            #region Bouton de connexion
+            newButton = new Button(10, 10, 40, 10)
+            {
+                Name = "loginButton",
+                Tag = "tryConnect",
+            };
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
+
             #endregion
 
         }
@@ -73,21 +82,26 @@ namespace DowerTefenseGame.Screens
             {
                 Button btn = (Button)sender;
 
-
-
-                if (btn.Tag.Equals("horsLigne") )
+                switch (btn.Tag.ToString())
                 {
-                    ScreenManager.GetInstance().SelectScreen(0);
+                    case "horsLigne":
+                        ScreenManager.GetInstance().SelectScreen(0);
+                        break;
+                    case "connexion":
+                        ScreenManager.GetInstance().SelectScreen(0);
+                        break;
+                    case "editor":
+                        ScreenManager.GetInstance().SelectScreen(2);
+                        break;
+                    case "tryConnect":
+                        if (Multiplayer.MultiplayerManager.TryConnect("lolFap"))
+                        {
+                            btn.text = "Ouais !";
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                if (btn.Tag.Equals("connexion"))
-                {
-                    ScreenManager.GetInstance().SelectScreen(0);
-                }
-                if (btn.Tag.Equals("editor"))
-                {
-                    ScreenManager.GetInstance().SelectScreen(2);
-                }
-
             }
 
         }

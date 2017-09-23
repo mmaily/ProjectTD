@@ -1,0 +1,6 @@
+C:\Users\celes\Documents\Projets LTB\ProjectTD\Game1\DowerTefenseGameServer\obj\Debug\DowerTefenseGameServer.csproj.CoreCompileInputs.cache
+C:\Users\celes\Documents\Projets LTB\ProjectTD\Game1\DowerTefenseGameServer\bin\Debug\DowerTefenseGameServer.exe.config
+C:\Users\celes\Documents\Projets LTB\ProjectTD\Game1\DowerTefenseGameServer\bin\Debug\DowerTefenseGameServer.exe
+C:\Users\celes\Documents\Projets LTB\ProjectTD\Game1\DowerTefenseGameServer\bin\Debug\DowerTefenseGameServer.pdb
+C:\Users\celes\Documents\Projets LTB\ProjectTD\Game1\DowerTefenseGameServer\obj\Debug\DowerTefenseGameServer.exe
+C:\Users\celes\Documents\Projets LTB\ProjectTD\Game1\DowerTefenseGameServer\obj\Debug\DowerTefenseGameServer.pdb
