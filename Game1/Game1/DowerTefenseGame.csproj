@@ -120,9 +120,9 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibrairieTropBien.GUI\LibrairieTropBien.GUI.csproj">
+    <ProjectReference Include="..\LibrairieTropBien.GUI\LibrairieTropBien.csproj">
       <Project>{a2a33bcd-10c9-45ca-920b-43869c71a68d}</Project>
-      <Name>LibrairieTropBien.GUI</Name>
+      <Name>LibrairieTropBien</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
