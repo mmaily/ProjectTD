@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using C3.MonoGame;
 using DowerTefenseGame.GameElements;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace DowerTefenseGame.Screens
 {
@@ -35,6 +37,7 @@ namespace DowerTefenseGame.Screens
         public Vector2 mapZoneOffset;
         public int mapWidth = 20;
         public int mapHeight =20;
+        public String mapName = "Belle";
         #endregion
         #region === Gestion de la selection===
         public Tile SelectedTile { get; set; }
@@ -90,6 +93,44 @@ namespace DowerTefenseGame.Screens
             uiZone.Offset(Graphics.PreferredBackBufferWidth - uiZone.Width, 0);
             tileZone = new Rectangle(uiZone.Left + 5, uiZone.Top + 5, tileSize * rowLength, (int)Math.Ceiling((double)(numbreOfTiles / rowLength) + 1) * tileSize);
             tileZoneOffset = new Vector2(tileZone.Left, tileZone.Top);
+            #region ===Les boutons !!!===
+            UIElementsList = new List<GuiElement>();
+            // Bouton de contruction de tour basique
+            int height = 100;
+            int width = 150;
+            Button newButton = new Button(uiZone.Left+uiZone.Width/2-width/2, uiZone.Width/2, width, height)
+            {
+                Name = "BasicSpawner",
+                Tag = "reset"
+
+            };
+            newButton.SetText("Reset", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
+            //On sauve la map ou bien ?
+            newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 2*uiZone.Height / 3, width, height)
+            {
+                Name = "BasicSpawner",
+                Tag = "saveMap"
+
+            };
+            newButton.SetText("Save", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
+            //On charge une map ou bien ?
+            newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 2 * uiZone.Height / 3, width, height)
+            {
+                Name = "BasicSpawner",
+                Tag = "openMap"
+
+            };
+            newButton.SetText("Save", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
+            #endregion
         }
         public override void LoadContent()
         {
@@ -99,7 +140,26 @@ namespace DowerTefenseGame.Screens
 
         private void Btn_OnClick(object sender, EventArgs e)
         {
-            ScreenManager.GetInstance().SelectScreen(0);
+            if (sender.GetType() == typeof(Button))
+            {
+                Button btn = (Button)sender;
+
+                switch (btn.Tag.ToString())
+                {
+                    case "reset":
+                        resetMap();
+                        break;
+                    case "saveMap":
+                        saveMap();
+                        break;
+                   case "openMap":
+                        openMap(mapName);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
         public override void Update(GameTime _gameTime)
         {
@@ -142,10 +202,20 @@ namespace DowerTefenseGame.Screens
                     spriteBatch.Draw(contentManager.Textures[EditedMap[j,k].TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                     // Si cette tuile est sélectionnée ou sous le curseur
                     if (EditedMap[j, k].selected || EditedMap[j, k].overviewed)
-                    {
-                        // On affiche la texture "sélectionnée" sur cette tuile
-                        spriteBatch.Draw(contentManager.Textures["Mouseover"], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One*0.5f, Color.White);
-                        // On reset le boolée "sous le curseur"
+                    {   
+                        if (SelectedTile != null)
+                        {
+                            // On affiche la texture "sélectionnée" sur cette tuile
+                            spriteBatch.Draw(contentManager.Textures[SelectedTile.TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                            // On reset le boolée "sous le curseur"
+                        }
+                        else
+                        {
+                            // On affiche la texture "sélectionnée" sur cette tuile
+                            spriteBatch.Draw(contentManager.Textures["Mouseover"], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                            // On reset le boolée "sous le curseur"
+                        }
+
                         EditedMap[j, k].overviewed = false;
                     }
                 }
@@ -190,7 +260,6 @@ namespace DowerTefenseGame.Screens
                 {
                     // On signale le clic gauche
                     leftClicked = true;
-                    //EditedMap[electedTile]
                     selectedTile.TileType = SelectedTile.TileType;
                 
                 }
@@ -266,7 +335,46 @@ namespace DowerTefenseGame.Screens
             Rectangle rec = new Rectangle(leftMargin, topMargin, this.mapWidth * tileSize, mapHeight * tileSize);
             return rec;
         }
+        public void resetMap()
+        {
+            Tile blockedTile;
+            for (int j = 0; j < EditedMap.GetLength(0); j++)
+            {
+                for (int k = 0; k < EditedMap.GetLength(1); k++)
+                {
+                    blockedTile = new Tile(Tile.TileTypeEnum.Blocked);
+                    EditedMap[j, k] = blockedTile;
+                }
+            }
+        }
+        public void saveMap()
+        {
+            //On créé l'objet serializabe+ on l'instancie
+            XmlMap map =new XmlMap(EditedMap);
+            //On fait le bordel avec le stream et tout ta race
 
+            // Open a file and serialize the object into it in binary format.
+            // EmployeeInfo.osl is the file that we are creating. 
+            // Note: -you can give any extension you want for your file
+            // If you use custom extensions, then the user will now
+            //   that the file is associated with your program.
+            Stream stream = File.Open("Map_" + mapName + ".osl", FileMode.Create);
+            BinaryFormatter bformatter = new BinaryFormatter();
+
+            bformatter.Serialize(stream, map);
+            stream.Close();
+        }
+        public Tile[,] openMap(String name)
+        {
+            //Clear mp for further usage.
+            XmlMap mapObject = null;
+            //Open the file written above and read values from it.
+            Stream stream = File.Open("Map_"+name+".osl", FileMode.Open);
+            BinaryFormatter bformatter = new BinaryFormatter();
+            mapObject = (XmlMap)bformatter.Deserialize(stream);
+            stream.Close();
+            return mapObject.map;
+        }
     }
 }
 

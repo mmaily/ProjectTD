@@ -1,6 +1,8 @@
 ﻿using DowerTefenseGame.GameElements.Units;
 using DowerTefenseGame.Units;
 using Microsoft.Xna.Framework;
+using System;
+using System.Runtime.Serialization;
 
 namespace DowerTefenseGame.GameElements
 {
@@ -8,7 +10,8 @@ namespace DowerTefenseGame.GameElements
     /// <summary>
     /// Classe représentant une tuile de la carte
     /// </summary>
-    public class Tile
+    [Serializable()]
+    public class Tile : ISerializable
     {
         // Énumérateur des types de tuiles
         public enum TileTypeEnum
@@ -82,6 +85,25 @@ namespace DowerTefenseGame.GameElements
             // Retour du vecteur
             return res;
         }
+        //Partie dédiée à la sérialization
+        public Tile(SerializationInfo info, StreamingContext ctxt)
+        {
+            //Get the values from info and assign them to the appropriate properties
+            TileType = (TileTypeEnum)info.GetValue("TileType", typeof(TileTypeEnum));
+            line = (int)info.GetValue("line", typeof(int));
+            column = (int)info.GetValue("column", typeof(int));
 
+        }
+        //Serialization function.
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            //You can use any custom name for your name-value pair. But make sure you
+            // read the values with the same name. For ex:- If you write EmpId as "EmployeeId"
+            // then you should read the same with "EmployeeId"
+            info.AddValue("line", line);
+            info.AddValue("column", column);
+            info.AddValue("TileType", TileType);
+        }
     }
+
 }

@@ -63,8 +63,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DowerTefense.cs" />
-    <Compile Include="GameElements\Map\Map.cs" />
-    <Compile Include="GameElements\Map\Tile.cs" />
+    <Compile Include="GameElements\Maps\Map.cs" />
+    <Compile Include="GameElements\Maps\Tile.cs" />
+    <Compile Include="GameElements\Maps\XmlMap.cs" />
     <Compile Include="GameElements\Projectiles\Projectile.cs" />
     <Compile Include="GameElements\Projectiles\SingleTargetProjectile.cs" />
     <Compile Include="GameElements\Units\Building.cs" />
@@ -103,6 +104,7 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
