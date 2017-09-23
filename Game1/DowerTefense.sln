@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowerTefenseGame", "Game1\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibrairieTropBien.GUI", "LibrairieTropBien.GUI\LibrairieTropBien.GUI.csproj", "{A2A33BCD-10C9-45CA-920B-43869C71A68D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowerTefenseGameServer", "DowerTefenseGameServer\DowerTefenseGameServer.csproj", "{21BB7573-6ABE-4C3B-838D-68EAD92E292B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,18 @@ Global
 		{A2A33BCD-10C9-45CA-920B-43869C71A68D}.Release|x64.Build.0 = Release|Any CPU
 		{A2A33BCD-10C9-45CA-920B-43869C71A68D}.Release|x86.ActiveCfg = Release|Any CPU
 		{A2A33BCD-10C9-45CA-920B-43869C71A68D}.Release|x86.Build.0 = Release|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Debug|x64.Build.0 = Debug|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Debug|x86.Build.0 = Debug|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Release|x64.ActiveCfg = Release|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Release|x64.Build.0 = Release|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Release|x86.ActiveCfg = Release|Any CPU
+		{21BB7573-6ABE-4C3B-838D-68EAD92E292B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

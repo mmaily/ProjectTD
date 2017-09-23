@@ -81,6 +81,7 @@
     <Compile Include="Managers\MapManager.cs" />
     <Compile Include="Managers\UIManager.cs" />
     <Compile Include="Managers\UnitsManager.cs" />
+    <Compile Include="Multiplayer\MultiplayerManager.cs" />
     <Compile Include="Players\AttackPlayer.cs" />
     <Compile Include="Players\DefensePlayer.cs" />
     <Compile Include="Program.cs" />
