@@ -186,11 +186,12 @@ namespace DowerTefenseGame.Screens
                 selectedTile.overviewed = true;
 
                 // Si le clic gauche est enclenché et que cela n'a pas encore été traité
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed && leftClicked == false)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && SelectedTile!=null)
                 {
                     // On signale le clic gauche
                     leftClicked = true;
-                    SelectedTile.TileType = typeSaved;
+                    //EditedMap[electedTile]
+                    selectedTile.TileType = SelectedTile.TileType;
                 
                 }
                 else if (Mouse.GetState().LeftButton == ButtonState.Released && leftClicked == true)
@@ -213,7 +214,7 @@ namespace DowerTefenseGame.Screens
             if (tileZone.Contains(mousePosition))
             {
                 // On récupère la tuile visée
-                Tile selectedTile = modelTiles.Find(tile => tile.line== (mousePosition.X - tileZone.Left) / tileSize&& tile.column== (mousePosition.Y - tileZone.Top) / tileSize);
+                Tile selectedTile = modelTiles.Find(tile => tile.line== (mousePosition.Y - tileZone.Top) / tileSize&& tile.column== (mousePosition.X - tileZone.Left) / tileSize);
                 //EditedMap[(mousePosition.X - leftMargin) / tileSize, (mousePosition.Y - topMargin) / tileSize];
                 // On marque la tuile comme sélectionnée
                 if (selectedTile != null)
