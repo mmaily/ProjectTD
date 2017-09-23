@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -22,7 +23,7 @@ namespace DowerTefenseGame.Multiplayer
             try
             {
                 // Client TCP
-                TcpClient connectionClient = new TcpClient(connectionServerIP, connectionServerPort);
+                TcpClient connectionClient = new TcpClient(IPAddress.Any.ToString(), connectionServerPort);
                 // Récupération du flux
                 NetworkStream ns = connectionClient.GetStream();
 
