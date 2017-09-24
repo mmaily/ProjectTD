@@ -22,7 +22,7 @@ namespace DowerTefenseGame.GameElements
         public XmlMap(SerializationInfo info, StreamingContext ctxt)
         {
             //Get the values from info and assign them to the appropriate properties
-            map = (Tile[,])info.GetValue("Map", typeof(Tile[,]));
+            map = (Tile[,])info.GetValue("map", typeof(Tile[,]));
         }
         //Serialization function.
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
