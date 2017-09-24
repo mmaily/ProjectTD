@@ -67,8 +67,9 @@ namespace DowerTefenseGame.Managers
         /// Dictionnaire des prix des bâtiments
         /// </summary>
         public Dictionary<String, int> Price;
-        //public CombinedGeometry coveredArea;
-        public GeometryGroup coveredArea;
+        // Ratio entre l'image de la tour et la taille des tiles
+        public float imageRatio;
+
 
         /// <summary>
         /// Constructeur
@@ -79,7 +80,7 @@ namespace DowerTefenseGame.Managers
             LockedBuildingsList = new List<Building>();
             FreeBuildingsList = new List<Building>();
             DefenseBuildingsList = new List<Building>();
-            coveredArea = new GeometryGroup();
+            imageRatio=MapManager.GetInstance().imageRatio;
             WaitingForConstruction = new List<Building>();
             Price = new Dictionary<string, int>();
             SetPrice();
@@ -133,6 +134,7 @@ namespace DowerTefenseGame.Managers
             {
                 _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name], 
                                 new Vector2(building.GetTile().column * map.tileSize, building.GetTile().line * map.tileSize),
+                                null, null, null, 0f, Vector2.One * imageRatio,
                                 Microsoft.Xna.Framework.Color.White);
             }
 

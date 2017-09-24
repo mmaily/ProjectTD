@@ -1,7 +1,5 @@
-﻿using DowerTefenseGame.Managers;
+﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -54,15 +52,16 @@ namespace DowerTefenseGame.GameElements
             // Intialisation du nom de la carte
             this.Name = "Carte demo";
 
-            GenerateMap(openMap(mapName));
+
             // Initialisation des listes de spawns et de bases
             Spawns = new List<Tile>();
             Bases = new List<Tile>();
             Paths = new List<Tile>();
 
             // Initialisation des tuiles
-            this.Tiles = new Tile[mapHeight, mapWidth];
 
+            Tiles = GenerateMap(openMap(mapName));
+            findSpawnBase();
 
         }
         public void BaseMap()
@@ -114,6 +113,10 @@ namespace DowerTefenseGame.GameElements
         private Tile[,] GenerateMap(XmlMap TempMap)
         {
             Tile[,] GeneratedMap = new Tile[TempMap.width, TempMap.height];
+            this.mapWidth = (byte)TempMap.width;
+            this.mapHeight = (byte)TempMap.height;
+            this.tileSize = (byte)TempMap.tileSize;
+
             for (int j = 0; j < TempMap.width; j++)
             {
                 for (int k = 0; k < TempMap.height; k++)
@@ -122,6 +125,14 @@ namespace DowerTefenseGame.GameElements
                 }
             }
             return GeneratedMap;
+        }
+        private void findSpawnBase()
+        {
+            foreach( Tile tile in Tiles)
+            {
+                if (tile.TileType == Tile.TileTypeEnum.Base) Bases.Add(tile);
+                if (tile.TileType == Tile.TileTypeEnum.Spawn) Spawns.Add(tile);
+            }
         }
 
     }

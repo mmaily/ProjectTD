@@ -82,6 +82,8 @@ namespace DowerTefenseGame.Screens
                 for(int k = 0; k < EditedMap.GetLength(1); k++)
                 {
                     blockedTile= new Tile(Tile.TileTypeEnum.Blocked);
+                    blockedTile.line = j;
+                    blockedTile.column = k;
                     EditedMap[j, k] = blockedTile;
                 }
             }
@@ -99,7 +101,7 @@ namespace DowerTefenseGame.Screens
             #region ===Les boutons !!!===
             UIElementsList = new List<GuiElement>();
             // Bouton de contruction de tour basique
-            int height = 100;
+            int height = 80;
             int width = 150;
             Button newButton = new Button(uiZone.Left+uiZone.Width/2-width/2, 2*uiZone.Height / 10, width, height)
             {
@@ -133,6 +135,17 @@ namespace DowerTefenseGame.Screens
             newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
+            //On retourne au menu ou bien ??!
+            newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 8 * uiZone.Height / 10, width, height)
+            {
+                Name = "BasicSpawner",
+                Tag = "back"
+
+            };
+            newButton.SetText("Back", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
             #endregion
         }
         public override void LoadContent()
@@ -140,7 +153,6 @@ namespace DowerTefenseGame.Screens
             base.LoadContent();
 
         }
-
         private void Btn_OnClick(object sender, EventArgs e)
         {
             if (sender.GetType() == typeof(Button))
@@ -158,6 +170,9 @@ namespace DowerTefenseGame.Screens
                    case "openMap":
                         GenerateMap(openMap(mapName));
                         break;
+                    case "back":
+                        ScreenManager.GetInstance().SelectScreen(0);
+                        break;
                     default:
                         break;
                 }
@@ -173,7 +188,6 @@ namespace DowerTefenseGame.Screens
                 element.Update();
             });
         }
-
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch);

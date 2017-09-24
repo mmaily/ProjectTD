@@ -27,8 +27,8 @@ namespace DowerTefenseGame.Screens
         private ScreenManager()
         {
             Screens = new ArrayList();
-            Screens.Add(new GameScreen());
             Screens.Add(new EntranceScreen());
+            Screens.Add(new GameScreen());
             Screens.Add(new Editor());
             currentScreen = (Screen)Screens[1];
 

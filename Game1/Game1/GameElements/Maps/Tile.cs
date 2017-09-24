@@ -81,7 +81,7 @@ namespace DowerTefenseGame.GameElements
         public Vector2 getTilePosition()
         {
             // Création du vecteur de retour
-            Vector2 res = new Vector2(this.column + 0.5f, this.line + 0.5f);
+            Vector2 res = new Vector2(this.line + 0.5f, this.column + 0.5f);
             // Retour du vecteur
             return res;
         }

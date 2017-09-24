@@ -24,6 +24,7 @@ namespace DowerTefenseGame.Managers
         public Dictionary<String, SpriteFont> Fonts;
         // Gestionnaire de contenu (parent)
         private ContentManager contentManager;
+        public byte textureSize;
 
         /// <summary>
         /// Constructeur du gestionnaire de contenu
@@ -93,7 +94,7 @@ namespace DowerTefenseGame.Managers
             AddFonts("defaultFont", "font");
 
 
-            
+            textureSize = (byte)Textures["BasicTower"].Height;
 
         }
 

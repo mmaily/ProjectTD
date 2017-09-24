@@ -17,13 +17,16 @@ namespace DowerTefenseGame.Managers
         public Map CurrentMap { get; set; }
         // Booléen de calcul du chemin
         private bool pathComputed = false;
+        public float imageRatio;
 
         /// <summary>
         /// Constructeur du gestionnaire de carte
         /// </summary>
         private MapManager()
         {
-            this.CurrentMap = GenerateMap(openMap(mapName)); ;
+            this.CurrentMap = new Map();
+            //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
+            this.imageRatio = (float)CurrentMap.tileSize/ (float)CustomContentManager.GetInstance().textureSize;
         }
 
         /// <summary>
@@ -68,12 +71,12 @@ namespace DowerTefenseGame.Managers
             foreach (Tile tile in CurrentMap.Tiles)
             {
                 // On affiche la texture correspondant à la nature de la carte
-                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.column * CurrentMap.tileSize, tile.line * CurrentMap.tileSize), Color.White);
+                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize), null, null, null, 0f, Vector2.One*imageRatio, Color.White);
                 // Si cette tuile est sélectionnée ou sous le curseur
                 if (tile.selected || tile.overviewed)
                 {
                     // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.column * CurrentMap.tileSize, tile.line * CurrentMap.tileSize),null,null,null,0f, Vector2.One, Color.White);
+                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize),null,null,null,0f, Vector2.One*imageRatio, Color.White);
                     // On reset le boolée "sous le curseur"
                     tile.overviewed = false;
                 }

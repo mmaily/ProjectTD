@@ -51,7 +51,7 @@ namespace DowerTefenseGame.Units
             // On informe la tuile qu'un bâtiment est dessus
             tile.building = this;
             // Attention au 64, TODO
-            this.Position = tile.getTilePosition() * 64;
+            this.Position = tile.getTilePosition() * MapManager.GetInstance().CurrentMap.tileSize;
         }
     }
 }

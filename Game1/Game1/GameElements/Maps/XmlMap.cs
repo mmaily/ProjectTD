@@ -30,7 +30,7 @@ namespace DowerTefenseGame.GameElements
             //Get the values from info and assign them to the appropriate properties
             map = (Tile[,])info.GetValue("map", typeof(Tile[,]));
             height = (int)info.GetValue("height", typeof(int));
-            width = (int)info.GetValue("widtht", typeof(int));
+            width = (int)info.GetValue("width", typeof(int));
             tileSize = (int)info.GetValue("tileSize", typeof(int));
         }
         //Serialization function.
@@ -42,7 +42,7 @@ namespace DowerTefenseGame.GameElements
             info.AddValue("map", map);
             info.AddValue("height", height);
             info.AddValue("width", width);
-            info.AddValue("height", height);
+            info.AddValue("tileSize", tileSize);
 
         }
     }

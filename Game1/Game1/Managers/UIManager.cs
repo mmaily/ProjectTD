@@ -39,6 +39,8 @@ namespace DowerTefenseGame.Managers
         private SpriteFont deFaultFont;
         // Décalage de l'interface
         public int leftUIOffset;
+        //Rectangle-zone pour l'ui
+        public Rectangle zoneUi;
         // Taille des boutons
         private byte btnSize = 35;
 
@@ -65,7 +67,11 @@ namespace DowerTefenseGame.Managers
         {
             // Récupération du décalage gauche de l'interface
             currentMap = MapManager.GetInstance().CurrentMap;
+
+
             leftUIOffset = currentMap.mapWidth * currentMap.tileSize + 5;
+            //Création d'une zone pour l'ui
+            zoneUi = new Rectangle(leftUIOffset, 0, 300, currentMap.mapHeight * currentMap.tileSize);
 
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
@@ -241,7 +247,7 @@ namespace DowerTefenseGame.Managers
             if (MapManager.GetInstance().GetMapZone().Contains(mousePosition))
             {
                 // On récupère la tuile visée
-                Tile selectedTile = currentMap.Tiles[mousePosition.Y / currentMap.tileSize, mousePosition.X / currentMap.tileSize];
+                Tile selectedTile = currentMap.Tiles[mousePosition.X / currentMap.tileSize, mousePosition.Y / currentMap.tileSize];
                 // On marque la tuile comme sélectionnée
                 selectedTile.overviewed = true;
 
@@ -288,6 +294,9 @@ namespace DowerTefenseGame.Managers
         /// <param name="_spriteBatch"></param>
         public void Draw(SpriteBatch _spriteBatch)
         {
+            #region ==Rectangle droite contenant l'ui==
+            _spriteBatch.DrawRectangle(zoneUi, Color.Bisque);
+            #endregion 
             #region === Infos globales ===
 
             //Display le nombre de Spawner
