@@ -1,6 +1,9 @@
 ﻿using DowerTefenseGame.Managers;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace DowerTefenseGame.GameElements
 {
@@ -37,8 +40,11 @@ namespace DowerTefenseGame.GameElements
         // Taille d'une tuile en pixels
         public byte tileSize = 64;
         // Taille de la carte
-        public byte mapHeight = 8;
-        public byte mapWidth = 16;
+        public byte mapHeight = 20;
+        public byte mapWidth = 20;
+        //Gestion de la génération d'une map à partir d'une sauvegarde
+        private String path = Path.Combine("Content", "savedMaps");
+        public String mapName = "Belle";
 
         /// <summary>
         /// Constructeur de la carte
@@ -48,6 +54,7 @@ namespace DowerTefenseGame.GameElements
             // Intialisation du nom de la carte
             this.Name = "Carte demo";
 
+            GenerateMap(openMap(mapName));
             // Initialisation des listes de spawns et de bases
             Spawns = new List<Tile>();
             Bases = new List<Tile>();
@@ -55,6 +62,11 @@ namespace DowerTefenseGame.GameElements
 
             // Initialisation des tuiles
             this.Tiles = new Tile[mapHeight, mapWidth];
+
+
+        }
+        public void BaseMap()
+        {
 
             // Génération de la carte (en dur pour le moment, TODO)
             for (int line = 0; line < mapHeight; line++)
@@ -85,9 +97,31 @@ namespace DowerTefenseGame.GameElements
             // Ajout d'un spawn
             Tiles[4, 0].TileType = Tile.TileTypeEnum.Spawn;
             Spawns.Add(Tiles[4, 0]);
-            Tiles[4, mapWidth-1].TileType = Tile.TileTypeEnum.Base;
+            Tiles[4, mapWidth - 1].TileType = Tile.TileTypeEnum.Base;
             Bases.Add(Tiles[4, mapWidth - 1]);
-
+        }
+        private XmlMap openMap(String name)
+        {
+            //Clear mp for further usage.
+            XmlMap mapObject = null;
+            //Open the file written above and read values from it.
+            Stream stream = File.Open(Path.Combine(path, "Map_" + mapName + ".osl"), FileMode.Open);
+            BinaryFormatter bformatter = new BinaryFormatter();
+            mapObject = (XmlMap)bformatter.Deserialize(stream);
+            stream.Close();
+            return mapObject;
+        }
+        private Tile[,] GenerateMap(XmlMap TempMap)
+        {
+            Tile[,] GeneratedMap = new Tile[TempMap.width, TempMap.height];
+            for (int j = 0; j < TempMap.width; j++)
+            {
+                for (int k = 0; k < TempMap.height; k++)
+                {
+                    GeneratedMap[j, k] = TempMap.map[j, k];
+                }
+            }
+            return GeneratedMap;
         }
 
     }

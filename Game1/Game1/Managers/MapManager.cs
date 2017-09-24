@@ -23,7 +23,7 @@ namespace DowerTefenseGame.Managers
         /// </summary>
         private MapManager()
         {
-            this.CurrentMap = new Map();
+            this.CurrentMap = GenerateMap(openMap(mapName)); ;
         }
 
         /// <summary>
@@ -141,5 +141,6 @@ namespace DowerTefenseGame.Managers
             Rectangle rec = new Rectangle(0,0,this.CurrentMap.mapWidth*CurrentMap.tileSize, CurrentMap.mapHeight * CurrentMap.tileSize);
                 return rec;
         }
+
     }
 }

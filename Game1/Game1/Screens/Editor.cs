@@ -353,7 +353,7 @@ namespace DowerTefenseGame.Screens
         public void saveMap()
         {
             //On créé l'objet serializabe+ on l'instancie
-            XmlMap map =new XmlMap(EditedMap);
+            XmlMap map =new XmlMap(EditedMap,tileSize,mapHeight,mapWidth);
             //On fait le bordel avec le stream et tout ta race
 
             // Open a file and serialize the object into it in binary format.
@@ -367,7 +367,7 @@ namespace DowerTefenseGame.Screens
             bformatter.Serialize(stream, map);
             stream.Close();
         }
-        public Tile[,] openMap(String name)
+        public XmlMap openMap(String name)
         {
             //Clear mp for further usage.
             XmlMap mapObject = null;
@@ -376,15 +376,15 @@ namespace DowerTefenseGame.Screens
             BinaryFormatter bformatter = new BinaryFormatter();
             mapObject = (XmlMap)bformatter.Deserialize(stream);
             stream.Close();
-            return mapObject.map;
+            return mapObject;
         }
-        public void GenerateMap(Tile[,] TempMap)
+        public void GenerateMap(XmlMap TempMap)
         {
-            for (int j = 0; j < EditedMap.GetLength(0); j++)
+            for (int j = 0; j < TempMap.width; j++)
             {
-                for (int k = 0; k < EditedMap.GetLength(1); k++)
+                for (int k = 0; k < TempMap.height; k++)
                 {
-                    EditedMap[j, k] = TempMap[j,k];
+                    EditedMap[j, k] = TempMap.map[j,k];
                 }
             }
         }
