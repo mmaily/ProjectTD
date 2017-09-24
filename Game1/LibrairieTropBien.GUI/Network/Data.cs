@@ -31,7 +31,7 @@ namespace LibrairieTropBien.GUI.Network
         public Data(Type _type, string _data)
         {
             this.type = _type;
-            this.stream = _data;
+            //this.stream = _data;
         }
     }
 }

@@ -59,7 +59,7 @@ namespace LibrairieTropBien.GUI.Network
             // Récupération de l'objet
 
 
-            return  ;
+            return null  ;
         }
     }
 }

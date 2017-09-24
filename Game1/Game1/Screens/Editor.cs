@@ -44,6 +44,9 @@ namespace DowerTefenseGame.Screens
         private bool leftClicked = false;
         public Tile.TileTypeEnum typeSaved;
         #endregion
+        #region === Gestion de la sauvegarde ===
+        private String path = Path.Combine("Content", "savedMaps");
+        #endregion
         public Editor()
         {
 
@@ -98,7 +101,7 @@ namespace DowerTefenseGame.Screens
             // Bouton de contruction de tour basique
             int height = 100;
             int width = 150;
-            Button newButton = new Button(uiZone.Left+uiZone.Width/2-width/2, uiZone.Width/2, width, height)
+            Button newButton = new Button(uiZone.Left+uiZone.Width/2-width/2, 2*uiZone.Height / 10, width, height)
             {
                 Name = "BasicSpawner",
                 Tag = "reset"
@@ -109,7 +112,7 @@ namespace DowerTefenseGame.Screens
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             //On sauve la map ou bien ?
-            newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 2*uiZone.Height / 3, width, height)
+            newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 4*uiZone.Height / 10, width, height)
             {
                 Name = "BasicSpawner",
                 Tag = "saveMap"
@@ -120,13 +123,13 @@ namespace DowerTefenseGame.Screens
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             //On charge une map ou bien ?
-            newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 2 * uiZone.Height / 3, width, height)
+            newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 6* uiZone.Height / 10, width, height)
             {
                 Name = "BasicSpawner",
                 Tag = "openMap"
 
             };
-            newButton.SetText("Save", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetText("Open", CustomContentManager.GetInstance().Fonts["font"]);
             newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
@@ -153,7 +156,7 @@ namespace DowerTefenseGame.Screens
                         saveMap();
                         break;
                    case "openMap":
-                        openMap(mapName);
+                        GenerateMap(openMap(mapName));
                         break;
                     default:
                         break;
@@ -358,7 +361,7 @@ namespace DowerTefenseGame.Screens
             // Note: -you can give any extension you want for your file
             // If you use custom extensions, then the user will now
             //   that the file is associated with your program.
-            Stream stream = File.Open("Map_" + mapName + ".osl", FileMode.Create);
+            Stream stream = File.Open(Path.Combine(path,"Map_" + mapName + ".osl"), FileMode.Create);
             BinaryFormatter bformatter = new BinaryFormatter();
 
             bformatter.Serialize(stream, map);
@@ -369,11 +372,21 @@ namespace DowerTefenseGame.Screens
             //Clear mp for further usage.
             XmlMap mapObject = null;
             //Open the file written above and read values from it.
-            Stream stream = File.Open("Map_"+name+".osl", FileMode.Open);
+            Stream stream = File.Open(Path.Combine(path,"Map_" + mapName + ".osl"), FileMode.Open);
             BinaryFormatter bformatter = new BinaryFormatter();
             mapObject = (XmlMap)bformatter.Deserialize(stream);
             stream.Close();
             return mapObject.map;
+        }
+        public void GenerateMap(Tile[,] TempMap)
+        {
+            for (int j = 0; j < EditedMap.GetLength(0); j++)
+            {
+                for (int k = 0; k < EditedMap.GetLength(1); k++)
+                {
+                    EditedMap[j, k] = TempMap[j,k];
+                }
+            }
         }
     }
 }
