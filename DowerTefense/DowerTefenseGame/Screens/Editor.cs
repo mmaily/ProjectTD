@@ -52,6 +52,8 @@ namespace DowerTefenseGame.Screens
 
             uiZone = new Rectangle(0, 0, 200, 400);
 
+            Directory.CreateDirectory(@"Content\savedMaps");
+
         }
         public override void Initialize(GraphicsDeviceManager _graphics)
         {

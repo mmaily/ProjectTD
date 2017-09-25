@@ -85,7 +85,7 @@ namespace DowerTefenseGame.Screens
                 switch (btn.Tag.ToString())
                 {
                     case "horsLigne":
-                        ScreenManager.GetInstance().SelectScreen(0);
+                        ScreenManager.GetInstance().SelectScreen(1);
                         break;
                     case "connexion":
                         ScreenManager.GetInstance().SelectScreen(0);

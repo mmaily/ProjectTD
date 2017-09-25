@@ -120,7 +120,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibrairieTropBien.GUI\LibrairieTropBien.csproj">
+    <ProjectReference Include="..\LibrairieTropBien\LibrairieTropBien.csproj">
       <Project>{a2a33bcd-10c9-45ca-920b-43869c71a68d}</Project>
       <Name>LibrairieTropBien</Name>
     </ProjectReference>

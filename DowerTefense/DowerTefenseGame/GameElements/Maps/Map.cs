@@ -122,6 +122,8 @@ namespace DowerTefenseGame.GameElements
                 for (int k = 0; k < TempMap.height; k++)
                 {
                     GeneratedMap[j, k] = TempMap.map[j, k];
+                    GeneratedMap[j, k].line = j;
+                    GeneratedMap[j, k].column = k;
                 }
             }
             return GeneratedMap;

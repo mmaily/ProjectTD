@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="C3.MonoGame.Primitives2D">
-      <HintPath>..\Game1\Libraries\C3.MonoGame.Primitives2D.dll</HintPath>
+      <HintPath>Libraries\C3.MonoGame.Primitives2D.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
