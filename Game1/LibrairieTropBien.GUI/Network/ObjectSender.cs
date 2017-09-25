@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;
 
-namespace LibrairieTropBien.GUI.Network
+namespace LibrairieTropBien.Network
 {
     /// <summary>
     /// Classe pour envoyer des objets sur le réseau
@@ -20,46 +22,53 @@ namespace LibrairieTropBien.GUI.Network
             // Succès de l'opération
             bool success = false;
 
-            // Sérialisation selon le type
-            var objectSerializer = new XmlSerializer(_item.GetType());
+            Message message;
 
-            // Passage en donnée
-            Data data = new Data()
+            using (var memoryStream = new MemoryStream())
             {
-                type = _item.GetType(),
-            };
-            objectSerializer.Serialize(data.stream, _item);
+                (new BinaryFormatter()).Serialize(memoryStream, _item);
+                message = new Message
+                {
+                    Data = memoryStream.ToArray(),
+                };
+            }
 
             // Récupération du flux réseau
-            var dataSerializer = new XmlSerializer(typeof(Data));
+            var dataSerializer = new XmlSerializer(typeof(Message));
             var networkStream = _tcpClient.GetStream();
 
             // Écriture du flux
             if (networkStream.CanWrite)
             {
-                dataSerializer.Serialize(networkStream, data);
+                dataSerializer.Serialize(networkStream, message);
                 success = true;
             }
 
+            networkStream.Close();
+            
             // Retour
             return success;
         }
 
-        public static object Receive(NetworkStream _stream)
+        public static object Receive(TcpClient _tcpClient)
         {
+            object received;
+
+            NetworkStream stream = _tcpClient.GetStream();
+
             // Serialiseur de type Data
-            XmlSerializer dataSerializer = new XmlSerializer(typeof(Data));
+            XmlSerializer dataSerializer = new XmlSerializer(typeof(Message));
             // Récupération de l'objet Data
-            Data receivedData = (Data)dataSerializer.Deserialize(_stream);
+            Message message = (Message)dataSerializer.Deserialize(stream);
 
-            // Type de l'objet à recevoir
-            Type type = receivedData.type.GetType();
-            // Serialiseur du type de l'objet
-            XmlSerializer objectSerialize = new XmlSerializer(type);
-            // Récupération de l'objet
+            using (var memoryStream = new MemoryStream(message.Data))
+            {
+                received = (new BinaryFormatter()).Deserialize(memoryStream);
+            }
 
+            stream.Close();
 
-            return null  ;
+            return received;
         }
     }
 }

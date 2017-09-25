@@ -1,37 +1,14 @@
 ﻿using System;
 using System.IO;
 
-namespace LibrairieTropBien.GUI.Network
+namespace LibrairieTropBien.Network
 {
     /// <summary>
     /// Classe d'échange de donnée
     /// </summary>
-    public class Data
+    public class Message
     {
-        /// <summary>
-        /// Type de l'objet
-        /// </summary>
-        public Type type;
-        /// <summary>
-        /// Données à échanger
-        /// </summary>
-        public Stream stream;
-
-        /// <summary>
-        /// Données à échanger sur le réseau
-        /// </summary>
-        public Data()
-        {
-
-        }
-
-        /// <summary>
-        /// Données à échanger sur le réseau
-        /// </summary>
-        public Data(Type _type, string _data)
-        {
-            this.type = _type;
-            //this.stream = _data;
-        }
+        // Données internes
+        public byte[] Data { get; set; }
     }
 }

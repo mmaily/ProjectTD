@@ -1,7 +1,8 @@
 ﻿
+using LibrairieTropBien.Network;
+using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace DowerTefenseGameServer
 {
@@ -41,16 +42,11 @@ namespace DowerTefenseGameServer
                 // Attente d'un client
                 TcpClient connectionClient = listener.AcceptTcpClient();
 
-                // Récupération du flux client
-                NetworkStream ns = connectionClient.GetStream();
+                var item = ObjectSender.Receive(connectionClient);
 
-                byte[] bytes = new byte[1024];
-                int bytesRead = ns.Read(bytes, 0, bytes.Length);
+                Type type = item.GetType();
 
-                System.Console.WriteLine(Encoding.ASCII.GetString(bytes, 0, bytesRead));
-
-                ns.Close();
-                connectionClient.Close();
+                //connectionClient.Close();
             }
 
             // Lancement du serveur

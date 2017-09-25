@@ -40,5 +40,11 @@
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibrairieTropBien.GUI\LibrairieTropBien.csproj">
+      <Project>{A2A33BCD-10C9-45CA-920B-43869C71A68D}</Project>
+      <Name>LibrairieTropBien</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
