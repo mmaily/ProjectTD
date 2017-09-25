@@ -171,7 +171,17 @@ namespace DowerTefenseGame.Managers
                                 Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + btn.Name));
                                 // Que l'on place sur une tuile
                                 building.SetTile(SelectedTile);
-                                defensePlayer.totalGold -= building.Cost;
+                                InfoPopUp info = new InfoPopUp( new Rectangle((int)((SelectedTile.getTilePosition().X-0.5)* currentMap.tileSize),
+                                                                            (int)((SelectedTile.getTilePosition().Y-0.5) * currentMap.tileSize),
+                                                                            currentMap.tileSize,currentMap.tileSize), 100, 50)
+                        {
+                            Name = "TowerInfo",
+                            Tag = "InfoPopUp",
+                            font = CustomContentManager.GetInstance().Fonts["font"]
+                        };
+                        UIElementsList.Add(info);
+                        building.SetInfoPopUp(info);
+                        defensePlayer.totalGold -= building.Cost;
 
 
                             }

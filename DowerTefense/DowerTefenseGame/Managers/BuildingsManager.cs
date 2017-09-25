@@ -132,8 +132,8 @@ namespace DowerTefenseGame.Managers
             // Pour chaque bâtiment
             foreach (Building building in DefenseBuildingsList)
             {
-                _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name], 
-                                new Vector2(building.GetTile().column * map.tileSize, building.GetTile().line * map.tileSize),
+                _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name],
+                                new Vector2(building.GetTile().line * map.tileSize, building.GetTile().column * map.tileSize),
                                 null, null, null, 0f, Vector2.One * imageRatio,
                                 Microsoft.Xna.Framework.Color.White);
             }
