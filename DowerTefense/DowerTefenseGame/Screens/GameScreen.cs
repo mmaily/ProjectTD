@@ -108,6 +108,7 @@ namespace DowerTefenseGame.Screens
            
             SpriteBatch spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             spriteBatch.Begin();
+            //spriteBatch.Draw(CustomContentManager.GetInstance().Colors["grey"],Graphics.);
             // Affichage de la carte
             MapManager.GetInstance().Draw(spriteBatch);
             // Affichage des bâtiments

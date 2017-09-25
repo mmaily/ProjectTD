@@ -16,7 +16,7 @@ namespace LibrairieTropBien.GUI
         private Boolean hovered = false;
         public String text = null;
         public SpriteFont font = null;
-        private Texture2D texture;
+        public Texture2D texture;
         Rectangle area;
         private Color defaultActive = Microsoft.Xna.Framework.Color.LightBlue;
         public InfoPopUp(int _x, int _y, int _width, int _height) : base(_x, _y, _width, _height)
@@ -53,7 +53,7 @@ namespace LibrairieTropBien.GUI
             if (hovered)
             {
 
-                _spriteBatch.DrawRectangle(this.elementBox, ElementColor);
+                _spriteBatch.Draw(texture,this.elementBox, ElementColor);
                 //// Measure string.
                 //System.Drawing.SizeF stringSize = new System.Drawing.SizeF();
                 //stringSize = this.Graphics.MeasureString(text, font);

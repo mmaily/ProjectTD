@@ -171,13 +171,14 @@ namespace DowerTefenseGame.Managers
                                 Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + btn.Name));
                                 // Que l'on place sur une tuile
                                 building.SetTile(SelectedTile);
-                                InfoPopUp info = new InfoPopUp( new Rectangle((int)((SelectedTile.getTilePosition().X-0.5)* currentMap.tileSize),
-                                                                            (int)((SelectedTile.getTilePosition().Y-0.5) * currentMap.tileSize),
-                                                                            currentMap.tileSize,currentMap.tileSize), 100, 50)
+                        InfoPopUp info = new InfoPopUp(new Rectangle((int)((SelectedTile.getTilePosition().X - 0.5) * currentMap.tileSize),
+                                                                    (int)((SelectedTile.getTilePosition().Y - 0.5) * currentMap.tileSize),
+                                                                    currentMap.tileSize, currentMap.tileSize), 100, 50)
                         {
                             Name = "TowerInfo",
                             Tag = "InfoPopUp",
-                            font = CustomContentManager.GetInstance().Fonts["font"]
+                            font = CustomContentManager.GetInstance().Fonts["font"],
+                            texture = CustomContentManager.GetInstance().Colors["grey"]
                         };
                         UIElementsList.Add(info);
                         building.SetInfoPopUp(info);
@@ -305,7 +306,7 @@ namespace DowerTefenseGame.Managers
         public void Draw(SpriteBatch _spriteBatch)
         {
             #region ==Rectangle droite contenant l'ui==
-            _spriteBatch.DrawRectangle(zoneUi, Color.Bisque);
+            _spriteBatch.Draw(CustomContentManager.GetInstance().Colors["pixel"],zoneUi, Color.Purple);
             #endregion 
             #region === Infos globales ===
 
