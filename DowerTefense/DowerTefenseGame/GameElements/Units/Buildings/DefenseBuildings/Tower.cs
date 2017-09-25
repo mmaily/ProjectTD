@@ -7,6 +7,8 @@ using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using DowerTefenseGame.GameElements.Projectiles;
 using DowerTefenseGame.Units;
+using LibrairieTropBien.GUI;
+using DowerTefenseGame.Screens;
 
 namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
 {
@@ -154,6 +156,10 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
         public List<Projectile> GetProjectileList()
         {
             return this.projectileList;
+        }
+        public override void SetInfoPopUp(InfoPopUp info)
+        {
+            info.setText("Damage : " + AttackPower+ Environment.NewLine+"Range" + this.Range);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace DowerTefenseGame.Screens
         public Editor()
         {
 
-            uiZone = new Rectangle(0, 0, 200, 400);
+            
 
             Directory.CreateDirectory(@"Content\savedMaps");
 
@@ -58,7 +58,7 @@ namespace DowerTefenseGame.Screens
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
-
+            uiZone = new Rectangle(0, 0, 200, 400);
             //Charge le manager
             this.contentManager = CustomContentManager.GetInstance();
 

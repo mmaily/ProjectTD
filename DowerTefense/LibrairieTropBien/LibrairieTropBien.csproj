@@ -7,8 +7,8 @@
     <ProjectGuid>{A2A33BCD-10C9-45CA-920B-43869C71A68D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibrairieTropBien.GUI</RootNamespace>
-    <AssemblyName>LibrairieTropBien.GUI</AssemblyName>
+    <RootNamespace>LibrairieTropBien</RootNamespace>
+    <AssemblyName>LibrairieTropBien</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="GUI\Button.cs" />
     <Compile Include="GUI\GuiElement.cs" />
+    <Compile Include="GUI\InfoPopUp.cs" />
     <Compile Include="GUI\ProgressBar.cs" />
     <Compile Include="Network\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -55,7 +55,7 @@ namespace DowerTefenseGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Use the Content_manager to load all the content, the different "Screens" can then acces them
-            CustomContentManager.GetInstance().LoadTextures(Content);
+            CustomContentManager.GetInstance().LoadTextures(Content,graphics.GraphicsDevice);
 
             // Réglage de la taille de l'écran selon la carte
             //graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;

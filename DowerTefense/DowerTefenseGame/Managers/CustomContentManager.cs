@@ -6,6 +6,7 @@ using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Projectiles;
 using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefenseGame.Units.Buildings;
+using Microsoft.Xna.Framework;
 
 namespace DowerTefenseGame.Managers
 {
@@ -22,6 +23,8 @@ namespace DowerTefenseGame.Managers
         public Dictionary<String, Texture2D> Textures;
         // Dictionnaire de polices
         public Dictionary<String, SpriteFont> Fonts;
+        //Dictionnaire des couleurs
+        public Dictionary<String, Texture2D> Colors;
         // Gestionnaire de contenu (parent)
         private ContentManager contentManager;
         public byte textureSize;
@@ -34,6 +37,7 @@ namespace DowerTefenseGame.Managers
             // Initialisation des dictionnaires
             Textures = new Dictionary<String, Texture2D>();
             Fonts = new Dictionary<String, SpriteFont>();
+            Colors = new Dictionary<String, Texture2D>();
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace DowerTefenseGame.Managers
         /// Chargement des textures
         /// </summary>
         /// <param name="_content"></param>
-        public void LoadTextures(ContentManager _content)
+        public void LoadTextures(ContentManager _content, GraphicsDevice _graphicsDevice)
         {
 
             this.contentManager = _content;
@@ -95,7 +99,19 @@ namespace DowerTefenseGame.Managers
 
 
             textureSize = (byte)Textures["BasicTower"].Height;
+#region Catalogue de couleur
+            // Make a 1x1 texture named pixel.  
+            Texture2D pixel = new Texture2D(_graphicsDevice, 1, 1);
 
+            // Create a 1D array of color data to fill the pixel texture with.  
+            Color[] colorData = {
+                        Color.Gray,
+                    };
+
+            // Set the texture data with our color information.  
+            pixel.SetData<Color>(colorData);
+            AddColors(pixel,"pixel");
+            #endregion
         }
 
         /// <summary>
@@ -139,6 +155,21 @@ namespace DowerTefenseGame.Managers
             {
                 // Sinon, on utilise le nom
                 Fonts.Add(_fontName, newFont);
+            }
+        }
+        public void AddColors(Texture2D _color, String _colorName = "")
+        {
+
+            // Le nom est il renseigné ?
+            if (_colorName == "")
+            {
+                // Si le ficihier est renseigné, on utilise ce critère
+                Colors.Add(_color.ToString(), _color);
+            }
+            else
+            {
+                // Sinon, on utilise le nom
+                Colors.Add(_colorName, _color);
             }
         }
     }

@@ -2,7 +2,7 @@
 using DowerTefenseGame.GameElements.Units;
 using Microsoft.Xna.Framework;
 using DowerTefenseGame.Managers;
-
+using LibrairieTropBien.GUI;
 
 namespace DowerTefenseGame.Units
 {
@@ -53,5 +53,6 @@ namespace DowerTefenseGame.Units
             // Attention au 64, TODO
             this.Position = tile.getTilePosition() * MapManager.GetInstance().CurrentMap.tileSize;
         }
+        public virtual void SetInfoPopUp(InfoPopUp _info) { }
     }
 }
