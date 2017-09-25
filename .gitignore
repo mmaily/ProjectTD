@@ -1,6 +1,3 @@
-
-Game1/\.vs/
-/.vs
-
+.vs/
 bin/
 obj/

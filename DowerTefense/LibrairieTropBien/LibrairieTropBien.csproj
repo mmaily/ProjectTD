@@ -48,8 +48,7 @@
     <Compile Include="GUI\Button.cs" />
     <Compile Include="GUI\GuiElement.cs" />
     <Compile Include="GUI\ProgressBar.cs" />
-    <Compile Include="Network\Data.cs" />
-    <Compile Include="Network\ObjectSender.cs" />
+    <Compile Include="Network\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

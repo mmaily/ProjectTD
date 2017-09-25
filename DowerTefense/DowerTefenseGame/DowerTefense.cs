@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using DowerTefenseGame.Screens;
 using DowerTefenseGame.Managers;
 
@@ -30,7 +29,6 @@ namespace DowerTefenseGame
             // Initialisation du gestionnaire de contenu
             CustomContentManager.GetInstance();
             IsFixedTimeStep = false;
-
 
         }
 

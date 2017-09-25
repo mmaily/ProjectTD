@@ -35,7 +35,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthentificationServer.cs" />
     <Compile Include="DowerTefenseGameServer.cs" />
+    <Compile Include="Elements\Client.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

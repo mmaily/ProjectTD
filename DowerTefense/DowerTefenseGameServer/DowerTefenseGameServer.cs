@@ -15,46 +15,23 @@ namespace DowerTefenseGameServer
     /// </summary>
     public static class DowerTefenseGameServer
     {
-        // Port du serveur de connexion
-        private const string localIP = "127.0.0.1";
-        private const int portNum = 42666;
-
 
         /// <summary>
         /// Méthode principale de lancement
         /// </summary>
-        public static int Main()
+        public static void Main()
         {
+
+            AuthentificationServer authServer = new AuthentificationServer();
+
             // Variable de sortie du serveur
             bool exit = false;
 
-            // Adress IP locale
-            IPAddress local = IPAddress.Parse(localIP);
+            Console.ReadLine();
 
-            // Auditeur TCP
-            TcpListener listener = new TcpListener(local, portNum);
-            listener.Start();
-            System.Console.WriteLine("Serveur lancé. En attente.");
-
-            // Boucle principale
-            while (!exit)
-            {
-                // Attente d'un client
-                TcpClient connectionClient = listener.AcceptTcpClient();
-
-                var item = ObjectSender.Receive(connectionClient);
-
-                Type type = item.GetType();
-
-                //connectionClient.Close();
-            }
-
-            // Lancement du serveur
-
-
-            // sortie
-            return 0;
         }
+
+
     }
 
 }
