@@ -6,19 +6,21 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using DowerTefenseGame.GameElements.Projectiles;
+using LibrairieTropBien.GUI;
 
 namespace DowerTefenseGame.Units.Buildings
 {
-    class SpawnerBuilding : Building
+    public class SpawnerBuilding : Building
     {
         protected double SpawnRate; //Number of mobs/second
         protected double lastSpawn; // Time of the last spawned mob
-        protected Boolean locked=true; // Le batiment ne spawn qui s'il est lock
-        public Boolean powered = true; // Le bâtiment ne spawn que s'il est powered
+        public Boolean locked=false; // Le batiment ne spawn qui s'il est lock
+        public Boolean powered; // Le bâtiment ne spawn que s'il est powered
         public int PowerNeeded { get; protected set; } // Energie requise par le bâtiment
         public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
         protected Unit Unit;// Type d'unité qu'il spawn
-        protected MapManager mapManager = MapManager.GetInstance();
+        protected String UnitName; 
+        public MapManager mapManager = MapManager.GetInstance();
         public enum NameEnum
         {
             BasicSpawner, // Spawner d'unité de base
@@ -29,9 +31,9 @@ namespace DowerTefenseGame.Units.Buildings
         {
             this.SpawnRate = 0.2;
             this.PowerNeeded = 1;
-            BuildingsManager.GetInstance().FreeBuildingsList.Add(this);
             this.Cost = 100;
             setName();
+            this.NbreOfInstantSpawn = 1;
         }
         public override void OnDuty()
         {
@@ -39,10 +41,6 @@ namespace DowerTefenseGame.Units.Buildings
             if (CanSpawn())
             {
                 SpawnUnit();
-                if(BuildingsManager.GetInstance().gameTime.TotalGameTime.Milliseconds > lastSpawn + (1 / SpawnRate) * 1000)
-                {
-                    TurnPower();
-                }
             }
         }
 
@@ -77,6 +75,20 @@ namespace DowerTefenseGame.Units.Buildings
         public virtual void setName()
         {
 
+        }
+        public void Lock()
+        {
+            this.locked = true;
+            this.CreateOnEventListener();
+        }
+        public SpawnerBuilding DeepCopy()
+        {
+            SpawnerBuilding other = (SpawnerBuilding)this.MemberwiseClone();
+            return other;
+        }
+        public override void SetInfoPopUp(InfoPopUp _info)
+        {
+            _info.setText( "Unit Spawned : " + UnitName + Environment.NewLine + "Spawn Rate : " + SpawnRate+ Environment.NewLine+ "Number spawned " + NbreOfInstantSpawn);
         }
     }
 }

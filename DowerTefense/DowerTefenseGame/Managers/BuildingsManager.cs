@@ -2,6 +2,7 @@
 using DowerTefenseGame.GameElements.Units;
 using DowerTefenseGame.Units;
 using DowerTefenseGame.Units.Buildings;
+using LibrairieTropBien.GUI;
 using Microsoft.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -50,11 +51,11 @@ namespace DowerTefenseGame.Managers
         /// <summary>
         /// Liste de tous les bâtiments "locked"
         /// </summary>
-        public List<Building> LockedBuildingsList { get; set; }
+        public List<SpawnerBuilding> LockedBuildingsList { get; set; }
         /// <summary>
         /// Liste de tous les bâtiments libre
         /// </summary>
-        public List<Building> FreeBuildingsList { get; set; }
+        public List<SpawnerBuilding> FreeBuildingsList { get; set; }
         /// <summary>
         /// Liste de tous les bâtiments libre
         /// </summary>
@@ -77,8 +78,8 @@ namespace DowerTefenseGame.Managers
         public BuildingsManager()
         {
            
-            LockedBuildingsList = new List<Building>();
-            FreeBuildingsList = new List<Building>();
+            LockedBuildingsList = new List<SpawnerBuilding>();
+            FreeBuildingsList = new List<SpawnerBuilding>();
             DefenseBuildingsList = new List<Building>();
             imageRatio=MapManager.GetInstance().imageRatio;
             WaitingForConstruction = new List<Building>();
@@ -147,6 +148,20 @@ namespace DowerTefenseGame.Managers
             Price.Add("BasicTower", 100);
             Price.Add("RapidFireTower", 50);
             Price.Add("BasicSpawner", 100);
+        }
+        public void lockBuildings()
+        {
+            foreach(Building bd in LockedBuildingsList) { bd.DeleteOnEventListener(); }
+            LockedBuildingsList.Clear();
+            SpawnerBuilding Spawner;
+            foreach (SpawnerBuilding sp in FreeBuildingsList.FindAll(sp => sp.powered))
+            {
+
+                Spawner = sp.DeepCopy();
+                Spawner.Lock();// Une fois lock, le bâtiment commence à spawn
+                LockedBuildingsList.Add(Spawner);
+            }
+
         }
     }
 

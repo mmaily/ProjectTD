@@ -99,7 +99,7 @@ namespace DowerTefenseGame.Managers
 
 
             textureSize = (byte)Textures["BasicTower"].Height;
-#region Catalogue de couleur
+            #region Catalogue de couleur
             // Make a 1x1 texture named pixel.  
             Texture2D pixel = new Texture2D(_graphicsDevice, 1, 1);
 

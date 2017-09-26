@@ -1,4 +1,5 @@
-﻿using DowerTefenseGame.Units.Buildings;
+﻿using DowerTefenseGame.Managers;
+using DowerTefenseGame.Units.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings
         public override void setName()
         {
             this.name = "BasicSpawner";
+            this.UnitName = "Basic Unit";
         }
     }
 }

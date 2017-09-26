@@ -24,6 +24,8 @@ namespace DowerTefenseGame.Screens
         public double time;
         //Joueur (défenseur pour l'instant)
         public DefensePlayer Player;
+        //Faire jouer l'AI
+        private Boolean AiGame = false;
 
         /// <summary>
         /// Constructeur principal
@@ -41,10 +43,11 @@ namespace DowerTefenseGame.Screens
         {
             this.Graphics = _graphics;
             // Init de l'UI
-            UIManager.GetInstance().Initialize();
+            
             Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;
             Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width;
             Graphics.ApplyChanges();
+            UIManager.GetInstance().Initialize(_graphics);
         }
 
         /// <summary>
@@ -83,6 +86,7 @@ namespace DowerTefenseGame.Screens
                 lastWaveTick = _gameTime.TotalGameTime.TotalMilliseconds;
                 // Nouvelle vague
                 newWave = true;
+
             }
             #endregion
 
@@ -92,10 +96,17 @@ namespace DowerTefenseGame.Screens
             UnitsManager.GetInstance().Update(_gameTime);
             // Mise à jour du gestionnaire de bâtiments
             BuildingsManager.GetInstance().Update(_gameTime);
+            if (AiGame) { 
             //Mise à jour des tâche de l'IA
             AiManager.GetInstance().Update(_gameTime, newWave);
+            }
             // Mise à jour du gestionnaire d'interface
             UIManager.GetInstance().Update(_gameTime, newWave, timeSince);
+            if (newWave == true)
+            {
+                BuildingsManager.GetInstance().lockBuildings();
+                UIManager.GetInstance().CreateLockedList();
+            }
         }
 
         public override void Draw(SpriteBatch _spriteBatch)
