@@ -32,31 +32,32 @@ namespace DowerTefenseGame.Screens
         {
             this.Graphics = _graphics;
             UIElementsList = new List<GuiElement>();
-            #region Création du bouton JOUER
+            #region Création du bouton Versus IA
             // Bouton de contruction de tour basique
             int height = 100;
             int width = 150;
             Button newButton = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight / 2 - height) / 2, width, height)
             {
-                Name = "BasicSpawner",
+                Name = "versusIA",
                 Tag = "horsLigne"
 
             };
-            newButton.SetText("JOUER", CustomContentManager.GetInstance().Fonts["font"]);
-            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.SetText("Versus IA", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.BackgroundColor = Color.DarkGreen;
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             #endregion
             #region Création du se connecter au compte
             newButton = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight / 2 - height) / 2 + height, width, height)
             {
-                Name = "BasicSpawner",
-                Tag = "connexion"
-
+                Name = "Matchmaking",
+                Tag = "matchmaking"
             };
-            newButton.SetText("SE CONNECTER", CustomContentManager.GetInstance().Fonts["font"]);
-            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.SetText("Matchmaking", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.BackgroundColor = Color.Blue;
+            newButton.TextColor = Color.White;
             newButton.OnRelease += Btn_OnClick;
+            newButton.Disabled = true;
             UIElementsList.Add(newButton);
             #endregion
             #region Création du bouton pour aller sur l'éditeur
@@ -100,16 +101,22 @@ namespace DowerTefenseGame.Screens
             switch (_state)
             {
                 case MultiplayerState.Disconnected:
+                    // Modification du bouton de connexion
                     connectionButton.Text = "Connexion";
                     connectionButton.BackgroundColor = Color.DarkRed;
+                    UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = true;
                     break;
                 case MultiplayerState.Connected:
+                    // Modification du bouton de connexion
                     connectionButton.Text = "Connexion...";
                     connectionButton.BackgroundColor = Color.DarkOrange;
                     break;
                 case MultiplayerState.Authentified:
+                    // Modification du bouton de connexion
                     connectionButton.Text = MultiplayerManager.name;
                     connectionButton.BackgroundColor = Color.Green;
+                    // Modification du bouton de matchmaking
+                    UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = false;
                     break;
                 case MultiplayerState.SearchingGame:
                     break;
@@ -140,8 +147,7 @@ namespace DowerTefenseGame.Screens
                     case "horsLigne":
                         ScreenManager.GetInstance().SelectScreen(1);
                         break;
-                    case "connexion":
-                        ScreenManager.GetInstance().SelectScreen(0);
+                    case "matchmaking":
                         break;
                     case "editor":
                         ScreenManager.GetInstance().SelectScreen(2);

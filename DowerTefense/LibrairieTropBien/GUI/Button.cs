@@ -25,6 +25,7 @@ namespace LibrairieTropBien.GUI
 
 
 
+
         #endregion
 
         #region === Propriétés du bouton
@@ -77,6 +78,7 @@ namespace LibrairieTropBien.GUI
             HoveredColor = Color.White;
             BackgroundColor = Color.Transparent;
             TextColor = Color.Black;
+            Disabled = false;
         }
 
         /// <summary>
@@ -139,14 +141,6 @@ namespace LibrairieTropBien.GUI
                 }
 
             }
-            if (NeedDim)
-            {
-                Dim = 0.5f;
-            }
-            else
-            {
-               Dim = 1f;
-            }
         }
 
         /// <summary>
@@ -171,10 +165,12 @@ namespace LibrairieTropBien.GUI
                 return;
             }
 
+            float opacity = this.GreyedOut ? this.Opacity : 1f;
+
             // Si la texture est définie
             if (texture != null)
             {
-                _spriteBatch.Draw(texture, elementBox, Color.White*Dim);
+                _spriteBatch.Draw(texture, elementBox, Color.White* opacity);
             }
             else
             {
@@ -186,9 +182,9 @@ namespace LibrairieTropBien.GUI
             }
 
             // Si on est sous la souris
-            if (hovered)
+            if (hovered && !Disabled)
             {
-                _spriteBatch.DrawRectangle(elementBox, HoveredColor * Dim, 2);
+                _spriteBatch.DrawRectangle(elementBox, HoveredColor * opacity, 2);
             }
 
             // Si le bouton possède du texte

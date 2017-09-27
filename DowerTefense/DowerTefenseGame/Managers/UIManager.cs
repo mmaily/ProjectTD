@@ -214,14 +214,14 @@ namespace DowerTefenseGame.Managers
                     {
                     ActiveList[btn].powered = true;
                     attackPlayer.usedEnergy += ActiveList[btn].PowerNeeded;
-                    btn.NeedDim = false;
+                    btn.GreyedOut = false;
                     return;
                     }
                     if (btn.Tag.Equals("ActiveList") && (ActiveList[btn].powered))
                     {
                         ActiveList[btn].powered = false;
                         attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
-                        btn.NeedDim = true;
+                        btn.GreyedOut = true;
                     return;
                     }
                 #endregion
@@ -260,10 +260,10 @@ namespace DowerTefenseGame.Managers
             Parallel.ForEach(UIElementsList, element =>
             {
             #region ===Grise les boutons de construction en attaque====
-                if (element.GetType().Equals(typeof(Button)) && element.Tag=="defenseBuild" && BuildingsManager.GetInstance().Price[element.Name] <= defensePlayer.totalGold) element.NeedDim = false;
+                if (element.GetType().Equals(typeof(Button)) && element.Tag=="defenseBuild" && BuildingsManager.GetInstance().Price[element.Name] <= defensePlayer.totalGold) element.GreyedOut = false;
                     if (element.GetType().Equals(typeof(Button)) && element.Tag == "defenseBuild" && BuildingsManager.GetInstance().Price[element.Name] > defensePlayer.totalGold)
                     {
-                        element.NeedDim = true;
+                        element.GreyedOut = true;
                     }
             #endregion
                 element.Update();
@@ -500,7 +500,7 @@ namespace DowerTefenseGame.Managers
                 };
                 btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
                 btnBuild.OnRelease += Btn_OnClick;
-                btnBuild.NeedDim = true;
+                btnBuild.GreyedOut = true;
                 lockedButton.Add(btnBuild);
                 //Add la popUp qui va bien
                 InfoPopUp info = new InfoPopUp(new Rectangle(btnBuild.elementBox.Left,

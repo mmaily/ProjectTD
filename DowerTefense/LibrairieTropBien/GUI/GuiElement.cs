@@ -17,16 +17,31 @@ namespace LibrairieTropBien.GUI
         /// Rectange définissant l'élément
         /// </summary>
         public Rectangle elementBox;
-        private Boolean needDim = false;
+        /// <summary>
+        /// Etat du bouton : désactivé ou non
+        /// </summary>
+        private bool disabled;
+
+        public bool Disabled
+        {
+            get { return disabled; }
+            set
+            {
+                disabled = value;
+                // Si désactivé, on grise le bouton aussi
+                GreyedOut = disabled;
+            }
+        }
         /// <summary>
         /// Grisage de l'élément
         /// </summary>
-        public bool NeedDim { get => needDim; set => needDim = value; }
+        public bool GreyedOut { get => greyeyOut; set => greyeyOut = value; }
+        private Boolean greyeyOut = false;
         /// <summary>
         /// Intensité du grisage
         /// </summary>
-        private float dim = 0.5f;
-        public float Dim { get => dim; set => dim = value; }
+        public float Opacity { get => opacity; set => opacity = value; }
+        private float opacity = 0.5f;
         /// <summary>
         /// Element à dessiner ou pas
         /// </summary>
