@@ -16,6 +16,7 @@ namespace LibrairieTropBien.GUI
         private Boolean hovered = false;
         public String text = null;
         public SpriteFont font = null;
+        public Vector2 stringSize;
         public Texture2D texture;
         Rectangle area;
         private Color defaultActive = Microsoft.Xna.Framework.Color.LightBlue;
@@ -23,12 +24,14 @@ namespace LibrairieTropBien.GUI
         {
             this.ElementColor = Microsoft.Xna.Framework.Color.White;
         }
-        public InfoPopUp(Rectangle _area ,int _width, int _height)
+        public InfoPopUp(Rectangle _area )
         {
             this.ElementColor = Microsoft.Xna.Framework.Color.White;
-            this.elementBox = new Rectangle(0,0, _width, _height);
+            this.elementBox = new Rectangle();
             this.area = _area;
         }
+        public int leftMargin = 5;
+        public int topMargin =5;
         public override void Update()
         {
             // Récupération de l'état de la souris
@@ -57,14 +60,15 @@ namespace LibrairieTropBien.GUI
                 //// Measure string.
                 //System.Drawing.SizeF stringSize = new System.Drawing.SizeF();
                 //stringSize = this.Graphics.MeasureString(text, font);
-                _spriteBatch.DrawString(font, text, new Vector2(this.elementBox.X, this.elementBox.Y) +
-                                        new Vector2(0,0), Color.Azure);
+                _spriteBatch.DrawString(font, text, elementBox.Location.ToVector2()+new Vector2(leftMargin,topMargin), Color.Azure);
             }
 
         }
         public void setText(String _text)
         {
             text = _text;
+            stringSize = font.MeasureString(text);
+            this.elementBox = new Rectangle(0, 0, (int)stringSize.X+2*leftMargin, (int)stringSize.Y+2*topMargin);
         }
     }
 }

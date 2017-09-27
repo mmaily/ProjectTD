@@ -44,8 +44,8 @@ namespace DowerTefenseGame.Screens
             this.Graphics = _graphics;
             // Init de l'UI
             
-            Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;
-            Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width;
+            Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize+topMargin*2;
+            Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width+leftMargin*2;
             Graphics.ApplyChanges();
             UIManager.GetInstance().Initialize(_graphics);
         }

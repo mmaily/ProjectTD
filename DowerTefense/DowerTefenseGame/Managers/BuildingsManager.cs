@@ -1,17 +1,13 @@
 ﻿using DowerTefenseGame.GameElements;
 using DowerTefenseGame.GameElements.Units;
+using DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings;
+using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefenseGame.Units;
 using DowerTefenseGame.Units.Buildings;
-using LibrairieTropBien.GUI;
-using Microsoft.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace DowerTefenseGame.Managers
 {
@@ -64,10 +60,14 @@ namespace DowerTefenseGame.Managers
         /// Liste de construction en attente pour le prochain update
         /// </summary>
         public List<Building> WaitingForConstruction { get; set; }
+        public object Spawner { get; }
+
         /// <summary>
         /// Dictionnaire des prix des bâtiments
         /// </summary>
-        public Dictionary<String, int> Price;
+        public Dictionary<string, int> Price;
+        //Catalogue des bâtiment de bases (utile pour display les info de construcion par exemple)
+        public Dictionary<string, Building> Dummies;
         // Ratio entre l'image de la tour et la taille des tiles
         public float imageRatio;
 
@@ -77,7 +77,6 @@ namespace DowerTefenseGame.Managers
         /// </summary>
         public BuildingsManager()
         {
-           
             LockedBuildingsList = new List<SpawnerBuilding>();
             FreeBuildingsList = new List<SpawnerBuilding>();
             DefenseBuildingsList = new List<Building>();
@@ -85,7 +84,32 @@ namespace DowerTefenseGame.Managers
             WaitingForConstruction = new List<Building>();
             Price = new Dictionary<string, int>();
             SetPrice();
-            // On instancie l'objet GameTime
+            #region === Remplir le catalogue des unités de base==
+            Dummies = new Dictionary<string, Building>();
+            //Building bd = new BasicTower();
+            //bd.DeleteOnEventListener();
+            //Dummies.Add("BasicTower", bd);
+            //bd = new RapidFireTower();
+            //bd.DeleteOnEventListener();
+            //Dummies.Add("RapidFireTower", bd);
+            //BasicSpawner bd;
+            //bd = new BasicSpawner();
+            //bd.DeleteOnEventListener();
+            //Dummies.Add("BasicSpawner", bd);
+            //Building newBuilding;
+            //foreach (Tower.NameEnum Name in Enum.GetValues(typeof(Tower.NameEnum)))
+            //{
+            //    newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + Name));
+            //    newBuilding.DeleteOnEventListener();
+            //    Dummies.Add(Name.ToString(), newBuilding);
+            //}
+            //foreach (SpawnerBuilding.NameEnum Name in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
+            //{
+            //    newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + Name));
+            //    newBuilding.DeleteOnEventListener();
+            //    Dummies.Add(Name.ToString(), newBuilding);
+            //}
+            #endregion
         }
 
         /// <summary>

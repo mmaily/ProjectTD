@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using DowerTefenseGame.GameElements;
+using DowerTefenseGame.Screens;
 
 namespace DowerTefenseGame.Managers
 {
@@ -18,6 +19,8 @@ namespace DowerTefenseGame.Managers
         // Booléen de calcul du chemin
         private bool pathComputed = false;
         public float imageRatio;
+        //Décalage de la map dû à la marge
+        Vector2 marginOffset;
 
         /// <summary>
         /// Constructeur du gestionnaire de carte
@@ -27,6 +30,7 @@ namespace DowerTefenseGame.Managers
             this.CurrentMap = new Map();
             //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
             this.imageRatio = (float)CurrentMap.tileSize/ (float)CustomContentManager.GetInstance().textureSize;
+            marginOffset = new Vector2(ScreenManager.GetInstance().Screens["GameScreen"].leftMargin, ScreenManager.GetInstance().Screens["GameScreen"].topMargin);
         }
 
         /// <summary>
@@ -71,12 +75,12 @@ namespace DowerTefenseGame.Managers
             foreach (Tile tile in CurrentMap.Tiles)
             {
                 // On affiche la texture correspondant à la nature de la carte
-                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize), null, null, null, 0f, Vector2.One*imageRatio, Color.White);
+                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null, null,null, 0f, Vector2.One*imageRatio, Color.White);
                 // Si cette tuile est sélectionnée ou sous le curseur
                 if (tile.selected || tile.overviewed)
                 {
                     // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize),null,null,null,0f, Vector2.One*imageRatio, Color.White);
+                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null,null,null,0f, Vector2.One*imageRatio, Color.White);
                     // On reset le boolée "sous le curseur"
                     tile.overviewed = false;
                 }

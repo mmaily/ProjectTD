@@ -3,6 +3,7 @@ using DowerTefenseGame.GameElements.Units;
 using Microsoft.Xna.Framework;
 using DowerTefenseGame.Managers;
 using LibrairieTropBien.GUI;
+using System;
 
 namespace DowerTefenseGame.Units
 {
@@ -19,7 +20,8 @@ namespace DowerTefenseGame.Units
 
         public Building() : base()
         {
-            CreateOnEventListener();
+         CreateOnEventListener();
+
         }
         //Ecoute l'event 'OnUnitInRange" et add la cible à sa liste
         public void CreateOnEventListener()
@@ -61,5 +63,6 @@ namespace DowerTefenseGame.Units
             this.Position = tile.getTilePosition() * MapManager.GetInstance().CurrentMap.tileSize;
         }
         public virtual void SetInfoPopUp(InfoPopUp _info) { }
+
     }
 }

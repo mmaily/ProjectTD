@@ -64,7 +64,7 @@ namespace DowerTefenseGame
             graphics.PreferredBackBufferWidth = 600;
             graphics.ApplyChanges();
             //Demande le chargement du premier écran
-            ScreenManager.GetInstance().SelectScreen(0);
+            ScreenManager.GetInstance().SelectScreen("EntranceScreen");
 
         }
 
