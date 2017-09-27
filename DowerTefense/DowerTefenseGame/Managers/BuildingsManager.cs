@@ -62,12 +62,8 @@ namespace DowerTefenseGame.Managers
         public List<Building> WaitingForConstruction { get; set; }
         public object Spawner { get; }
 
-        /// <summary>
-        /// Dictionnaire des prix des bâtiments
-        /// </summary>
-        public Dictionary<string, int> Price;
         //Catalogue des bâtiment de bases (utile pour display les info de construcion par exemple)
-        public Dictionary<string, Building> Dummies;
+        public List<Building> Dummies;
         // Ratio entre l'image de la tour et la taille des tiles
         public float imageRatio;
 
@@ -82,33 +78,12 @@ namespace DowerTefenseGame.Managers
             DefenseBuildingsList = new List<Building>();
             imageRatio=MapManager.GetInstance().imageRatio;
             WaitingForConstruction = new List<Building>();
-            Price = new Dictionary<string, int>();
-            SetPrice();
             #region === Remplir le catalogue des unités de base==
-            Dummies = new Dictionary<string, Building>();
-            //Building bd = new BasicTower();
-            //bd.DeleteOnEventListener();
-            //Dummies.Add("BasicTower", bd);
-            //bd = new RapidFireTower();
-            //bd.DeleteOnEventListener();
-            //Dummies.Add("RapidFireTower", bd);
-            //BasicSpawner bd;
-            //bd = new BasicSpawner();
-            //bd.DeleteOnEventListener();
-            //Dummies.Add("BasicSpawner", bd);
-            //Building newBuilding;
-            //foreach (Tower.NameEnum Name in Enum.GetValues(typeof(Tower.NameEnum)))
-            //{
-            //    newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + Name));
-            //    newBuilding.DeleteOnEventListener();
-            //    Dummies.Add(Name.ToString(), newBuilding);
-            //}
-            //foreach (SpawnerBuilding.NameEnum Name in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
-            //{
-            //    newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + Name));
-            //    newBuilding.DeleteOnEventListener();
-            //    Dummies.Add(Name.ToString(), newBuilding);
-            //}
+            Dummies = new List<Building>();
+            foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
+            {
+                Dummies.Add((Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString())));
+            }
             #endregion
         }
 
@@ -160,19 +135,11 @@ namespace DowerTefenseGame.Managers
                 _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name],
                                 new Vector2(building.GetTile().line * map.tileSize, building.GetTile().column * map.tileSize),
                                 null, null, null, 0f, Vector2.One * imageRatio,
-                                Microsoft.Xna.Framework.Color.White);
+                                Color.White);
             }
 
         }
-        /// <summary>
-        /// Méthode pour ajouter les prix des bâtiments au dictionnaire
-        /// </summary>
-        public void SetPrice()
-        {
-            Price.Add("BasicTower", 100);
-            Price.Add("RapidFireTower", 50);
-            Price.Add("BasicSpawner", 100);
-        }
+
         public void lockBuildings()
         {
             foreach(Building bd in LockedBuildingsList) { bd.DeleteOnEventListener(); }

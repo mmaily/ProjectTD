@@ -76,7 +76,7 @@ namespace DowerTefenseGame.Managers
             currentMap = MapManager.GetInstance().CurrentMap;
 
 
-            leftUIOffset = currentMap.mapWidth * currentMap.tileSize + ScreenManager.GetInstance().Screens["GameScreen"].topMargin*2;
+            leftUIOffset = currentMap.mapWidth * currentMap.tileSize + ScreenManager.GetInstance().Screens["GameScreen"].topMargin * 2;
             //Création d'une zone pour l'ui
             zoneUi = new Rectangle(leftUIOffset, ScreenManager.GetInstance().Screens["GameScreen"].topMargin, 300, currentMap.mapHeight * currentMap.tileSize);
 
@@ -120,7 +120,7 @@ namespace DowerTefenseGame.Managers
             btnBuild.OnRelease += Btn_OnClick;
             UIElementsList.Add(btnBuild);
             //Bouton de construction de tour rapide
-            btnBuild = new Button(30+leftUIOffset+btnBuild.elementBox.Width, 100, btnSize, btnSize)
+            btnBuild = new Button(30 + leftUIOffset + btnBuild.elementBox.Width, 100, btnSize, btnSize)
             {
                 Name = "RapidFireTower",
                 Tag = "defenseBuild"
@@ -147,7 +147,7 @@ namespace DowerTefenseGame.Managers
             #endregion
 
             // Bouton de changement de mode
-            Button btnMode = new Button(Graphics.PreferredBackBufferWidth-btnSize, 0, btnSize, btnSize)
+            Button btnMode = new Button(Graphics.PreferredBackBufferWidth - btnSize, 0, btnSize, btnSize)
             {
                 Name = "ModeSwitch",
                 Tag = "UI",
@@ -174,17 +174,23 @@ namespace DowerTefenseGame.Managers
             if (sender.GetType() == typeof(Button))
             {
                 Button btn = (Button)sender;
-                    if (btn.Tag.Equals("defenseBuild") && SelectedTile != null && BuildingsManager.GetInstance().Price[btn.Name] <= defensePlayer.totalGold)
+                // Si le bouton est une construction et qu'on l'on sélectionne une tuile
+                if (btn.Tag.Equals("defenseBuild") && SelectedTile != null)
+                {
+                    // On récupère le bâtiment à construire
+                    Building building = BuildingsManager.GetInstance().Dummies.Find(b => b.name.Equals(btn.Name));
+                    // Si la tuile est libre, n'a pas de bâtiment dessus et le joueur a assez d'argent
+                    if (SelectedTile.TileType == Tile.TileTypeEnum.Free
+                        && SelectedTile.building == null
+                        && (building.Cost <= defensePlayer.totalGold))
                     {
-                            if (SelectedTile.TileType == Tile.TileTypeEnum.Free && SelectedTile.building == null)
-                            {
-                                // On créé un bâtiment de ce type
-                                Building building = BuildingsManager.GetInstance().Dummies[btn.Name];
-                                // Que l'on place sur une tuile
-                                building.SetTile(SelectedTile);
-                                InfoPopUp info = new InfoPopUp(new Rectangle((int)((SelectedTile.getTilePosition().X - 0.5) * currentMap.tileSize),
-                                                                    (int)((SelectedTile.getTilePosition().Y - 0.5) * currentMap.tileSize),
-                                                                    currentMap.tileSize, currentMap.tileSize))
+                        // On créé un bâtiment de ce type
+                        // TODO : Ici faire une copie de l'instance de building
+                        // Que l'on place sur cette tuile
+                        building.SetTile(SelectedTile);
+                        InfoPopUp info = new InfoPopUp(new Rectangle((int)((SelectedTile.getTilePosition().X - 0.5) * currentMap.tileSize),
+                                                            (int)((SelectedTile.getTilePosition().Y - 0.5) * currentMap.tileSize),
+                                                            currentMap.tileSize, currentMap.tileSize))
                         {
                             Name = "TowerInfo",
                             Tag = "InfoPopUp",
@@ -193,55 +199,61 @@ namespace DowerTefenseGame.Managers
                         };
                         UIElementsList.Add(info);
                         building.SetInfoPopUp(info);
+                        // Retrait du coût du bâtiment
                         defensePlayer.totalGold -= building.Cost;
-
-
-                            }
-                        
                     }
-                    if(btn.Tag.Equals("attackBuild") && BuildingsManager.GetInstance().Price[btn.Name] <= attackPlayer.totalGold)
+                }
+                // Si le bouton est une construction attaque
+                if (btn.Tag.Equals("attackBuild"))
+                {
+                    // On récupère le bâtiment à construire
+                    Building building = BuildingsManager.GetInstance().Dummies.Find(b => b.name.Equals(btn.Name));
+                    if (building.Cost <= attackPlayer.totalGold)
                     {
-                    SpawnerBuilding building = (SpawnerBuilding)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + btn.Name));
-                    attackPlayer.totalGold -= building.Cost;
-                    UpdateBtnLists(building);
-                    BuildingsManager.GetInstance().FreeBuildingsList.Add(building);
-                    if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (building.PowerNeeded))
-                        {
-                        building.powered = true;
-                        attackPlayer.usedEnergy += building.PowerNeeded;
-                        }
+                        // TODO : Ici faire une copie de l'instance de building
+                        //SpawnerBuilding spawnbuilding = (SpawnerBuilding)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + btn.Name));
+                        //attackPlayer.totalGold -= spawnbuilding.Cost;
+                        //UpdateBtnLists(spawnbuilding);
+                        //BuildingsManager.GetInstance().FreeBuildingsList.Add(spawnbuilding);
+                        //if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawnbuilding.PowerNeeded))
+                        //{
+                        //    spawnbuilding.powered = true;
+                        //    attackPlayer.usedEnergy += spawnbuilding.PowerNeeded;
+                        //}
                     }
+
+                }
                 #region ===Gestion de l'appui sur les boutons de l'attaquand sur sa liste
-                    if (btn.Tag.Equals("ActiveList")&& attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (ActiveList[btn].PowerNeeded)&& !(ActiveList[btn].powered))
-                    {
+                if (btn.Tag.Equals("ActiveList") && attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (ActiveList[btn].PowerNeeded) && !(ActiveList[btn].powered))
+                {
                     ActiveList[btn].powered = true;
                     attackPlayer.usedEnergy += ActiveList[btn].PowerNeeded;
                     btn.GreyedOut = false;
                     return;
-                    }
-                    if (btn.Tag.Equals("ActiveList") && (ActiveList[btn].powered))
-                    {
-                        ActiveList[btn].powered = false;
-                        attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
-                        btn.GreyedOut = true;
+                }
+                if (btn.Tag.Equals("ActiveList") && (ActiveList[btn].powered))
+                {
+                    ActiveList[btn].powered = false;
+                    attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
+                    btn.GreyedOut = true;
                     return;
-                    }
+                }
                 #endregion
                 else if (btn.Tag.Equals("UI"))
+                {
+                    if (btn.Name.Equals("ModeSwitch"))
                     {
-                        if (btn.Name.Equals("ModeSwitch"))
+                        if (mode.Equals("defense"))
                         {
-                            if (mode.Equals("defense"))
-                            {
-                                mode = "attack";
-                            }
-                            else if (mode.Equals("attack"))
-                            {
-                                mode = "defense";
-                            }
+                            mode = "attack";
+                        }
+                        else if (mode.Equals("attack"))
+                        {
+                            mode = "defense";
                         }
                     }
-                
+                }
+
             }
 
         }
@@ -261,13 +273,14 @@ namespace DowerTefenseGame.Managers
             // Mise à jour de tous les élémets d'interface
             Parallel.ForEach(UIElementsList, element =>
             {
-            #region ===Grise les boutons de construction en attaque====
-                if (element.GetType().Equals(typeof(Button)) && element.Tag=="defenseBuild" && BuildingsManager.GetInstance().Price[element.Name] <= defensePlayer.totalGold) element.GreyedOut = false;
-                    if (element.GetType().Equals(typeof(Button)) && element.Tag == "defenseBuild" && BuildingsManager.GetInstance().Price[element.Name] > defensePlayer.totalGold)
-                    {
-                        element.GreyedOut = true;
-                    }
-            #endregion
+                // Si l'élément est de type bouton
+                if (element.GetType().Equals(typeof(Button)) && element.Tag == "defenseBuild")
+                {
+                    // On récupère le bâtiment associé
+                    Building building = BuildingsManager.GetInstance().Dummies.Find(b => b.name.Equals("name"));
+                    // On grise le bouton si le joueur n'a pas assez d'argent
+                    element.GreyedOut = (building.Cost <= defensePlayer.totalGold) ? false : true;
+                }
                 element.Update();
             });
         }
@@ -335,7 +348,7 @@ namespace DowerTefenseGame.Managers
         public void Draw(SpriteBatch _spriteBatch)
         {
             #region ==Rectangle droite contenant l'ui==
-            _spriteBatch.Draw(CustomContentManager.GetInstance().Colors["pixel"],zoneUi, Color.Purple);
+            _spriteBatch.Draw(CustomContentManager.GetInstance().Colors["pixel"], zoneUi, Color.Purple);
             #endregion 
             #region === Infos globales ===
 
@@ -356,7 +369,7 @@ namespace DowerTefenseGame.Managers
             _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + BuildingsManager.GetInstance().FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             offset = 420;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + BuildingsManager.GetInstance().DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
-            
+
             // Affichage du nom de la carte
             _spriteBatch.DrawString(deFaultFont, currentMap.Name + " -- Mode : " + mode, new Vector2(leftUIOffset, 5), Color.Wheat);
 
@@ -372,16 +385,16 @@ namespace DowerTefenseGame.Managers
                 _spriteBatch.DrawString(deFaultFont, "Energie du joueur : " + (attackPlayer.totalEnergy - attackPlayer.usedEnergy) + "/" + attackPlayer.totalEnergy, new Vector2(leftUIOffset, offset), Color.White);
             }
             // Si une tuile est sélectionnée
-            if(SelectedTile != null)
+            if (SelectedTile != null)
             {
                 // On affiche les infos de la tuile
                 this.DisplaySelectedTile(_spriteBatch);
 
                 // Si la tuile possède un bâtiment
-                if(SelectedTile.building != null)
+                if (SelectedTile.building != null)
                 {
                     // Si le bâtiment possède une portée non nulle
-                    if(SelectedTile.building.Range > 0)
+                    if (SelectedTile.building.Range > 0)
                     {
                         _spriteBatch.DrawCircle(SelectedTile.building.Position, SelectedTile.building.Range, 50, Color.Green, 5);
                     }
@@ -406,7 +419,7 @@ namespace DowerTefenseGame.Managers
                     if (mode.Equals("defense") && SelectedTile.TileType == Tile.TileTypeEnum.Free)
                     {
                         //element.Enabled = drawBuildUI;
-                        drawButton=true;
+                        drawButton = true;
                     }
                 }//Si une tile est séléctionné+mode défense le booléen passe true
                 element.Enabled = drawButton;
@@ -417,11 +430,11 @@ namespace DowerTefenseGame.Managers
             Parallel.ForEach(buildElements, element =>
             {
 
-                    if (mode.Equals("attack"))
-                    {
-                        //element.Enabled = drawBuildUI;
-                        drawButton = true;
-                    }
+                if (mode.Equals("attack"))
+                {
+                    //element.Enabled = drawBuildUI;
+                    drawButton = true;
+                }
                 element.Enabled = drawButton;
 
             });
@@ -446,7 +459,7 @@ namespace DowerTefenseGame.Managers
         {
             int offset = 100;
             _spriteBatch.DrawString(deFaultFont, "Batiment : " + SelectedTile.building.name, new Vector2(leftUIOffset, offset), Color.White);
-           
+
         }
 
         /// <summary>
@@ -464,7 +477,7 @@ namespace DowerTefenseGame.Managers
 
         public void UpdateBtnLists(Building _building)
         {
-            Button btnBuild = new Button(leftUIOffset + 30+ActiveList.Count*btnSize, Graphics.PreferredBackBufferHeight-btnSize*2, btnSize, btnSize)
+            Button btnBuild = new Button(leftUIOffset + 30 + ActiveList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 2, btnSize, btnSize)
             {
                 Name = _building.name,
                 Tag = "ActiveList"
@@ -485,7 +498,7 @@ namespace DowerTefenseGame.Managers
             UIElementsList.Add(info);
             _building.SetInfoPopUp(info);
 
-            ActiveList.Add(btnBuild,(SpawnerBuilding)_building);
+            ActiveList.Add(btnBuild, (SpawnerBuilding)_building);
 
         }
         //Appelée depuis GameScreen pour créer la ligne de bâtiments bloqués
@@ -493,7 +506,7 @@ namespace DowerTefenseGame.Managers
         {
             lockedButton.Clear();
             LockedList.Clear();
-            foreach(SpawnerBuilding sp in BuildingsManager.GetInstance().LockedBuildingsList)
+            foreach (SpawnerBuilding sp in BuildingsManager.GetInstance().LockedBuildingsList)
             {
                 Button btnBuild = new Button(leftUIOffset + 30 + LockedList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 4, btnSize, btnSize)
                 {

@@ -28,7 +28,7 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
             this.TargetNumber = 1;
             this.BulletSpeed = 5*64;
             this.projectileName = "BasicShot";
-            this.Cost = BuildingsManager.GetInstance().Price[this.name];
+            this.Cost = 10;
         }
 
        
