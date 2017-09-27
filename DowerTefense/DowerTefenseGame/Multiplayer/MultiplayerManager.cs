@@ -24,57 +24,61 @@ namespace DowerTefenseGame.Multiplayer
 
         // Etat du compte
         private static MultiplayerState state = MultiplayerState.Disconnected;
+        public static MultiplayerState State
+        {
+            get => state;
+            set
+            {
+                state = value;
+                StateChanged?.Invoke(value);
+            }
+        }
+        public static event StateChangedEventHanlder StateChanged;
+        public delegate void StateChangedEventHanlder(MultiplayerState _state);
+
+
 
         // Temp ?
-        private static string name;
+        public static string name;
+
 
         /// <summary>
         /// Tentative de connexion au serveur d'authentification
         /// </summary>
         /// <param name="Name">Pseudo de connexion</param>
         /// <returns></returns>
-        public static bool TryConnect(string _name)
+        public static void TryConnect(string _name)
         {
-            bool success = false;
-
             name = _name;
 
-            try
+            // Fermeture du socket si toujours ouvert
+            if (authSocket != null && authSocket.Connected)
             {
-                // Fermeture du socket si toujours ouvert
-                if (authSocket != null && authSocket.Connected)
-                {
-                    authSocket.Shutdown(SocketShutdown.Both);
-                    System.Threading.Thread.Sleep(10);
-                    authSocket.Close();
-                }
-
-                // Création de l'objet socket
-                authSocket = new Socket(AddressFamily.InterNetwork,
-                    SocketType.Stream,
-                    ProtocolType.Tcp);
-
-                // Définition de l'addresse du serveur
-                IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPlocal), authServerPort);
-
-                // Connexion au serveur avec cellback
-                authSocket.Blocking = false;
-                AsyncCallback onConnect = new AsyncCallback(OnConnect);
-                authSocket.BeginConnect(epAuthServer, onConnect, authSocket);
-            }
-            catch (Exception e)
-            {
-                success = false;
+                authSocket.Shutdown(SocketShutdown.Both);
+                System.Threading.Thread.Sleep(10);
+                authSocket.Close();
             }
 
-            return success;
+            // Création de l'objet socket
+            authSocket = new Socket(AddressFamily.InterNetwork,
+                SocketType.Stream,
+                ProtocolType.Tcp);
+
+            // Définition de l'addresse du serveur
+            IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPlocal), authServerPort);
+
+            // Connexion au serveur avec cellback
+            authSocket.Blocking = false;
+            AsyncCallback onConnect = new AsyncCallback(OnConnect);
+            authSocket.BeginConnect(epAuthServer, onConnect, authSocket);
+
         }
 
         /// <summary>
         /// Callback de la tentative de connexion
         /// </summary>
         /// <param name="ar"></param>
-        public static void OnConnect( IAsyncResult ar)
+        public static void OnConnect(IAsyncResult ar)
         {
             // Récupération du socket
             Socket authSocket = (Socket)ar.AsyncState;
@@ -89,7 +93,7 @@ namespace DowerTefenseGame.Multiplayer
                     authSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, receiveData, authSocket);
 
                     // Etat : connecté
-                    state = MultiplayerState.Connected;
+                    State = MultiplayerState.Connected;
 
                     // Processus d'authentification
                     StartAuthentification();
@@ -119,7 +123,8 @@ namespace DowerTefenseGame.Multiplayer
             {
                 int nBytesReceived = socket.EndReceive(ar);
                 // Si le nombre d'octets reçus est supérieur à 0
-                if(nBytesReceived > 0) {
+                if (nBytesReceived > 0)
+                {
                     // Récupération du message reçu
                     Message messageReceived = new Message(receivedBuffer);
 
@@ -137,29 +142,28 @@ namespace DowerTefenseGame.Multiplayer
                     socket.Close();
 
                     // Etat : déconnecté
-                    state = MultiplayerState.Disconnected;
+                    State = MultiplayerState.Disconnected;
                 }
             }
             catch (Exception)
             {
-
-                throw;
+                // Socket fermé, probable déconnexion
             }
         }
 
         /// <summary>
         /// Fermeture du socket de connexion
         /// </summary>
-        private static void CloseConnection()
+        public static void CloseConnection()
         {
-            if(authSocket != null && authSocket.Connected)
+            if (authSocket != null && authSocket.Connected)
             {
                 authSocket.Shutdown(SocketShutdown.Both);
                 authSocket.Close();
             }
 
             // Etat : déconnecté
-            state = MultiplayerState.Disconnected;
+            State = MultiplayerState.Disconnected;
         }
 
         /// <summary>
@@ -170,7 +174,7 @@ namespace DowerTefenseGame.Multiplayer
         private static void Send(string _subject, object _data)
         {
             // Si pas connecté
-            if(authSocket == null || !authSocket.Connected)
+            if (authSocket == null || !authSocket.Connected)
             {
                 return;
             }
@@ -198,10 +202,14 @@ namespace DowerTefenseGame.Multiplayer
             Send("login", name);
         }
 
+        /// <summary>
+        /// Traitement du message reçu selon l'état de la connexion et le sujet du message
+        /// </summary>
+        /// <param name="_message">Message reçu</param>
         public static void ProcessMessageReceived(Message _message)
         {
             // Selon le message du sujet et l'état de connexion, on en déduit l'utilité du message
-            switch (state)
+            switch (State)
             {
                 case MultiplayerState.Disconnected:
                     break;
@@ -213,7 +221,7 @@ namespace DowerTefenseGame.Multiplayer
                         {
                             case "ok":
                                 // Connexion réussie
-                                state = MultiplayerState.Authentified;
+                                State = MultiplayerState.Authentified;
                                 //
                                 break;
                             default:

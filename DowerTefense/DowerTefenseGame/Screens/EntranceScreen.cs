@@ -6,18 +6,28 @@ using LibrairieTropBien.GUI;
 using DowerTefenseGame.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using DowerTefenseGame.Multiplayer;
+using LibrairieTropBien.Network;
 
 namespace DowerTefenseGame.Screens
 {
     class EntranceScreen : Screen
     {
-        // Etat de la connexion au serveur d'authentification
-        private bool connected = false;
+        // Bouton de connexion au service
+        private Button connectionButton;
 
+        /// <summary>
+        /// Constructeur de l'écran d'acceuil
+        /// </summary>
         public EntranceScreen()
         {
 
         }
+        
+        /// <summary>
+        /// Initialisation de l'écran d'accueil
+        /// </summary>
+        /// <param name="_graphics"></param>
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
@@ -64,18 +74,61 @@ namespace DowerTefenseGame.Screens
             #endregion
 
             #region Bouton de connexion
-            newButton = new Button(10, 10, 40, 10)
+            connectionButton = new Button(10, 10, 80, 30)
             {
                 Name = "loginButton",
-                Tag = "tryConnect",
+                Tag = "connect",
+                BackgroundColor = Color.DarkRed,
             };
-            newButton.OnRelease += Btn_OnClick;
-            UIElementsList.Add(newButton);
+            connectionButton.SetText("Connexion", CustomContentManager.GetInstance().Fonts["font"]);
+            connectionButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(connectionButton);
 
             #endregion
 
+            // Abonnement aux modifications de l'état de connexion du compte
+            MultiplayerManager.StateChanged += StateChanged;
+
         }
 
+        /// <summary>
+        /// Changement d'état de connexion du compte
+        /// </summary>
+        /// <param name="_state"></param>
+        private void StateChanged(MultiplayerState _state)
+        {
+            switch (_state)
+            {
+                case MultiplayerState.Disconnected:
+                    connectionButton.Text = "Connexion";
+                    connectionButton.BackgroundColor = Color.DarkRed;
+                    break;
+                case MultiplayerState.Connected:
+                    connectionButton.Text = "Connexion...";
+                    connectionButton.BackgroundColor = Color.DarkOrange;
+                    break;
+                case MultiplayerState.Authentified:
+                    connectionButton.Text = MultiplayerManager.name;
+                    connectionButton.BackgroundColor = Color.Green;
+                    break;
+                case MultiplayerState.SearchingGame:
+                    break;
+                case MultiplayerState.InLobby:
+                    break;
+                case MultiplayerState.InGame:
+                    break;
+                case MultiplayerState.InEndGameLobby:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Handler de clic sur les boutons de l'interface
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_OnClick(object sender, EventArgs e)
         {
             if (sender.GetType() == typeof(Button))
@@ -93,10 +146,17 @@ namespace DowerTefenseGame.Screens
                     case "editor":
                         ScreenManager.GetInstance().SelectScreen(2);
                         break;
-                    case "tryConnect":
-                        if (Multiplayer.MultiplayerManager.TryConnect("lolFap"))
+                    case "connect":
+                        // Si le compte est déconnecté
+                        if (MultiplayerManager.State == MultiplayerState.Disconnected)
                         {
-                            btn.text = "Ouais !";
+                            // Tentative de connexion
+                            MultiplayerManager.TryConnect("LolFap");
+                        }
+                        else
+                        {
+                            // Sinon, déconnexion
+                            MultiplayerManager.CloseConnection();
                         }
                         break;
                     default:
@@ -105,6 +165,12 @@ namespace DowerTefenseGame.Screens
             }
 
         }
+
+
+        /// <summary>
+        /// Mise à jour de tous les éléments d'interface
+        /// </summary>
+        /// <param name="_gameTime"></param>
         public override void Update(GameTime _gameTime)
         {
             Parallel.ForEach(UIElementsList, element =>
@@ -113,6 +179,10 @@ namespace DowerTefenseGame.Screens
             });
         }
 
+        /// <summary>
+        /// Affihage de tous les éléments d'interfaces
+        /// </summary>
+        /// <param name="_spriteBatch"></param>
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch);
