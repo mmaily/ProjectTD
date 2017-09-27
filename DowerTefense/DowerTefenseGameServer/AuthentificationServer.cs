@@ -80,6 +80,9 @@ namespace DowerTefenseGameServer
             // Récupération de l'horodatage
             client.ConnectedSince = DateTime.Now;
 
+            // Changement d'état pour ce client
+            client.state = MultiplayerState.Connected;
+
             // Création du callback de réception
             client.SetupRecieveCallback(this);
         }
@@ -129,9 +132,41 @@ namespace DowerTefenseGameServer
                 case "login":
                     // L'utilisateur demande à se connecter avec ce pseudo
                     _client.Name = (string)_messageReceived.received;
+                    // L'utilisateur est maintenant authentifié
+                    _client.state = MultiplayerState.Authentified;
+                    // Info console
+                    Console.WriteLine("Client {0} s'est connecté", _client.Name);
+                    // Envoi de la confirmation client
+                    Send(_client, "login", "ok");
                     break;
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Méthode d'envoi de données
+        /// </summary>
+        /// <param name="_subject">Sujet du message</param>
+        /// <param name="_data">Données du message</param>
+        private static void Send(Client _client, string _subject, object _data)
+        {
+            // Si pas connecté
+            if (_client.AuthSocket == null || !_client.AuthSocket.Connected)
+            {
+                return;
+            }
+
+            try
+            {
+                // Création d'un objet message et envoi
+                Message message = new Message(_subject, _data);
+                byte[] bMessage = message.GetArray();
+                _client.AuthSocket.Send(bMessage, bMessage.Length, 0);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Erreur d'envoi du message : " + e.ToString());
             }
         }
     }

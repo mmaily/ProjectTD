@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using LibrairieTropBien.Network;
 
 namespace DowerTefenseGameServer.Elements
 {
@@ -19,6 +20,9 @@ namespace DowerTefenseGameServer.Elements
         private byte[] receivedBuffer = new byte[50];     // Receive data buffer
 
         public DateTime ConnectedSince { get; set; }
+
+        // Etat de la connexion
+        public MultiplayerState state = MultiplayerState.Disconnected;
 
         /// <summary>
         /// Constructor

@@ -50,6 +50,7 @@
     <Compile Include="GUI\InfoPopUp.cs" />
     <Compile Include="GUI\ProgressBar.cs" />
     <Compile Include="Network\Message.cs" />
+    <Compile Include="Network\MultiplayerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

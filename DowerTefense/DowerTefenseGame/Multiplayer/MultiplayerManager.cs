@@ -2,7 +2,6 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace DowerTefenseGame.Multiplayer
 {
@@ -22,6 +21,9 @@ namespace DowerTefenseGame.Multiplayer
         private static Socket authSocket = null;
         // Received data buffer
         private static byte[] receivedBuffer = new byte[256];
+
+        // Etat du compte
+        private static MultiplayerState state = MultiplayerState.Disconnected;
 
         // Temp ?
         private static string name;
@@ -86,6 +88,9 @@ namespace DowerTefenseGame.Multiplayer
                     AsyncCallback receiveData = new AsyncCallback(OnReceivedData);
                     authSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, receiveData, authSocket);
 
+                    // Etat : connecté
+                    state = MultiplayerState.Connected;
+
                     // Processus d'authentification
                     StartAuthentification();
                 }
@@ -121,12 +126,18 @@ namespace DowerTefenseGame.Multiplayer
                     // Remise en était du callback de réception
                     AsyncCallback recieveData = new AsyncCallback(OnReceivedData);
                     socket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveData, socket);
+
+                    // Traitement du message
+                    ProcessMessageReceived(messageReceived);
                 }
                 else
                 {
                     // La connextion est probablement fermée
                     socket.Shutdown(SocketShutdown.Both);
                     socket.Close();
+
+                    // Etat : déconnecté
+                    state = MultiplayerState.Disconnected;
                 }
             }
             catch (Exception)
@@ -146,6 +157,9 @@ namespace DowerTefenseGame.Multiplayer
                 authSocket.Shutdown(SocketShutdown.Both);
                 authSocket.Close();
             }
+
+            // Etat : déconnecté
+            state = MultiplayerState.Disconnected;
         }
 
         /// <summary>
@@ -163,6 +177,7 @@ namespace DowerTefenseGame.Multiplayer
 
             try
             {
+                // Création d'un objet message et envoi
                 Message message = new Message(_subject, _data);
                 byte[] bMessage = message.GetArray();
                 authSocket.Send(bMessage, bMessage.Length, 0);
@@ -181,6 +196,45 @@ namespace DowerTefenseGame.Multiplayer
         {
             // Demande de connection avec le pseudo demandé
             Send("login", name);
+        }
+
+        public static void ProcessMessageReceived(Message _message)
+        {
+            // Selon le message du sujet et l'état de connexion, on en déduit l'utilité du message
+            switch (state)
+            {
+                case MultiplayerState.Disconnected:
+                    break;
+                case MultiplayerState.Connected:
+                    // Cela concerne la demande d'authentification précédente :
+                    if (_message.Subject.Equals("login"))
+                    {
+                        switch (_message.received)
+                        {
+                            case "ok":
+                                // Connexion réussie
+                                state = MultiplayerState.Authentified;
+                                //
+                                break;
+                            default:
+                                // Erreur d'authentification
+                                break;
+                        }
+                    }
+                    break;
+                case MultiplayerState.Authentified:
+                    break;
+                case MultiplayerState.SearchingGame:
+                    break;
+                case MultiplayerState.InLobby:
+                    break;
+                case MultiplayerState.InGame:
+                    break;
+                case MultiplayerState.InEndGameLobby:
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
