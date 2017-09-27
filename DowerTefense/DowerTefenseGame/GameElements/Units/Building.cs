@@ -29,6 +29,13 @@ namespace DowerTefenseGame.Units
             BuildingsManager bd = BuildingsManager.GetInstance();
             bd.BuildingDuty += new BuildingsManager.BuildingDutyHandler(OnDuty);
         }
+        public void DeleteOnEventListener()
+        {
+            //Event qui prévient la tour qu'une unité est dans la surface-union, dans ce cas on déclenche la 
+            //méthode AddTarget(), l'argument de l'event c'est l'objet Unit concerné
+            BuildingsManager bd = BuildingsManager.GetInstance();
+            bd.BuildingDuty -= new BuildingsManager.BuildingDutyHandler(OnDuty);
+        }
         public virtual void OnDuty()
         {
 

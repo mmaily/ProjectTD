@@ -9,7 +9,7 @@ namespace DowerTefenseGame.Managers
     /// <summary>
     /// Gestionnaire de carte
     /// </summary>
-    class MapManager
+    public class MapManager
     {
         // Instance du gestionnaire
         private static MapManager instance = null;
