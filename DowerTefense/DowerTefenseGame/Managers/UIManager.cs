@@ -65,6 +65,7 @@ namespace DowerTefenseGame.Managers
         #region Gestion du lock des spawn
         private Dictionary<Button, SpawnerBuilding> ActiveList;
         private Dictionary<Button, SpawnerBuilding> LockedList;
+
         #endregion
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -75,9 +76,9 @@ namespace DowerTefenseGame.Managers
             currentMap = MapManager.GetInstance().CurrentMap;
 
 
-            leftUIOffset = currentMap.mapWidth * currentMap.tileSize + 5;
+            leftUIOffset = currentMap.mapWidth * currentMap.tileSize + ScreenManager.GetInstance().Screens["GameScreen"].topMargin*2;
             //Création d'une zone pour l'ui
-            zoneUi = new Rectangle(leftUIOffset, 0, 300, currentMap.mapHeight * currentMap.tileSize);
+            zoneUi = new Rectangle(leftUIOffset, ScreenManager.GetInstance().Screens["GameScreen"].topMargin, 300, currentMap.mapHeight * currentMap.tileSize);
 
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
@@ -107,6 +108,7 @@ namespace DowerTefenseGame.Managers
         public void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
+
             #region Interface de construction de défense
             // Bouton de contruction de tour basique
             Button btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
@@ -127,7 +129,7 @@ namespace DowerTefenseGame.Managers
             btnBuild.OnRelease += Btn_OnClick;
             UIElementsList.Add(btnBuild);
             #endregion
-            #region Interface de construction en attaquee
+            #region Interface de construction en attaque
             // Bouton de contruction de tour basique
             btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
             {
@@ -177,12 +179,12 @@ namespace DowerTefenseGame.Managers
                             if (SelectedTile.TileType == Tile.TileTypeEnum.Free && SelectedTile.building == null)
                             {
                                 // On créé un bâtiment de ce type
-                                Building building = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + btn.Name));
+                                Building building = BuildingsManager.GetInstance().Dummies[btn.Name];
                                 // Que l'on place sur une tuile
                                 building.SetTile(SelectedTile);
                                 InfoPopUp info = new InfoPopUp(new Rectangle((int)((SelectedTile.getTilePosition().X - 0.5) * currentMap.tileSize),
                                                                     (int)((SelectedTile.getTilePosition().Y - 0.5) * currentMap.tileSize),
-                                                                    currentMap.tileSize, currentMap.tileSize), 100, 50)
+                                                                    currentMap.tileSize, currentMap.tileSize))
                         {
                             Name = "TowerInfo",
                             Tag = "InfoPopUp",
@@ -473,7 +475,7 @@ namespace DowerTefenseGame.Managers
             //Add la popUp qui va bien
             InfoPopUp info = new InfoPopUp(new Rectangle(btnBuild.elementBox.Left,
                                                          btnBuild.elementBox.Top,
-            MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize), 160, 60)
+            MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize))
             {
                 Name = "LockedSpawnInfo",
                 Tag = "InfoPopUp",
@@ -505,7 +507,7 @@ namespace DowerTefenseGame.Managers
                 //Add la popUp qui va bien
                 InfoPopUp info = new InfoPopUp(new Rectangle(btnBuild.elementBox.Left,
                                                              btnBuild.elementBox.Top,
-                MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize), 160, 60)
+                MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize))
                 {
                     Name = "LockedSpawnInfo",
                     Tag = "InfoPopUp",

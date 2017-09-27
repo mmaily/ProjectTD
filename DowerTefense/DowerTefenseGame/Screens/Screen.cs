@@ -16,9 +16,13 @@ namespace DowerTefenseGame.Screens
         /// Liste des éléments graphiques de l'écran
         /// </summary>
         public List<GuiElement> UIElementsList;
+        public int leftMargin;
+        public int topMargin;
         public Screen()
         {
             UIElementsList = new List<GuiElement>();
+            this.leftMargin = 5;
+            this.topMargin = 5;
         }
 
         public virtual void LoadContent()

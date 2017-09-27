@@ -3,6 +3,7 @@ using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.Screens;
+using System.Collections.Generic;
 
 namespace DowerTefenseGame.Screens
 {
@@ -16,23 +17,24 @@ namespace DowerTefenseGame.Screens
         // Instance du gestionnaire d'écran
         private static ScreenManager instance=null;
         private GraphicsDeviceManager Graphics;
-        // Liste des différents écrans
-        ArrayList Screens;
         // Écran courant
         Screen currentScreen;
+        //Dictionnaire des Screen
+        public Dictionary<String, Screen> Screens;
 
         /// <summary>
         /// Constructeur du gestionnaire d'écrans
         /// </summary>
         private ScreenManager()
         {
-            Screens = new ArrayList();
-            Screens.Add(new EntranceScreen());
-            Screens.Add(new GameScreen());
-            Screens.Add(new Editor());
-            currentScreen = (Screen)Screens[1];
+            Screens = new Dictionary<String, Screen>();
+            Screens.Add("EntranceScreen", new EntranceScreen());
+            Screens.Add("GameScreen", new GameScreen());
+            Screens.Add("Editor", new Editor());
+            currentScreen = (Screen)Screens["EntranceScreen"];
+            
 
-        }
+    }
 
         /// <summary>
         /// Récupération de l'instance du gestionnaire d'écran
@@ -53,9 +55,9 @@ namespace DowerTefenseGame.Screens
         /// Chargement d'un écran spécifique (temporaire)
         /// </summary>
         /// <param name="_id">Identifiant de l'écran à charger</param>
-        public void SelectScreen(int _id)
+        public void SelectScreen(String _screenName)
         {
-            currentScreen = (Screen)Screens[_id];
+            currentScreen = (Screen)Screens[_screenName];
             Initialize();
             LoadContent();
 

@@ -29,8 +29,7 @@ namespace DowerTefenseGame.Screens
         public int tileSize = Tile.tileSize;
         public int rowLength = 3; //Exprimé en nombre de Tile
         #endregion
-        public int leftMargin=5;
-        public int topMargin=5;
+
         #region ===Variables liées à la map===
         public Rectangle mapZone;
         public Tile[,] EditedMap;
@@ -173,7 +172,7 @@ namespace DowerTefenseGame.Screens
                         GenerateMap(openMap(mapName));
                         break;
                     case "back":
-                        ScreenManager.GetInstance().SelectScreen(0);
+                        ScreenManager.GetInstance().SelectScreen("EntranceScreen");
                         break;
                     default:
                         break;

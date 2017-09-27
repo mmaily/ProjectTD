@@ -31,6 +31,9 @@ namespace DowerTefenseGame.Screens
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
+            Graphics.PreferredBackBufferHeight = 400;
+            Graphics.PreferredBackBufferWidth = 600;
+            Graphics.ApplyChanges();
             UIElementsList = new List<GuiElement>();
             #region Création du bouton Versus IA
             // Bouton de contruction de tour basique
@@ -145,12 +148,17 @@ namespace DowerTefenseGame.Screens
                 switch (btn.Tag.ToString())
                 {
                     case "horsLigne":
-                        ScreenManager.GetInstance().SelectScreen(1);
+                        ScreenManager.GetInstance().SelectScreen("GameScreen");
                         break;
+<<<<<<< HEAD
                     case "matchmaking":
+=======
+                    case "connexion":
+                        ScreenManager.GetInstance().SelectScreen("EntranceScreen");
+>>>>>>> b19e9c4c2ffce4b1756f976451f90f3e9582c576
                         break;
                     case "editor":
-                        ScreenManager.GetInstance().SelectScreen(2);
+                        ScreenManager.GetInstance().SelectScreen("Editor");
                         break;
                     case "connect":
                         // Si le compte est déconnecté

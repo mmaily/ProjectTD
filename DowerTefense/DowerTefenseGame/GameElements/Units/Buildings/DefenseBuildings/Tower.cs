@@ -161,5 +161,10 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
         {
             info.setText("Damage : " + AttackPower+ Environment.NewLine+"Range" + this.Range);
         }
+        public Tower DeepCopy()
+        {
+            Tower other = (Tower)this.MemberwiseClone();
+            return other;
+        }
     }
 }
