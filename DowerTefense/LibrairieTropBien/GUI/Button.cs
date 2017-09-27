@@ -194,8 +194,9 @@ namespace LibrairieTropBien.GUI
             // Si le bouton possède du texte
             if (HasText && font!=null)
             {
-                // Measure string.
+                // Taille du texte avec la police en cours
                 Vector2 stringSize = font.MeasureString(Text);
+                // Affichage du texte au milieu du bouton
                 _spriteBatch.DrawString(font, Text, 
                     elementBox.Center.ToVector2() - stringSize / 2,
                     TextColor);
