@@ -28,10 +28,6 @@ namespace LibrairieTropBien.GUI
         #endregion
 
         #region === Propriétés du bouton
-
-        public String text = null;
-        public SpriteFont font = null;
-        private Boolean HasText = false;
         /// <summary>
         /// Action à réaliser
         /// </summary>
@@ -39,46 +35,55 @@ namespace LibrairieTropBien.GUI
 
         #endregion
 
+        #region === Affichage ===
+
+        private Texture2D texture;
+
+        private string text = "";
+        public string Text
+        {
+            get { return text; }
+            set {
+                text = value;
+                HasText = text!=null ? true : false;
+            }
+        }
+        private Boolean HasText = false;
+        private SpriteFont font;
+        public Color TextColor { get; set; }
+
+        /// <summary>
+        /// Si sous la souris
+        /// </summary>
+        public Color HoveredColor { get; set; }
+        /// <summary>
+        /// Couleur d'arrière plan
+        /// </summary>
+        public Color BackgroundColor { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Handler des clics
         /// </summary>
         public event EventHandler OnRelease;
 
-        #region === Affichage ===
-
-        private Texture2D texture;
-
-        /// <summary>
-        /// Défaut
-        /// </summary>
-        private Microsoft.Xna.Framework.Color defaultColor = new Color(140, 140, 140);
-
-        /// <summary>
-        /// Si sous la souris
-        /// </summary>
-        private Color defaultHover = new Microsoft.Xna.Framework.Color(0, 133, 188);
-
-        /// <summary>
-        /// Si actif
-        /// </summary>
-        private Color defaultActive = Microsoft.Xna.Framework.Color.LightBlue;
-
-        #endregion
-
         /// <summary>
         /// Bouton de base
         /// </summary>
         public Button(int _x, int _y, int _width, int _height) : base(_x, _y, _width, _height)
         {
-            this.ElementColor = Microsoft.Xna.Framework.Color.White;
+            ElementColor = Color.DarkBlue;
+            HoveredColor = Color.White;
+            BackgroundColor = Color.Transparent;
+            TextColor = Color.Black;
         }
 
         /// <summary>
         /// Mise à jour de la boîte de délimitation
         /// </summary>
         /// <param name="buttonBoundingbox">the new bounding box</param>
-        protected void UpdateBoundingbox(Microsoft.Xna.Framework.Rectangle _buttonBox)
+        protected void UpdateBoundingbox(Rectangle _buttonBox)
         {
             this.elementBox = _buttonBox;
         }
@@ -108,9 +113,6 @@ namespace LibrairieTropBien.GUI
                     // On l'enregistre
                     hovered = true;
 
-                    // On change la couleur
-                    this.ElementColor = defaultHover;
-
                     // Si on clique gauche une première fois
                     if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                     {
@@ -134,11 +136,6 @@ namespace LibrairieTropBien.GUI
 
                     // On oublie qu'on l'on a cliqué
                     pressed = false;
-
-                    if (this.Enabled)
-                        this.ElementColor = defaultActive;
-                    else
-                        this.ElementColor = defaultColor;
                 }
 
             }
@@ -178,27 +175,30 @@ namespace LibrairieTropBien.GUI
             if (texture != null)
             {
                 _spriteBatch.Draw(texture, elementBox, Color.White*Dim);
-
-                // Si on est sous la souris
-                if (hovered)
-                {
-                    _spriteBatch.DrawRectangle(elementBox, Color.White*Dim, 2);
-                }
-
             }
             else
             {
+                // Texture non définie, on affiche un rectangle
                 _spriteBatch.DrawRectangle(this.elementBox, ElementColor);
+
+                // Affichage de la couleur du fond
+                _spriteBatch.FillRectangle(this.elementBox, BackgroundColor);
             }
-            if (HasText)
+
+            // Si on est sous la souris
+            if (hovered)
             {
+                _spriteBatch.DrawRectangle(elementBox, HoveredColor * Dim, 2);
+            }
 
-
-                //// Measure string.
-                //System.Drawing.SizeF stringSize = new System.Drawing.SizeF();
-                //stringSize = this.Graphics.MeasureString(text, font);
-                _spriteBatch.DrawString(font, text, new Vector2(this.elementBox.X, this.elementBox.Y) + 
-                                        new Vector2(20,40), Color.Azure);
+            // Si le bouton possède du texte
+            if (HasText && font!=null)
+            {
+                // Measure string.
+                Vector2 stringSize = font.MeasureString(Text);
+                _spriteBatch.DrawString(font, Text, 
+                    elementBox.Center.ToVector2() - stringSize / 2,
+                    TextColor);
             }
 
         }
@@ -220,10 +220,15 @@ namespace LibrairieTropBien.GUI
                 this.elementBox.Height = _texture.Height;
             }
         }
+
+        /// <summary>
+        /// Permet de modifier texte et police
+        /// </summary>
+        /// <param name="_text"></param>
+        /// <param name="_font"></param>
         public void SetText(String _text, SpriteFont _font)
         {
-            this.text = _text;
-            
+            this.Text = _text;
             this.font= _font;
             HasText = true;
         }

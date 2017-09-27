@@ -13,15 +13,20 @@ namespace LibrairieTropBien.GUI
     /// </summary>
     public abstract class GuiElement
     {
-        GraphicsDeviceManager Graphics;
         /// <summary>
         /// Rectange définissant l'élément
         /// </summary>
         public Rectangle elementBox;
-        //Griser l'élément
-        public Boolean NeedDim = false;
-        //Valeur du grisage
-        public float Dim = 0.5f;
+        private Boolean needDim = false;
+        /// <summary>
+        /// Grisage de l'élément
+        /// </summary>
+        public bool NeedDim { get => needDim; set => needDim = value; }
+        /// <summary>
+        /// Intensité du grisage
+        /// </summary>
+        private float dim = 0.5f;
+        public float Dim { get => dim; set => dim = value; }
         /// <summary>
         /// Element à dessiner ou pas
         /// </summary>
