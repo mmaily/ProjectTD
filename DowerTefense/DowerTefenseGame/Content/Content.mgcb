@@ -164,3 +164,6 @@
 /processorParam:TextureFormat=Color
 /build:Maps/BasicSpawner.png
 
+#begin GameMaps/Map_demo.osl
+/copy:GameMaps/Map_demo.osl
+
