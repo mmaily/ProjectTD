@@ -150,12 +150,7 @@ namespace DowerTefenseGame.Screens
                     case "horsLigne":
                         ScreenManager.GetInstance().SelectScreen("GameScreen");
                         break;
-<<<<<<< HEAD
                     case "matchmaking":
-=======
-                    case "connexion":
-                        ScreenManager.GetInstance().SelectScreen("EntranceScreen");
->>>>>>> b19e9c4c2ffce4b1756f976451f90f3e9582c576
                         break;
                     case "editor":
                         ScreenManager.GetInstance().SelectScreen("Editor");
