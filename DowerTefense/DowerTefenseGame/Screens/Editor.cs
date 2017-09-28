@@ -302,7 +302,6 @@ namespace DowerTefenseGame.Screens
             {
                 // On récupère la tuile visée
                 Tile selectedTile = modelTiles.Find(tile => tile.line== (mousePosition.Y - tileZone.Top) / tileSize&& tile.column== (mousePosition.X - tileZone.Left) / tileSize);
-                //EditedMap[(mousePosition.X - leftMargin) / tileSize, (mousePosition.Y - topMargin) / tileSize];
                 // On marque la tuile comme sélectionnée
                 if (selectedTile != null)
                 {

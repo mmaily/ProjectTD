@@ -81,9 +81,9 @@ namespace DowerTefenseGame.Units.Buildings
             this.locked = true;
             this.CreateOnEventListener();
         }
-        public SpawnerBuilding DeepCopy()
+        public override Building DeepCopy()
         {
-            SpawnerBuilding other = (SpawnerBuilding)this.MemberwiseClone();
+            Building other = (SpawnerBuilding)this.MemberwiseClone();
             return other;
         }
         public override void SetInfoPopUp(InfoPopUp _info)

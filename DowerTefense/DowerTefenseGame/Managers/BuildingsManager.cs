@@ -62,8 +62,7 @@ namespace DowerTefenseGame.Managers
         public List<Building> WaitingForConstruction { get; set; }
         public object Spawner { get; }
 
-        //Catalogue des bâtiment de bases (utile pour display les info de construcion par exemple)
-        public List<Building> Dummies;
+
         // Ratio entre l'image de la tour et la taille des tiles
         public float imageRatio;
 
@@ -78,13 +77,7 @@ namespace DowerTefenseGame.Managers
             DefenseBuildingsList = new List<Building>();
             imageRatio=MapManager.GetInstance().imageRatio;
             WaitingForConstruction = new List<Building>();
-            #region === Remplir le catalogue des unités de base==
-            Dummies = new List<Building>();
-            foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
-            {
-                Dummies.Add((Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString())));
-            }
-            #endregion
+
         }
 
         /// <summary>
@@ -133,7 +126,7 @@ namespace DowerTefenseGame.Managers
             foreach (Building building in DefenseBuildingsList)
             {
                 _spriteBatch.Draw(CustomContentManager.GetInstance().Textures[building.name],
-                                new Vector2(building.GetTile().line * map.tileSize, building.GetTile().column * map.tileSize),
+                                new Vector2(building.GetTile().line * map.tileSize, building.GetTile().column * map.tileSize) + MapManager.GetInstance().marginOffset,
                                 null, null, null, 0f, Vector2.One * imageRatio,
                                 Color.White);
             }
@@ -148,7 +141,7 @@ namespace DowerTefenseGame.Managers
             foreach (SpawnerBuilding sp in FreeBuildingsList.FindAll(sp => sp.powered))
             {
 
-                Spawner = sp.DeepCopy();
+                Spawner = (SpawnerBuilding)sp.DeepCopy();
                 Spawner.Lock();// Une fois lock, le bâtiment commence à spawn
                 LockedBuildingsList.Add(Spawner);
             }

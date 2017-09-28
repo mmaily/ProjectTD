@@ -59,10 +59,9 @@ namespace DowerTefenseGame.Units
             tile = _tile;
             // On informe la tuile qu'un bâtiment est dessus
             tile.building = this;
-            // Attention au 64, TODO
             this.Position = tile.getTilePosition() * MapManager.GetInstance().CurrentMap.tileSize;
         }
         public virtual void SetInfoPopUp(InfoPopUp _info) { }
-
+        public abstract Building DeepCopy();
     }
 }

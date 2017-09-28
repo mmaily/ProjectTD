@@ -159,11 +159,11 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
         }
         public override void SetInfoPopUp(InfoPopUp info)
         {
-            info.setText("Damage : " + AttackPower+ Environment.NewLine+"Range" + this.Range);
+            info.setText("Damage : " + AttackPower+ Environment.NewLine+"Range : " + this.Range);
         }
-        public Tower DeepCopy()
+        public override Building DeepCopy()
         {
-            Tower other = (Tower)this.MemberwiseClone();
+            Building other = (Tower)this.MemberwiseClone();
             return other;
         }
     }

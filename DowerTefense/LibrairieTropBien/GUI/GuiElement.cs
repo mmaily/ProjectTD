@@ -56,7 +56,7 @@ namespace LibrairieTropBien.GUI
         /// Tag de l'élément (catégorie)
         /// </summary>
         public string Tag { get; set; }
-
+        public Boolean PopUpAttached { get; set; }
         /// <summary>
         /// Couleur de l'élément
         /// </summary>

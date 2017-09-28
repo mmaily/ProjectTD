@@ -37,7 +37,7 @@ namespace LibrairieTropBien.GUI
             // Récupération de l'état de la souris
             MouseState mouseState = Mouse.GetState();
             // Si la souris est sur le bouton
-            if (this.area.Contains(mouseState.Position))
+            if (this.area.Contains(mouseState.Position)&&Enabled)
             {
                 // On l'enregistre
                 hovered = true;

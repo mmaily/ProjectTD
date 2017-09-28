@@ -14,6 +14,8 @@ namespace DowerTefenseGame.Screens
     /// </summary>
     class GameScreen : Screen
     {
+        //Role adopté par ce GameScreen (Attaquant, défenseur, les deux pour débug, spectateur plus tard)
+        public string role = "both"; //attack, defense, spect, both(pour pouvoir switch en mode débug)
         // Carte en cours
         private Map map;
         // Variables liées aux vagues
@@ -47,7 +49,9 @@ namespace DowerTefenseGame.Screens
             Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize+topMargin*2;
             Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width+leftMargin*2;
             Graphics.ApplyChanges();
+            UIManager.GetInstance().SetRole(role);
             UIManager.GetInstance().Initialize(_graphics);
+
         }
 
         /// <summary>

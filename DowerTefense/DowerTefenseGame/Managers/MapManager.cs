@@ -20,7 +20,7 @@ namespace DowerTefenseGame.Managers
         private bool pathComputed = false;
         public float imageRatio;
         //Décalage de la map dû à la marge
-        Vector2 marginOffset;
+        public Vector2 marginOffset;
 
         /// <summary>
         /// Constructeur du gestionnaire de carte

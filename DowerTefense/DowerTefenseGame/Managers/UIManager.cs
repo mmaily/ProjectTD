@@ -11,7 +11,7 @@ using DowerTefenseGame.Players;
 using System.Collections.Generic;
 using DowerTefenseGame.Screens;
 using System.Threading.Tasks;
-using DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings;
+using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 
 namespace DowerTefenseGame.Managers
 {
@@ -44,28 +44,38 @@ namespace DowerTefenseGame.Managers
         public Rectangle zoneUi;
         // Taille des boutons
         private byte btnSize = 35;
-
+        //Offset de la map par rapport au coin sup droit
+        private Vector2 mapOffset;
         #endregion
 
         // Carte en cours
         private Map currentMap;
 
+        #region ==Element d'interface (boutons, bar de progression)
         // Éléments d'interface
         private List<GuiElement> UIElementsList;
         //Liste des boutons de la liste locked
         private List<Button> lockedButton;
+        private Dictionary<Button,InfoPopUp> PopUp;
         // Exception pour la barre de progression
         private ProgressBar progressBarWaves;
-
-
+        #endregion
+        //Role
+        protected String role;
         //Joueur (défenseur pour l'instant)
         public DefensePlayer defensePlayer;
         //Joueur attaquand
         public AttackPlayer attackPlayer;
+        //Point de vue adoptée par l'interface
         #region Gestion du lock des spawn
         private Dictionary<Button, SpawnerBuilding> ActiveList;
         private Dictionary<Button, SpawnerBuilding> LockedList;
 
+        #endregion
+
+        #region Gestion des unités Dummies
+        //Catalogue des bâtiment de bases (utile pour display les info de construcion par exemple)
+        public List<Building> Dummies;
         #endregion
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -74,20 +84,39 @@ namespace DowerTefenseGame.Managers
         {
             // Récupération du décalage gauche de l'interface
             currentMap = MapManager.GetInstance().CurrentMap;
+            mapOffset = new Vector2(ScreenManager.GetInstance().Screens["GameScreen"].leftMargin, ScreenManager.GetInstance().Screens["GameScreen"].topMargin);
 
-
-            leftUIOffset = currentMap.mapWidth * currentMap.tileSize + ScreenManager.GetInstance().Screens["GameScreen"].topMargin * 2;
+            leftUIOffset = currentMap.mapWidth * currentMap.tileSize +(int)mapOffset.Y * 2;
             //Création d'une zone pour l'ui
-            zoneUi = new Rectangle(leftUIOffset, ScreenManager.GetInstance().Screens["GameScreen"].topMargin, 300, currentMap.mapHeight * currentMap.tileSize);
+            zoneUi = new Rectangle(leftUIOffset,(int)mapOffset.Y, 300, currentMap.mapHeight * currentMap.tileSize);
 
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
             //Instanciation des joueurs
-            defensePlayer = new DefensePlayer();
-            attackPlayer = new AttackPlayer();
+
+             defensePlayer = new DefensePlayer();
+             attackPlayer = new AttackPlayer();
+
 
             // Initialisation de la liste des éléments d'interface
-            UIElementsList = new List<GuiElement>();
+            UIElementsList = new List<GuiElement>(); UIElementsList = new List<GuiElement>();
+            PopUp = new Dictionary<Button, InfoPopUp>();
+            #region === Remplir le catalogue des unités de base==
+            Dummies = new List<Building>();
+            Building newBuilding;
+            foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
+            {
+               newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
+               newBuilding.DeleteOnEventListener();
+               Dummies.Add(newBuilding);
+            }
+            foreach (SpawnerBuilding.NameEnum spawn in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
+            {
+                newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
+                newBuilding.DeleteOnEventListener(); // On le "désactive" en le rendant désabonnant de son event listener d'action
+                Dummies.Add(newBuilding);
+            }
+            #endregion
         }
 
         /// <summary>
@@ -108,54 +137,89 @@ namespace DowerTefenseGame.Managers
         public void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
+            Button btnBuild;
+            //Chargement des éléments selon le role adopté
+            if (role.Equals("defense") || role.Equals("both"))
+            {
+                #region Interface de construction de défense
+                // Boutons de contruction des tours
+                int j = 0;
+                foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
+                {
 
-            #region Interface de construction de défense
-            // Bouton de contruction de tour basique
-            Button btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
+                    btnBuild = new Button(leftUIOffset + 30 + j * btnSize, 100, btnSize, btnSize)
+                    {
+                        Name = tower.ToString(),
+                        Tag = "defenseBuild",
+                        PopUpAttached = true
+                    };
+                    btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+                    btnBuild.OnRelease += Btn_OnClick;
+                    UIElementsList.Add(btnBuild);
+                    //Add la popUp qui va bien
+                    InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
+                    {
+                        Name = tower.ToString() + "Info",
+                        Tag = "InfoPopUp",
+                        font = CustomContentManager.GetInstance().Fonts["font"],
+                        texture = CustomContentManager.GetInstance().Colors["pixel"]
+                    };
+                    PopUp.Add(btnBuild, info);
+                    Dummies.Find(b => b.name.Equals(btnBuild.Name)).SetInfoPopUp(info);
+                    j++;
+                }
+                #endregion
+            }
+            if (role.Equals("attack") || role.Equals("both"))
             {
-                Name = "BasicTower",
-                Tag = "defenseBuild"
-            };
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
-            //Bouton de construction de tour rapide
-            btnBuild = new Button(30 + leftUIOffset + btnBuild.elementBox.Width, 100, btnSize, btnSize)
-            {
-                Name = "RapidFireTower",
-                Tag = "defenseBuild"
-            };
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
-            #endregion
-            #region Interface de construction en attaque
-            // Bouton de contruction de tour basique
-            btnBuild = new Button(leftUIOffset + 30, 100, btnSize, btnSize)
-            {
-                Name = "BasicSpawner",
-                Tag = "attackBuild"
-            };
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
-            #endregion
+                #region Interface de construction en attaque
+                // Bouton de contruction de spawner
+                int n = 0;
+                foreach (SpawnerBuilding.NameEnum spawner in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
+                {
+
+                    btnBuild = new Button(leftUIOffset + 30 + n * btnSize, 100, btnSize, btnSize)
+                    {
+                        Name = spawner.ToString(),
+                        Tag = "attackBuild",
+                        PopUpAttached = true
+                    };
+                    btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+                    btnBuild.OnRelease += Btn_OnClick;
+                    UIElementsList.Add(btnBuild);
+                    //Add la popUp qui va bien
+                    InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
+                    {
+                        Name = spawner.ToString() + "Info",
+                        Tag = "InfoPopUp",
+                        font = CustomContentManager.GetInstance().Fonts["font"],
+                        texture = CustomContentManager.GetInstance().Colors["pixel"]
+                    };
+                    PopUp.Add(btnBuild, info);
+                    Dummies.Find(b => b.name.Equals(btnBuild.Name)).SetInfoPopUp(info);
+                    n++;
+                }
+                #endregion
+            }
+            if (role.Equals("both")){
+                // Bouton de changement de mode
+                Button btnMode = new Button(Graphics.PreferredBackBufferWidth - btnSize, 0, btnSize, btnSize)
+                {
+                    Name = "ModeSwitch",
+                    Tag = "UI",
+                    Enabled = true
+                };
+                btnMode.OnRelease += Btn_OnClick;
+
+                UIElementsList.Add(btnMode);
+            }
             #region Listes des bâtiments actifs et locked
             ActiveList = new Dictionary<Button, SpawnerBuilding>();
             LockedList = new Dictionary<Button, SpawnerBuilding>();
             lockedButton = new List<Button>();
             #endregion
 
-            // Bouton de changement de mode
-            Button btnMode = new Button(Graphics.PreferredBackBufferWidth - btnSize, 0, btnSize, btnSize)
-            {
-                Name = "ModeSwitch",
-                Tag = "UI",
-                Enabled = true
-            };
-            btnMode.OnRelease += Btn_OnClick;
 
-            UIElementsList.Add(btnMode);
 
             // Barre de progression des vagues
             progressBarWaves = new ProgressBar(15, 15, (int)(currentMap.mapWidth * currentMap.tileSize * 0.90) - 15, 15)
@@ -178,7 +242,7 @@ namespace DowerTefenseGame.Managers
                 if (btn.Tag.Equals("defenseBuild") && SelectedTile != null)
                 {
                     // On récupère le bâtiment à construire
-                    Building building = BuildingsManager.GetInstance().Dummies.Find(b => b.name.Equals(btn.Name));
+                    Building building = Dummies.Find(b => b.name.Equals(btn.Name));
                     // Si la tuile est libre, n'a pas de bâtiment dessus et le joueur a assez d'argent
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free
                         && SelectedTile.building == null
@@ -187,6 +251,8 @@ namespace DowerTefenseGame.Managers
                         // On créé un bâtiment de ce type
                         // TODO : Ici faire une copie de l'instance de building
                         // Que l'on place sur cette tuile
+                        building = (Tower)building.DeepCopy();
+                        building.CreateOnEventListener();
                         building.SetTile(SelectedTile);
                         InfoPopUp info = new InfoPopUp(new Rectangle((int)((SelectedTile.getTilePosition().X - 0.5) * currentMap.tileSize),
                                                             (int)((SelectedTile.getTilePosition().Y - 0.5) * currentMap.tileSize),
@@ -207,19 +273,18 @@ namespace DowerTefenseGame.Managers
                 if (btn.Tag.Equals("attackBuild"))
                 {
                     // On récupère le bâtiment à construire
-                    Building building = BuildingsManager.GetInstance().Dummies.Find(b => b.name.Equals(btn.Name));
+                    Building building = Dummies.Find(b => b.name.Equals(btn.Name));
                     if (building.Cost <= attackPlayer.totalGold)
                     {
-                        // TODO : Ici faire une copie de l'instance de building
-                        //SpawnerBuilding spawnbuilding = (SpawnerBuilding)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + btn.Name));
-                        //attackPlayer.totalGold -= spawnbuilding.Cost;
-                        //UpdateBtnLists(spawnbuilding);
-                        //BuildingsManager.GetInstance().FreeBuildingsList.Add(spawnbuilding);
-                        //if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawnbuilding.PowerNeeded))
-                        //{
-                        //    spawnbuilding.powered = true;
-                        //    attackPlayer.usedEnergy += spawnbuilding.PowerNeeded;
-                        //}
+                        SpawnerBuilding spawnbuilding =(SpawnerBuilding)building.DeepCopy();
+                        attackPlayer.totalGold -= spawnbuilding.Cost;
+                        UpdateBtnLists(spawnbuilding);
+                        BuildingsManager.GetInstance().FreeBuildingsList.Add(spawnbuilding);
+                        if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawnbuilding.PowerNeeded))
+                        {
+                            spawnbuilding.powered = true;
+                            attackPlayer.usedEnergy += spawnbuilding.PowerNeeded;
+                        }
                     }
 
                 }
@@ -243,7 +308,7 @@ namespace DowerTefenseGame.Managers
                 {
                     if (btn.Name.Equals("ModeSwitch"))
                     {
-                        if (mode.Equals("defense"))
+                        if (mode.Equals("defense")|| mode.Equals("both"))
                         {
                             mode = "attack";
                         }
@@ -269,22 +334,42 @@ namespace DowerTefenseGame.Managers
 
             // Mise à jour de l'état de la bar de vague
             progressBarWaves.State = _timeSince;
-
+            
             // Mise à jour de tous les élémets d'interface
             Parallel.ForEach(UIElementsList, element =>
             {
                 // Si l'élément est de type bouton
-                if (element.GetType().Equals(typeof(Button)) && element.Tag == "defenseBuild")
+                if (element.GetType().Equals(typeof(Button)) && element.Tag == role+"Build")
                 {
                     // On récupère le bâtiment associé
-                    Building building = BuildingsManager.GetInstance().Dummies.Find(b => b.name.Equals("name"));
-                    // On grise le bouton si le joueur n'a pas assez d'argent
-                    element.GreyedOut = (building.Cost <= defensePlayer.totalGold) ? false : true;
-                }
+                    Building building = Dummies.Find(b => b.name.Equals(element.Name));
+                    // On regarde le role adopté, et grise les boutons soit
+                    if(role.Equals("defense") || role.Equals("both"))
+                    {
+                        element.GreyedOut = (building.Cost <= defensePlayer.totalGold) ? false : true;
+                    }
+                    if (role.Equals("attack") || role.Equals("both"))
+                    {
+                        element.GreyedOut = (building.Cost <= attackPlayer.totalGold) ? false : true;
+                    }
+                }                // Si l'élément est de type bouton
+                //On update le bouton
                 element.Update();
-            });
-        }
+                //On update la popUp associée
+                if (element.PopUpAttached==true)
+                {
+                    PopUp[(Button)element].Enabled = element.Enabled;
+                    PopUp[(Button)element].Update();
 
+                }
+            });
+            Parallel.ForEach(lockedButton, element =>
+            {
+                PopUp[(Button)element].Enabled = element.Enabled;
+                PopUp[(Button)element].Update();
+            });
+
+        }
         /// <summary>
         /// Mise à jour de la tuile sélectionnée
         /// </summary>
@@ -418,7 +503,6 @@ namespace DowerTefenseGame.Managers
                 {
                     if (mode.Equals("defense") && SelectedTile.TileType == Tile.TileTypeEnum.Free)
                     {
-                        //element.Enabled = drawBuildUI;
                         drawButton = true;
                     }
                 }//Si une tile est séléctionné+mode défense le booléen passe true
@@ -432,7 +516,6 @@ namespace DowerTefenseGame.Managers
 
                 if (mode.Equals("attack"))
                 {
-                    //element.Enabled = drawBuildUI;
                     drawButton = true;
                 }
                 element.Enabled = drawButton;
@@ -444,10 +527,18 @@ namespace DowerTefenseGame.Managers
             Parallel.ForEach(UIElementsList, element =>
             {
                 element.Draw(_spriteBatch);
+
             });
+            //Affichage des bouttons de la liste vérouillée qui part en guerre
             Parallel.ForEach(lockedButton, element =>
             {
                 element.Draw(_spriteBatch);
+            });
+            //Affichage des popUp en dernier
+            Parallel.ForEach(PopUp.Values, element =>
+            {
+                element.Draw(_spriteBatch);
+
             });
         }
 
@@ -480,22 +571,24 @@ namespace DowerTefenseGame.Managers
             Button btnBuild = new Button(leftUIOffset + 30 + ActiveList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 2, btnSize, btnSize)
             {
                 Name = _building.name,
-                Tag = "ActiveList"
+                Tag = "ActiveList",
+                PopUpAttached = true
             };
             btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
             btnBuild.OnRelease += Btn_OnClick;
             UIElementsList.Add(btnBuild);
             //Add la popUp qui va bien
-            InfoPopUp info = new InfoPopUp(new Rectangle(btnBuild.elementBox.Left,
-                                                         btnBuild.elementBox.Top,
-            MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize))
+            //InfoPopUp info = new InfoPopUp(new Rectangle(btnBuild.elementBox.Left,
+            //                                             btnBuild.elementBox.Top,
+            //MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize))
+            InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
             {
-                Name = "LockedSpawnInfo",
+                Name = "ActiveSpawnInfo",
                 Tag = "InfoPopUp",
                 font = CustomContentManager.GetInstance().Fonts["font"],
                 texture = CustomContentManager.GetInstance().Colors["pixel"]
             };
-            UIElementsList.Add(info);
+            PopUp.Add(btnBuild,info);
             _building.SetInfoPopUp(info);
 
             ActiveList.Add(btnBuild, (SpawnerBuilding)_building);
@@ -511,26 +604,30 @@ namespace DowerTefenseGame.Managers
                 Button btnBuild = new Button(leftUIOffset + 30 + LockedList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 4, btnSize, btnSize)
                 {
                     Name = sp.name,
-                    Tag = "LockedList"
+                    Tag = "LockedList",
+                    PopUpAttached = true
                 };
                 btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
                 btnBuild.OnRelease += Btn_OnClick;
                 btnBuild.GreyedOut = true;
                 lockedButton.Add(btnBuild);
                 //Add la popUp qui va bien
-                InfoPopUp info = new InfoPopUp(new Rectangle(btnBuild.elementBox.Left,
-                                                             btnBuild.elementBox.Top,
-                MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize))
+                InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
                 {
                     Name = "LockedSpawnInfo",
                     Tag = "InfoPopUp",
                     font = CustomContentManager.GetInstance().Fonts["font"],
                     texture = CustomContentManager.GetInstance().Colors["pixel"]
                 };
-                UIElementsList.Add(info);
+                PopUp.Add(btnBuild,info);
                 sp.SetInfoPopUp(info);
                 LockedList.Add(btnBuild, (SpawnerBuilding)sp);
             }
+        }
+        public void SetRole(String _role)
+        {
+            this.role = _role;
+            this.mode = _role;
         }
     }
 }
