@@ -37,30 +37,11 @@ namespace LibrairieTropBien.GUI
         #endregion
 
         #region === Affichage ===
-
-        private Texture2D texture;
-
-        private string text = "";
-        public string Text
-        {
-            get { return text; }
-            set {
-                text = value;
-                HasText = text!=null ? true : false;
-            }
-        }
-        private Boolean HasText = false;
-        private SpriteFont font;
-        public Color TextColor { get; set; }
-
         /// <summary>
         /// Si sous la souris
         /// </summary>
         public Color HoveredColor { get; set; }
         /// <summary>
-        /// Couleur d'arrière plan
-        /// </summary>
-        public Color BackgroundColor { get; set; }
 
         #endregion
 
@@ -166,7 +147,6 @@ namespace LibrairieTropBien.GUI
             }
 
             float opacity = this.GreyedOut ? this.Opacity : 1f;
-
             // Si la texture est définie
             if (texture != null)
             {

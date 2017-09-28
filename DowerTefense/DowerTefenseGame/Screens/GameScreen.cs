@@ -43,9 +43,10 @@ namespace DowerTefenseGame.Screens
         
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
+            //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
+            spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             // Init de l'UI
-            
             Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize+topMargin*2;
             Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width+leftMargin*2;
             Graphics.ApplyChanges();
@@ -121,7 +122,6 @@ namespace DowerTefenseGame.Screens
                 _spriteBatch.DrawString(CustomContentManager.GetInstance().Fonts["font"], Math.Ceiling(1000 / (millisecPerFrame)).ToString(), new Vector2(UIManager.GetInstance().leftUIOffset, offset), Color.White);
             }
            
-            SpriteBatch spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             spriteBatch.Begin();
             //spriteBatch.Draw(CustomContentManager.GetInstance().Colors["grey"],Graphics.);
             // Affichage de la carte

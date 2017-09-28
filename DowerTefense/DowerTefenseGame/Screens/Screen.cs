@@ -11,7 +11,7 @@ namespace DowerTefenseGame.Screens
     abstract class Screen
     {
         public GraphicsDeviceManager Graphics;
-
+        public SpriteBatch spriteBatch;
         /// <summary>
         /// Liste des éléments graphiques de l'écran
         /// </summary>
@@ -46,6 +46,7 @@ namespace DowerTefenseGame.Screens
 
         public virtual void Initialize(GraphicsDeviceManager _graphics)
         {
+
         }
     }
 
