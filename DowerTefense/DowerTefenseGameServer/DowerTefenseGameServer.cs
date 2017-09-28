@@ -1,8 +1,6 @@
 ﻿
-using LibrairieTropBien.Network;
+using DowerTefenseGameServer.Servers;
 using System;
-using System.Net;
-using System.Net.Sockets;
 
 namespace DowerTefenseGameServer
 {
@@ -21,11 +19,8 @@ namespace DowerTefenseGameServer
         /// </summary>
         public static void Main()
         {
-
+            // Lancement du serveur d'authentification
             AuthentificationServer authServer = new AuthentificationServer();
-
-            // Variable de sortie du serveur
-            bool exit = false;
 
             Console.ReadLine();
 

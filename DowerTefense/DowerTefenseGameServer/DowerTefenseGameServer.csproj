@@ -35,11 +35,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthentificationServer.cs" />
+    <Compile Include="Servers\AuthentificationServer.cs" />
     <Compile Include="DowerTefenseGameServer.cs" />
     <Compile Include="Elements\Client.cs" />
-    <Compile Include="GameServer.cs" />
+    <Compile Include="Servers\GameServer.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="Servers\LobbyServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

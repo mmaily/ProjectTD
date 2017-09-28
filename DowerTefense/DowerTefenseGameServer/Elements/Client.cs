@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using LibrairieTropBien.Network;
+using LibrairieTropBien.Network.Game;
 
 namespace DowerTefenseGameServer.Elements
 {
@@ -15,6 +16,9 @@ namespace DowerTefenseGameServer.Elements
         /// </summary>
         public Socket AuthSocket { get; private set; }
 
+        /// <summary>
+        /// Nom du client
+        /// </summary>
         public string Name { get; set; }
 
         private byte[] receivedBuffer = new byte[50];     // Receive data buffer
