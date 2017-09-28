@@ -21,7 +21,7 @@ namespace DowerTefenseGameServer.Elements
         /// </summary>
         public string Name { get; set; }
 
-        private byte[] receivedBuffer = new byte[50];     // Receive data buffer
+        private byte[] receivedBuffer = new byte[255];     // Receive data buffer
 
         public DateTime ConnectedSince { get; set; }
 

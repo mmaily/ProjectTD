@@ -31,6 +31,7 @@ namespace DowerTefenseGame.Screens
             Screens.Add("EntranceScreen", new EntranceScreen());
             Screens.Add("GameScreen", new GameScreen());
             Screens.Add("Editor", new Editor());
+            Screens.Add("Lobby", new LobbyScreen());
             currentScreen = (Screen)Screens["EntranceScreen"];
             
 

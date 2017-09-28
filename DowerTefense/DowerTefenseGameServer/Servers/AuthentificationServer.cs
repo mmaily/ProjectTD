@@ -28,7 +28,7 @@ namespace DowerTefenseGameServer.Servers
         // TODO : Liste ou dictionnaire ?
         private List<Client> connectedClients;
         // Liste des clients en recherche de match
-        private List<Client> matchmakingClients;
+        private Dictionary<string, List<Client>> matchmakingClients;
         private object matchmakingListLock;
 
         // Liste des lobbiess
@@ -41,7 +41,9 @@ namespace DowerTefenseGameServer.Servers
         {
             // Création de la liste des clients connectés
             connectedClients = new List<Client>();
-            matchmakingClients = new List<Client>();
+            matchmakingClients = new Dictionary<string, List<Client>>();
+            matchmakingClients.Add("Attack", new List<Client>());
+            matchmakingClients.Add("Defense", new List<Client>());
             matchmakingListLock = new object();
 
             // Création de la liste des lobbys
@@ -129,12 +131,17 @@ namespace DowerTefenseGameServer.Servers
                     break;
                 case "matchmaking":
                     // Le client demande à rechercher un match en ligne
+                    // Si c'est déjà le cas
+                    if(_client.state == MultiplayerState.SearchingGame)
+                    {
+                        break;
+                    }
                     // Etat du client
                     _client.state = MultiplayerState.SearchingGame;
                     // Envoi confirmation recherche au client
                     _client.Send("matchmaking", "searching");
                     // Lancement d'une recherche de match
-                    this.ProcessMatchmaking(_client);
+                    this.ProcessMatchmaking(_client, (string)_messageReceived.received);
                     break;
                 default:
                     break;
@@ -145,18 +152,20 @@ namespace DowerTefenseGameServer.Servers
         /// Recherche un match compatible pour ce client
         /// </summary>
         /// <param name="_client"></param>
-        private void ProcessMatchmaking(Client _client)
+        private void ProcessMatchmaking(Client _client, string _role)
         {
             // Match trouvé ou non
             bool matchFound = false;
             // Opposant compatible
             Client opponant = null;
 
+            string opponantRole = _role.Equals("Attack") ? "Defense" : "Attack";
+
             // Verrouillage pour accès concurentiel
             lock (matchmakingListLock)
             {
                 // Parcours de la liste des clients recherchant un match
-                foreach (Client c in matchmakingClients)
+                foreach (Client c in matchmakingClients[opponantRole])
                 {
                     // TODO : ELO searching
                     if (true)
@@ -175,15 +184,18 @@ namespace DowerTefenseGameServer.Servers
                     // Lancement du match entre les deux joueurs compatibles
                     LobbyServer lobby = new LobbyServer(this);
                     // Ajout des joueurs
-                    lobby.AddPlayer(_client);
-                    lobby.AddPlayer(opponant);
+                    lobby.AddPlayer(_client, _role);
+                    lobby.AddPlayer(opponant, opponantRole);
                     // Retrait de l'opposant de la liste des clients en recherche de match
-                    matchmakingClients.Remove(opponant);
+                    matchmakingClients[opponantRole].Remove(opponant);
+
+                    // Info console
+                    Console.WriteLine("Match créé entre " + _client.Name + " et " + opponant.Name + ". GLHF !");
                 }
                 else
                 {
                     // On ajoute le client à la liste
-                    matchmakingClients.Add(_client);
+                    matchmakingClients[_role].Add(_client);
                 }
             }
 

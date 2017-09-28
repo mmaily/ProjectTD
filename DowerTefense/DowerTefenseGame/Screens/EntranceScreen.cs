@@ -50,7 +50,7 @@ namespace DowerTefenseGame.Screens
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             #endregion
-            #region Création du se connecter au compte
+            #region Création du bouton matchmaking
             newButton = new Button((_graphics.PreferredBackBufferWidth - width) / 2, (_graphics.PreferredBackBufferHeight / 2 - height) / 2 + height, width, height)
             {
                 Name = "Matchmaking",
@@ -90,6 +90,31 @@ namespace DowerTefenseGame.Screens
 
             #endregion
 
+            #region Boutons choix rôle
+            newButton = new Button(10, 100, 100, 20)
+            {
+                Name = "Attack",
+                Tag = "multi",
+                Text = "Attack",
+                BackgroundColor = Color.Wheat,
+                TextColor = Color.Black,
+            };
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
+            newButton = new Button(10, 150, 100, 20)
+            {
+                Name = "Defense",
+                Tag = "multi",
+                Text = "Defense",
+                BackgroundColor = Color.Wheat,
+                TextColor = Color.Black,
+
+            };
+            newButton.OnRelease += Btn_OnClick;
+            UIElementsList.Add(newButton);
+            #endregion
+
+
             // Abonnement aux modifications de l'état de connexion du compte
             MultiplayerManager.StateChanged += StateChanged;
 
@@ -127,6 +152,7 @@ namespace DowerTefenseGame.Screens
                     // TODO : remettre bouton en état
                     break;
                 case MultiplayerState.InLobby:
+                    ScreenManager.GetInstance().SelectScreen("Lobby");
                     break;
                 case MultiplayerState.InGame:
                     break;
@@ -154,7 +180,10 @@ namespace DowerTefenseGame.Screens
                         ScreenManager.GetInstance().SelectScreen("GameScreen");
                         break;
                     case "matchmaking":
-                        MultiplayerManager.SearchMatch();
+                        //MultiplayerManager.SearchMatch("");
+                        break;
+                    case "multi":
+                        MultiplayerManager.SearchMatch(btn.Name);
                         break;
                     case "editor":
                         ScreenManager.GetInstance().SelectScreen("Editor");
@@ -164,7 +193,8 @@ namespace DowerTefenseGame.Screens
                         if (MultiplayerManager.State == MultiplayerState.Disconnected)
                         {
                             // Tentative de connexion
-                            MultiplayerManager.TryConnect("LolFap");
+                            // TODO : Nom de connexion
+                            MultiplayerManager.TryConnect(DateTime.Now.ToString());
                         }
                         else
                         {

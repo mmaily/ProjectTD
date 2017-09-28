@@ -20,7 +20,7 @@ namespace DowerTefenseGame.Multiplayer
         // Socket de connexion
         private static Socket authSocket = null;
         // Received data buffer
-        private static byte[] receivedBuffer = new byte[256];
+        private static byte[] receivedBuffer = new byte[255];
 
         // Etat du compte
         private static MultiplayerState state = MultiplayerState.Disconnected;
@@ -34,7 +34,11 @@ namespace DowerTefenseGame.Multiplayer
             }
         }
         public static event StateChangedEventHanlder StateChanged;
-        public delegate void StateChangedEventHanlder(MultiplayerState _state);
+        public delegate void StateChangedEventHanlder(MultiplayerState state);
+
+        //Mise à jour du lobby
+        public static event LobbyUpdateEventHanlder LobbyUpdate;
+        public delegate void LobbyUpdateEventHanlder(Message message);
 
 
 
@@ -136,7 +140,6 @@ namespace DowerTefenseGame.Multiplayer
 
         #endregion
 
-
         #region === Émission ===
 
         /// <summary>
@@ -144,7 +147,7 @@ namespace DowerTefenseGame.Multiplayer
         /// </summary>
         /// <param name="_subject">Sujet du message</param>
         /// <param name="_data">Données du message</param>
-        private static void Send(string _subject, object _data)
+        public static void Send(string _subject, object _data)
         {
             // Si pas connecté
             if (authSocket == null || !authSocket.Connected)
@@ -169,9 +172,9 @@ namespace DowerTefenseGame.Multiplayer
         /// <summary>
         /// Demande de recherche de match
         /// </summary>
-        public static void SearchMatch()
+        public static void SearchMatch(string _role)
         {
-            Send("matchmaking", "attackIciPasEncoreImplementé");
+            Send("matchmaking", _role);
         }
 
         #endregion
@@ -189,36 +192,70 @@ namespace DowerTefenseGame.Multiplayer
             Socket socket = (Socket)ar.AsyncState;
 
             // Vérification de la présence de données
+            byte[] receivedData = GetRecievedData(ar);
+            // Si le nombre d'octets reçus est supérieur à 0
+            if (receivedData.Length > 0)
+            {
+                // Récupération du message reçu
+                Message messageReceived = new Message(receivedData);
+
+                // Remise en était du callback de réception
+                AsyncCallback recieveDataCallBack = new AsyncCallback(OnReceivedData);
+                socket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveDataCallBack, socket);
+
+                // Traitement du message
+                ProcessMessageReceived(messageReceived);
+            }
+            else
+            {
+                // La connextion est probablement fermée
+                //socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+
+                // Etat : déconnecté
+                State = MultiplayerState.Disconnected;
+            }
+        }
+
+        /// <summary>
+        /// Récupération des données recues
+        /// </summary>
+        /// <param name="ar"></param>
+        /// <returns>Tableau d'octets des données</returns>
+        public static byte[] GetRecievedData(IAsyncResult ar)
+        {
+            // Nombre d'octets reçus
+            int nBytesReceived = 0;
             try
             {
-                int nBytesReceived = socket.EndReceive(ar);
-                // Si le nombre d'octets reçus est supérieur à 0
-                if (nBytesReceived > 0)
-                {
-                    // Récupération du message reçu
-                    Message messageReceived = new Message(receivedBuffer);
-
-                    // Remise en était du callback de réception
-                    AsyncCallback recieveData = new AsyncCallback(OnReceivedData);
-                    socket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveData, socket);
-
-                    // Traitement du message
-                    ProcessMessageReceived(messageReceived);
-                }
-                else
-                {
-                    // La connextion est probablement fermée
-                    socket.Shutdown(SocketShutdown.Both);
-                    socket.Close();
-
-                    // Etat : déconnecté
-                    State = MultiplayerState.Disconnected;
-                }
+                nBytesReceived = authSocket.EndReceive(ar);
             }
             catch (Exception)
             {
-                // Socket fermé, probable déconnexion
+                return new byte[0];
             }
+            byte[] byReturn = new byte[nBytesReceived];
+
+            // Copie des octets
+            Array.Copy(receivedBuffer, byReturn, nBytesReceived);
+
+            // Vérifie la présence de données restantes
+            // Augmente la performance des paquets
+            // "pas essentiel et chiant à lire"
+            int nToBeRead = authSocket.Available;
+            if (nToBeRead > 0)
+            {
+                // Récupération des octets restants
+                byte[] byData = new byte[nToBeRead];
+                authSocket.Receive(byData);
+                // Ajout des octets au tableau de retour
+                byte[] byReturnFull = new byte[nBytesReceived + nToBeRead];
+                Buffer.BlockCopy(byReturn, 0, byReturnFull, 0, nBytesReceived);
+                Buffer.BlockCopy(byData, 0, byReturnFull, nBytesReceived, nToBeRead);
+                byReturn = byReturnFull;
+            }
+
+            return byReturn;
         }
 
 
@@ -256,7 +293,7 @@ namespace DowerTefenseGame.Multiplayer
                         switch (_message.received)
                         {
                             case "searching":
-                                state = MultiplayerState.SearchingGame;
+                                State = MultiplayerState.SearchingGame;
                                 break;
                             default:
                                 break;
@@ -264,8 +301,13 @@ namespace DowerTefenseGame.Multiplayer
                     }
                     break;
                 case MultiplayerState.SearchingGame:
+                    if (_message.Subject.Equals("newLobby"))
+                    {
+                        State = MultiplayerState.InLobby;
+                    }
                     break;
                 case MultiplayerState.InLobby:
+                    LobbyUpdate?.Invoke(_message);
                     break;
                 case MultiplayerState.InGame:
                     break;

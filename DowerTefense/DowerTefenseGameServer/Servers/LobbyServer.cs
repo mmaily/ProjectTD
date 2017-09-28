@@ -23,37 +23,56 @@ namespace DowerTefenseGameServer.Servers
         private AuthentificationServer authServer;
 
         /// <summary>
-        /// Consttructeur avec un ou plusieurs clients
+        /// Constructeur
         /// </summary>
-        /// <param name="_player1"></param>
-        /// <param name="_player2"></param>
         public LobbyServer(AuthentificationServer _authServer)
         {
+            // Récupération du serveur d'authentification
             this.authServer = _authServer;
+            // Initialisation de la liste des clients
+            clients = new Dictionary<Client, Player>();
+
+            // Récupération des évènements de réception
         }
 
         /// <summary>
         /// Ajout d'un joueur au lobby
         /// </summary>
         /// <param name="_client"></param>
-        public void AddPlayer(Client _client)
+        public void AddPlayer(Client _client, string _role)
         {
+            // Vérification de l'unicité du client
+            if (clients.ContainsKey(_client))
+            {
+                return;
+            }
+
+            // Envoi au joueur l'info de la création du lobby
+            _client.Send("newLobby", "");
+            // Changement de l'état du client
+            _client.state = MultiplayerState.InLobby;
+            // Création du callback de réception
+            _client.SetupRecieveCallback(this);
+
             // Création du nouveau joueur
             Player newPlayer = new Player()
             {
                 Name = _client.Name,
+                Role = _role.Equals("Attack") ? PlayerRole.Attacker : PlayerRole.Defender,
             };
 
-            // Envoi au joueur l'info de la création du lobby
-            _client.Send("newLobby", "");
+            // Envoi de lui même
+            _client.Send("playerUpdate", newPlayer);
+
             // Pour tous les joueurs déjà présents
             Parallel.ForEach(clients, other =>
             {
                 // Info du nouveau joueur
-                other.Key.Send("newPlayer", newPlayer);
+                other.Key.Send("playerUpdate", newPlayer);
                 // Info des joueurs déjà présents
-                _client.Send("newPlayer", other.Value.Name);
+                _client.Send("playerUpdate", other.Value);
             });
+
             // Ajout du joueur
             clients.Add(_client, newPlayer);
         }
@@ -104,7 +123,7 @@ namespace DowerTefenseGameServer.Servers
             Parallel.ForEach(clients, other =>
             {
                 // Info de la modification
-                other.Key.Send("update", clients[_clientModified]);
+                other.Key.Send("playerUpdate", clients[_clientModified]);
                 // On regarde l'état prêt
                 allReady = allReady && other.Value.Ready;
             });
