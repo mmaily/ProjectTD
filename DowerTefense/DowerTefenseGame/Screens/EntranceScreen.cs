@@ -122,6 +122,9 @@ namespace DowerTefenseGame.Screens
                     UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = false;
                     break;
                 case MultiplayerState.SearchingGame:
+                    // Modifiication bouton Matchmaking
+                    ((Button)UIElementsList.Find(elem => elem.Name.Equals("Matchmaking"))).Text = "Searching...";
+                    // TODO : remettre bouton en état
                     break;
                 case MultiplayerState.InLobby:
                     break;
@@ -151,6 +154,7 @@ namespace DowerTefenseGame.Screens
                         ScreenManager.GetInstance().SelectScreen("GameScreen");
                         break;
                     case "matchmaking":
+                        MultiplayerManager.SearchMatch();
                         break;
                     case "editor":
                         ScreenManager.GetInstance().SelectScreen("Editor");

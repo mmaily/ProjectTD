@@ -9,12 +9,12 @@ using LibrairieTropBien.Network;
 /// Mieux mieux mieux ! https://www.codeproject.com/Articles/1608/Asynchronous-socket-communication
 /// </summary>
 
-namespace DowerTefenseGameServer
+namespace DowerTefenseGameServer.Servers
 {
     /// <summary>
     /// Serveur d'authentification
     /// </summary>
-    public class AuthentificationServer
+    public class AuthentificationServer : Server
     {
         // Port du serveur de connexion
         private const string localIP = "127.0.0.1";
@@ -24,7 +24,15 @@ namespace DowerTefenseGameServer
         // Taille maximale de la file d'attente
         private const byte maxQueueLenght = 50;
 
+        // Liste des clients connectés
+        // TODO : Liste ou dictionnaire ?
         private List<Client> connectedClients;
+        // Liste des clients en recherche de match
+        private List<Client> matchmakingClients;
+        private object matchmakingListLock;
+
+        // Liste des lobbiess
+        private List<LobbyServer> lobbies;
 
         /// <summary>
         /// Constructeur
@@ -33,6 +41,11 @@ namespace DowerTefenseGameServer
         {
             // Création de la liste des clients connectés
             connectedClients = new List<Client>();
+            matchmakingClients = new List<Client>();
+            matchmakingListLock = new object();
+
+            // Création de la liste des lobbys
+            lobbies = new List<LobbyServer>();
 
             // Adress IP locale
             IPAddress local = IPAddress.Parse(localIP);
@@ -49,6 +62,8 @@ namespace DowerTefenseGameServer
             // Début de l'acceptation des clients et mise en place du callback
             listener.BeginAccept(new AsyncCallback(this.OnConnectRequest), listener);
         }
+
+        #region === Connexion ===
 
         /// <summary>
         /// Callback à la demande de connexion d'un client
@@ -77,6 +92,8 @@ namespace DowerTefenseGameServer
             Client client = new Client(_socket);
             connectedClients.Add(client);
 
+            // TODO : Vérifier nom unique
+
             // Récupération de l'horodatage
             client.ConnectedSince = DateTime.Now;
 
@@ -87,57 +104,37 @@ namespace DowerTefenseGameServer
             client.SetupRecieveCallback(this);
         }
 
-        /// <summary>
-        /// Réception des données reçues par un client
-        /// </summary>
-        /// <param name="ar"></param>
-        public void OnReiceivedData(IAsyncResult ar)
-        {
-            // Récupération du client
-            Client client = (Client)ar.AsyncState;
-            // Données recues
-            byte[] receivedData = client.GetRecievedData(ar);
+        #endregion
 
-            // Si aucune donnée n'a été reçue, la connexion est probablement fermée
-            if (receivedData.Length > 0)
-            {
-                client.SetupRecieveCallback(this);
-                
-                // Récupération du message
-                Message messageReceived = new Message(receivedData);
-                ProcessMessage(messageReceived, client);
-            }
-            else
-            {
-                Console.WriteLine("Client " + client.Name + " déconnecté.");
-                // Fermeture du socket
-                client.AuthSocket.Close();
-                // Retrait de la liste des clients
-                connectedClients.Remove(client);
-                return;
-            }
+        #region === Réception ===
 
-
-        }
-        
         /// <summary>
         /// Traitement du message reçu
         /// </summary>
         /// <param name="_messageReceived"></param>
-        private void ProcessMessage(Message _messageReceived, Client _client)
+        protected override void ProcessMessage(Message _messageReceived, Client _client)
         {
             // Traitement des différents cas
             switch (_messageReceived.Subject)
             {
                 case "login":
-                    // L'utilisateur demande à se connecter avec ce pseudo
+                    // Le client demande à se connecter avec ce pseudo
                     _client.Name = (string)_messageReceived.received;
-                    // L'utilisateur est maintenant authentifié
+                    // Le client est maintenant authentifié
                     _client.state = MultiplayerState.Authentified;
                     // Info console
                     Console.WriteLine("Client {0} s'est connecté", _client.Name);
                     // Envoi de la confirmation client
-                    Send(_client, "login", "ok");
+                    _client.Send("login", "ok");
+                    break;
+                case "matchmaking":
+                    // Le client demande à rechercher un match en ligne
+                    // Etat du client
+                    _client.state = MultiplayerState.SearchingGame;
+                    // Envoi confirmation recherche au client
+                    _client.Send("matchmaking", "searching");
+                    // Lancement d'une recherche de match
+                    this.ProcessMatchmaking(_client);
                     break;
                 default:
                     break;
@@ -145,32 +142,57 @@ namespace DowerTefenseGameServer
         }
 
         /// <summary>
-        /// Méthode d'envoi de données
+        /// Recherche un match compatible pour ce client
         /// </summary>
-        /// <param name="_subject">Sujet du message</param>
-        /// <param name="_data">Données du message</param>
-        private static void Send(Client _client, string _subject, object _data)
+        /// <param name="_client"></param>
+        private void ProcessMatchmaking(Client _client)
         {
-            // Si pas connecté
-            if (_client.AuthSocket == null || !_client.AuthSocket.Connected)
+            // Match trouvé ou non
+            bool matchFound = false;
+            // Opposant compatible
+            Client opponant = null;
+
+            // Verrouillage pour accès concurentiel
+            lock (matchmakingListLock)
             {
-                return;
+                // Parcours de la liste des clients recherchant un match
+                foreach (Client c in matchmakingClients)
+                {
+                    // TODO : ELO searching
+                    if (true)
+                    {
+                        // Match trouvé
+                        matchFound = true;
+                        // Sauvegarde opposant
+                        opponant = c;
+                        break;
+                    }
+                }
+
+                // Si aucun match n'a été trouvé
+                if (matchFound)
+                {
+                    // Lancement du match entre les deux joueurs compatibles
+                    LobbyServer lobby = new LobbyServer(this);
+                    // Ajout des joueurs
+                    lobby.AddPlayer(_client);
+                    lobby.AddPlayer(opponant);
+                    // Retrait de l'opposant de la liste des clients en recherche de match
+                    matchmakingClients.Remove(opponant);
+                }
+                else
+                {
+                    // On ajoute le client à la liste
+                    matchmakingClients.Add(_client);
+                }
             }
 
-            try
-            {
-                // Création d'un objet message et envoi
-                Message message = new Message(_subject, _data);
-                byte[] bMessage = message.GetArray();
-                _client.AuthSocket.Send(bMessage, bMessage.Length, 0);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Erreur d'envoi du message : " + e.ToString());
-            }
+
         }
+
+        #endregion
     }
 
 
-    
+
 }

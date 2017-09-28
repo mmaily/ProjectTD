@@ -49,6 +49,7 @@
     <Compile Include="GUI\GuiElement.cs" />
     <Compile Include="GUI\InfoPopUp.cs" />
     <Compile Include="GUI\ProgressBar.cs" />
+    <Compile Include="Network\Game\Player.cs" />
     <Compile Include="Network\Message.cs" />
     <Compile Include="Network\MultiplayerState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

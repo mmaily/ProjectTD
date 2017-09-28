@@ -41,6 +41,7 @@ namespace DowerTefenseGame.Multiplayer
         // Temp ?
         public static string name;
 
+        #region === Connexion ===
 
         /// <summary>
         /// Tentative de connexion au serveur d'authentification
@@ -110,6 +111,75 @@ namespace DowerTefenseGame.Multiplayer
         }
 
         /// <summary>
+        /// Processus d'authentification
+        /// </summary>
+        private static void StartAuthentification()
+        {
+            // Demande de connection avec le pseudo demandé
+            Send("login", name);
+        }
+
+        /// <summary>
+        /// Fermeture du socket de connexion
+        /// </summary>
+        public static void CloseConnection()
+        {
+            if (authSocket != null && authSocket.Connected)
+            {
+                authSocket.Shutdown(SocketShutdown.Both);
+                authSocket.Close();
+            }
+
+            // Etat : déconnecté
+            State = MultiplayerState.Disconnected;
+        }
+
+        #endregion
+
+
+        #region === Émission ===
+
+        /// <summary>
+        /// Méthode d'envoi de données
+        /// </summary>
+        /// <param name="_subject">Sujet du message</param>
+        /// <param name="_data">Données du message</param>
+        private static void Send(string _subject, object _data)
+        {
+            // Si pas connecté
+            if (authSocket == null || !authSocket.Connected)
+            {
+                return;
+            }
+
+            try
+            {
+                // Création d'un objet message et envoi
+                Message message = new Message(_subject, _data);
+                byte[] bMessage = message.GetArray();
+                authSocket.Send(bMessage, bMessage.Length, 0);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Demande de recherche de match
+        /// </summary>
+        public static void SearchMatch()
+        {
+            Send("matchmaking", "attackIciPasEncoreImplementé");
+        }
+
+        #endregion
+
+        #region === Réception ===
+
+
+        /// <summary>
         /// Callback de réception de données
         /// </summary>
         /// <param name="ar"></param>
@@ -151,56 +221,6 @@ namespace DowerTefenseGame.Multiplayer
             }
         }
 
-        /// <summary>
-        /// Fermeture du socket de connexion
-        /// </summary>
-        public static void CloseConnection()
-        {
-            if (authSocket != null && authSocket.Connected)
-            {
-                authSocket.Shutdown(SocketShutdown.Both);
-                authSocket.Close();
-            }
-
-            // Etat : déconnecté
-            State = MultiplayerState.Disconnected;
-        }
-
-        /// <summary>
-        /// Méthode d'envoi de données
-        /// </summary>
-        /// <param name="_subject">Sujet du message</param>
-        /// <param name="_data">Données du message</param>
-        private static void Send(string _subject, object _data)
-        {
-            // Si pas connecté
-            if (authSocket == null || !authSocket.Connected)
-            {
-                return;
-            }
-
-            try
-            {
-                // Création d'un objet message et envoi
-                Message message = new Message(_subject, _data);
-                byte[] bMessage = message.GetArray();
-                authSocket.Send(bMessage, bMessage.Length, 0);
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Processus d'authentification
-        /// </summary>
-        private static void StartAuthentification()
-        {
-            // Demande de connection avec le pseudo demandé
-            Send("login", name);
-        }
 
         /// <summary>
         /// Traitement du message reçu selon l'état de la connexion et le sujet du message
@@ -231,6 +251,17 @@ namespace DowerTefenseGame.Multiplayer
                     }
                     break;
                 case MultiplayerState.Authentified:
+                    if (_message.Subject.Equals("matchmaking"))
+                    {
+                        switch (_message.received)
+                        {
+                            case "searching":
+                                state = MultiplayerState.SearchingGame;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
                 case MultiplayerState.SearchingGame:
                     break;
@@ -244,5 +275,9 @@ namespace DowerTefenseGame.Multiplayer
                     break;
             }
         }
+
+        #endregion
+
+
     }
 }
