@@ -96,6 +96,7 @@ namespace LibrairieTropBien.GUI
         {
             this.elementBox = new Rectangle(_x, _y, _width, _height);
             this.Enabled = true;
+
         }
 
         /// <summary>
@@ -121,15 +122,15 @@ namespace LibrairieTropBien.GUI
             // Si la texture est définie
             if (texture != null)
             {
-                _spriteBatch.Draw(texture, this.elementBox, ElementColor);
+                _spriteBatch.Draw(texture, this.elementBox, ElementColor * opacity);
             }
             else
             {
                 // Texture non définie, on affiche un rectangle
-                _spriteBatch.DrawRectangle(this.elementBox, ElementColor);
+                _spriteBatch.DrawRectangle(this.elementBox, ElementColor * opacity);
 
                 // Affichage de la couleur du fond
-                _spriteBatch.FillRectangle(this.elementBox, BackgroundColor);
+                _spriteBatch.FillRectangle(this.elementBox, BackgroundColor * opacity);
             }
 
             // Si le bouton possède du texte

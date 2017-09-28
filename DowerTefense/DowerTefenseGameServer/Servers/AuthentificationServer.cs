@@ -102,8 +102,11 @@ namespace DowerTefenseGameServer.Servers
             // Changement d'état pour ce client
             client.state = MultiplayerState.Connected;
 
+            // Modification du destinataire du callback
+            client.ReceiveDataCallback = this.OnReiceivedData;
+
             // Création du callback de réception
-            client.SetupRecieveCallback(this);
+            client.SetupReceiveCallback(this);
         }
 
         #endregion

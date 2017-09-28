@@ -16,7 +16,7 @@ namespace DowerTefenseGame.Screens
     class LobbyScreen : Screen
     {
         //TODO : infos joueur et opposant
-        private Dictionary<PlayerRole, Button> buttons;
+        private Dictionary<PlayerRole, GuiElement> players;
         private Button readyButton;
 
         private bool initialized = false;
@@ -32,7 +32,7 @@ namespace DowerTefenseGame.Screens
             UIElementsList = new List<GuiElement>();
 
             // Init boutons
-            buttons = new Dictionary<PlayerRole, Button>();
+            players = new Dictionary<PlayerRole, GuiElement>();
 
             // Abonnement aux mises à jour du lobby
             Multiplayer.MultiplayerManager.LobbyUpdate += this.LobbyUpdate;
@@ -44,22 +44,28 @@ namespace DowerTefenseGame.Screens
         /// <param name="_graphics"></param>
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
-            Button attacker = new Button(50, 100, 80, 30)
+            GuiElement attacker = new Button(50, 100, 80, 30)
             {
                 Name = "player",
                 Text = "Ici nom du joueur",
-                BackgroundColor = Color.Wheat,
+                TextColor = Color.White,
+                BackgroundColor = Color.DarkRed,
+                font = CustomContentManager.GetInstance().Fonts["font"],
+                GreyedOut = false,
             };
 
-            Button defender = new Button(200, 100, 80, 30)
+            GuiElement defender = new Button(200, 100, 80, 30)
             {
                 Name = "opponant",
                 Text = "",
-                BackgroundColor = Color.Wheat,
+                TextColor = Color.White,
+                BackgroundColor = Color.DarkRed,
+                font = CustomContentManager.GetInstance().Fonts["font"],
+                GreyedOut = false,
             };
 
-            buttons.Add(PlayerRole.Attacker, attacker);
-            buttons.Add(PlayerRole.Defender, defender);
+            players.Add(PlayerRole.Attacker, attacker);
+            players.Add(PlayerRole.Defender, defender);
             UIElementsList.Add(attacker);
             UIElementsList.Add(defender);
 
@@ -68,9 +74,14 @@ namespace DowerTefenseGame.Screens
                 Name = "Ready",
                 Tag = "ready",
                 Text = "ready",
+                font = CustomContentManager.GetInstance().Fonts["font"],
+                BackgroundColor = Color.Indigo,
+                GreyedOut = true,
             };
             readyButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(readyButton);
+
+            MultiplayerManager.Send("lol", "casseToiOMG");
 
             initialized = true;
         }
@@ -137,9 +148,9 @@ namespace DowerTefenseGame.Screens
         private void UpdatePlayer(Player newPlayer)
         {
             // Récupération du bouton à modifier
-            Button toUpdate = buttons[newPlayer.Role];
+            GuiElement toUpdate = players[newPlayer.Role];
             // Mise à jour
-            toUpdate.Disabled = newPlayer.Ready;
+            toUpdate.GreyedOut = newPlayer.Ready;
             toUpdate.Text = newPlayer.Name;
         }
 

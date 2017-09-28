@@ -98,6 +98,7 @@ namespace DowerTefenseGame.Screens
                 Text = "Attack",
                 BackgroundColor = Color.Wheat,
                 TextColor = Color.Black,
+                font = CustomContentManager.GetInstance().Fonts["font"],
             };
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
@@ -108,6 +109,7 @@ namespace DowerTefenseGame.Screens
                 Text = "Defense",
                 BackgroundColor = Color.Wheat,
                 TextColor = Color.Black,
+                font = CustomContentManager.GetInstance().Fonts["font"],
 
             };
             newButton.OnRelease += Btn_OnClick;
@@ -194,7 +196,7 @@ namespace DowerTefenseGame.Screens
                         {
                             // Tentative de connexion
                             // TODO : Nom de connexion
-                            MultiplayerManager.TryConnect(DateTime.Now.ToString());
+                            MultiplayerManager.TryConnect(DateTime.Now.Millisecond.ToString());
                         }
                         else
                         {

@@ -51,8 +51,11 @@ namespace DowerTefenseGameServer.Servers
             _client.Send("newLobby", "");
             // Changement de l'état du client
             _client.state = MultiplayerState.InLobby;
+
+            // Modification du destinataire du callback
+            _client.ReceiveDataCallback = this.OnReiceivedData;
             // Création du callback de réception
-            _client.SetupRecieveCallback(this);
+            _client.SetupReceiveCallback(this);
 
             // Création du nouveau joueur
             Player newPlayer = new Player()
@@ -116,6 +119,9 @@ namespace DowerTefenseGameServer.Servers
 
         private void UpdateClients(Client _clientModified)
         {
+            // Debug
+            Console.WriteLine("Mise à jour client : " + clients[_clientModified].Name + " est maintenant prêt : " + clients[_clientModified].Ready);
+
             // Tous prêts ?
             bool allReady = true;
 

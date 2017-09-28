@@ -16,6 +16,8 @@ namespace DowerTefenseGameServer.Elements
         /// </summary>
         public Socket AuthSocket { get; private set; }
 
+        public AsyncCallback ReceiveDataCallback { get; set; }
+
         /// <summary>
         /// Nom du client
         /// </summary>
@@ -39,15 +41,16 @@ namespace DowerTefenseGameServer.Elements
         }
 
         /// <summary>
-        /// Lise en place du callback pour réception de données
+        /// Mise en place du callback pour réception de données
         /// </summary>
         /// <param name="app"></param>
-        public void SetupRecieveCallback(Server _server)
+        public void SetupReceiveCallback(Server _server)
         {
+            Console.WriteLine("         Mise en place pour " + _server.ToString());
+
             try
             {
-                AsyncCallback recieveData = new AsyncCallback(_server.OnReiceivedData);
-                AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveData, this);
+                AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, ReceiveDataCallback, this);
             }
             catch (Exception ex)
             {
@@ -77,7 +80,17 @@ namespace DowerTefenseGameServer.Elements
             // Vérifie la présence de données restantes
             // Augmente la performance des paquets
             // "pas essentiel et chiant à lire"
-            int nToBeRead = AuthSocket.Available;
+            int nToBeRead = 0;
+            try
+            {
+                nToBeRead = AuthSocket.Available;
+            }
+            catch (Exception)
+            {
+                // Le socket a été fermé, c'est pas grave... (Nan en vrai c'est qu'on switch de serveur)
+            }
+
+
             if (nToBeRead > 0)
             {
                 // Récupération des octets restants

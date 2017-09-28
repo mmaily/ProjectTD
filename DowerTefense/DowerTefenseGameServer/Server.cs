@@ -29,11 +29,13 @@ namespace DowerTefenseGameServer
             // Si aucune donnée n'a été reçue, la connexion est probablement fermée
             if (receivedData.Length > 0)
             {
-                client.SetupRecieveCallback(this);
+                client.SetupReceiveCallback(this);
 
                 // Récupération du message
                 Message messageReceived = new Message(receivedData);
                 ProcessMessage(messageReceived, client);
+
+                //Console.WriteLine("Après réception du message " + messageReceived.Subject +", on remet le callback pour " + this.ToString());
             }
             else
             {

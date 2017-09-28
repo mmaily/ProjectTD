@@ -18,8 +18,8 @@ namespace DowerTefenseGameServer.Servers
         /// </summary>
         public GameServer(Client _attack, Client _defense)
         {
-            _attack.SetupRecieveCallback(this);
-            _defense.SetupRecieveCallback(this);
+            _attack.SetupReceiveCallback(this);
+            _defense.SetupReceiveCallback(this);
         }
 
         /// <summary>
