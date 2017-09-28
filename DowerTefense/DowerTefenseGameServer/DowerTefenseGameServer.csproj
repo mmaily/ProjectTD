@@ -38,6 +38,7 @@
     <Compile Include="AuthentificationServer.cs" />
     <Compile Include="DowerTefenseGameServer.cs" />
     <Compile Include="Elements\Client.cs" />
+    <Compile Include="GameServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

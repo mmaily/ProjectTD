@@ -193,6 +193,11 @@ namespace DowerTefenseGame.Multiplayer
             }
         }
 
+        internal static void SearchMatch()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Processus d'authentification
         /// </summary>

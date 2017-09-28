@@ -88,5 +88,31 @@ namespace DowerTefenseGameServer.Elements
 
             return byReturn;
         }
+
+        /// <summary>
+        /// Méthode d'envoi de données
+        /// </summary>
+        /// <param name="_subject">Sujet du message</param>
+        /// <param name="_data">Données du message</param>
+        public void Send(string _subject, object _data)
+        {
+            // Si pas connecté
+            if (AuthSocket == null || !AuthSocket.Connected)
+            {
+                return;
+            }
+
+            try
+            {
+                // Création d'un objet message et envoi
+                Message message = new Message(_subject, _data);
+                byte[] bMessage = message.GetArray();
+                AuthSocket.Send(bMessage, bMessage.Length, 0);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Erreur d'envoi du message : " + e.ToString());
+            }
+        }
     }
 }
