@@ -38,11 +38,11 @@ namespace DowerTefenseGameServer.Elements
         /// Lise en place du callback pour réception de données
         /// </summary>
         /// <param name="app"></param>
-        public void SetupRecieveCallback(AuthentificationServer _authentificationServer)
+        public void SetupRecieveCallback(Server _server)
         {
             try
             {
-                AsyncCallback recieveData = new AsyncCallback(_authentificationServer.OnReiceivedData);
+                AsyncCallback recieveData = new AsyncCallback(_server.OnReiceivedData);
                 AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveData, this);
             }
             catch (Exception ex)

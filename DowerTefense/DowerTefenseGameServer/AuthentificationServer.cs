@@ -14,7 +14,7 @@ namespace DowerTefenseGameServer
     /// <summary>
     /// Serveur d'authentification
     /// </summary>
-    public class AuthentificationServer
+    public class AuthentificationServer : Server
     {
         // Port du serveur de connexion
         private const string localIP = "127.0.0.1";
@@ -91,7 +91,7 @@ namespace DowerTefenseGameServer
         /// Réception des données reçues par un client
         /// </summary>
         /// <param name="ar"></param>
-        public void OnReiceivedData(IAsyncResult ar)
+        public override void OnReiceivedData(IAsyncResult ar)
         {
             // Récupération du client
             Client client = (Client)ar.AsyncState;
@@ -116,8 +116,6 @@ namespace DowerTefenseGameServer
                 connectedClients.Remove(client);
                 return;
             }
-
-
         }
         
         /// <summary>
@@ -143,8 +141,6 @@ namespace DowerTefenseGameServer
                     break;
             }
         }
-
-
     }
 
 

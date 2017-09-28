@@ -39,6 +39,7 @@
     <Compile Include="DowerTefenseGameServer.cs" />
     <Compile Include="Elements\Client.cs" />
     <Compile Include="GameServer.cs" />
+    <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
