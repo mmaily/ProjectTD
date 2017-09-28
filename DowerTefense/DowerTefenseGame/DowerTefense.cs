@@ -28,7 +28,6 @@ namespace DowerTefenseGame
             Content.RootDirectory = "Content";
             // Initialisation du gestionnaire de contenu
             CustomContentManager.GetInstance();
-            IsFixedTimeStep = false;
 
         }
 
@@ -39,6 +38,7 @@ namespace DowerTefenseGame
         {
             //Envoie le graphic au screenManager
             ScreenManager.GetInstance().SetGraphics(this.graphics);
+
             // Initialisation des composants
             base.Initialize();
 
@@ -63,8 +63,10 @@ namespace DowerTefenseGame
             graphics.PreferredBackBufferHeight = 400;
             graphics.PreferredBackBufferWidth = 600;
             graphics.ApplyChanges();
-            //Demande le chargement du premier écran
+
+            //Demande l'affichage du premier écran
             ScreenManager.GetInstance().SelectScreen("EntranceScreen");
+
 
         }
 
@@ -97,8 +99,6 @@ namespace DowerTefenseGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // Récupération du ScreenManager
-            ScreenManager screenManager = ScreenManager.GetInstance();
 
             // Nettoyage de l'écran
             GraphicsDevice.Clear(Color.Black);
@@ -107,7 +107,7 @@ namespace DowerTefenseGame
             spriteBatch.Begin();
 
             // Affichage de l'écran en cours
-            screenManager.Draw(spriteBatch);
+            ScreenManager.GetInstance().Draw(spriteBatch);
 
             // Fin de l'affichage
             spriteBatch.End();

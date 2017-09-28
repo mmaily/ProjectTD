@@ -138,6 +138,7 @@ namespace DowerTefenseGame.Managers
         {
             this.Graphics = _graphics;
             Button btnBuild;
+            GuiElement panel;
             //Chargement des éléments selon le role adopté
             if (role.Equals("defense") || role.Equals("both"))
             {
@@ -200,6 +201,17 @@ namespace DowerTefenseGame.Managers
                     n++;
                 }
                 #endregion
+                #region Interface de composition d'armée
+                panel = new GuiElement(leftUIOffset,600, zoneUi.Width,300)
+                {
+                    Name = "ArmyCompo",
+                    Tag = "attackBuild",
+                    font= CustomContentManager.GetInstance().Fonts["font"],
+                    texture = CustomContentManager.GetInstance().Colors["pixel"]
+                };
+                panel.setText("Lol");
+                UIElementsList.Add(panel);
+                #endregion
             }
             if (role.Equals("both")){
                 // Bouton de changement de mode
@@ -261,7 +273,8 @@ namespace DowerTefenseGame.Managers
                             Name = "TowerInfo",
                             Tag = "InfoPopUp",
                             font = CustomContentManager.GetInstance().Fonts["font"],
-                            texture = CustomContentManager.GetInstance().Colors["pixel"]
+                            texture = CustomContentManager.GetInstance().Colors["pixel"],
+                            Enabled = true
                         };
                         UIElementsList.Add(info);
                         building.SetInfoPopUp(info);
@@ -338,6 +351,9 @@ namespace DowerTefenseGame.Managers
             // Mise à jour de tous les élémets d'interface
             Parallel.ForEach(UIElementsList, element =>
             {
+                if (element.GetType().Equals(typeof(InfoPopUp))){
+                    element.Update();
+                }
                 // Si l'élément est de type bouton
                 if (element.GetType().Equals(typeof(Button)) && element.Tag == role+"Build")
                 {

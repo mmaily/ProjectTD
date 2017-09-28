@@ -29,7 +29,6 @@ namespace DowerTefenseGame.Screens
         public int tileSize = Tile.tileSize;
         public int rowLength = 3; //Exprimé en nombre de Tile
         #endregion
-
         #region ===Variables liées à la map===
         public Rectangle mapZone;
         public Tile[,] EditedMap;
@@ -57,6 +56,7 @@ namespace DowerTefenseGame.Screens
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
+            spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             uiZone = new Rectangle(0, 0, 200, 400);
             //Charge le manager
             this.contentManager = CustomContentManager.GetInstance();
@@ -192,7 +192,6 @@ namespace DowerTefenseGame.Screens
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch);
-            SpriteBatch spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             spriteBatch.Begin();
             #region ===Affichage des Tiles modèles===
             foreach (Tile tile in modelTiles)
