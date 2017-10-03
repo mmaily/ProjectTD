@@ -14,6 +14,7 @@ namespace LibrairieTropBien.Network.Game
         Attacker,
         Defender,
         Spectator,
+        Debug, // Both
     }
 
     /// <summary>

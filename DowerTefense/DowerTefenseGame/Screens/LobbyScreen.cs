@@ -127,7 +127,6 @@ namespace DowerTefenseGame.Screens
                 System.Threading.Thread.Sleep(10);
             }
 
-
             switch (_message.Subject)
             {
                 case "playerUpdate":
@@ -135,6 +134,15 @@ namespace DowerTefenseGame.Screens
                     Player newPlayer = (Player)_message.received;
                     // TODO SALE
                     UpdatePlayer(newPlayer);
+                    break;
+                case "game":
+                    if (_message.received.Equals("starting"))
+                    {
+                        // Réglage du mode de l'écran de jeu
+                        ScreenManager.GetInstance().UpdateGameScreenMode(false);
+                       // Le jeu commence, on change d'écran
+                       ScreenManager.GetInstance().SelectScreen("GameScreen");
+                    }
                     break;
                 default:
                     break;

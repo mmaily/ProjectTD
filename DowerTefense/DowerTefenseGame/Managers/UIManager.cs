@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using DowerTefenseGame.Screens;
 using System.Threading.Tasks;
 using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
+using LibrairieTropBien.Network.Game;
 
 namespace DowerTefenseGame.Managers
 {
@@ -61,7 +62,7 @@ namespace DowerTefenseGame.Managers
         private ProgressBar progressBarWaves;
         #endregion
         //Role
-        protected String role;
+        protected PlayerRole role;
         //Joueur (défenseur pour l'instant)
         public DefensePlayer defensePlayer;
         //Joueur attaquand
@@ -140,7 +141,7 @@ namespace DowerTefenseGame.Managers
             Button btnBuild;
             GuiElement panel;
             //Chargement des éléments selon le role adopté
-            if (role.Equals("defense") || role.Equals("both"))
+            if (role == PlayerRole.Defender || role == PlayerRole.Debug)
             {
                 #region Interface de construction de défense
                 // Boutons de contruction des tours
@@ -171,7 +172,7 @@ namespace DowerTefenseGame.Managers
                 }
                 #endregion
             }
-            if (role.Equals("attack") || role.Equals("both"))
+            if (role == PlayerRole.Attacker || role == PlayerRole.Debug)
             {
                 #region Interface de construction en attaque
                 // Bouton de contruction de spawner
@@ -213,7 +214,7 @@ namespace DowerTefenseGame.Managers
                 UIElementsList.Add(panel);
                 #endregion
             }
-            if (role.Equals("both")){
+            if (role == PlayerRole.Debug){
                 // Bouton de changement de mode
                 Button btnMode = new Button(Graphics.PreferredBackBufferWidth - btnSize, 0, btnSize, btnSize)
                 {
@@ -640,10 +641,12 @@ namespace DowerTefenseGame.Managers
                 LockedList.Add(btnBuild, (SpawnerBuilding)sp);
             }
         }
-        public void SetRole(String _role)
+        public void SetRole(PlayerRole _role)
         {
+            // Rôle du joueur en cours
             this.role = _role;
-            this.mode = _role;
+            // Mode d'affichage (pour debug / spectator ?)
+            this.mode = _role == PlayerRole.Attacker ? "attack" : "defense";
         }
     }
 }

@@ -46,8 +46,6 @@ namespace DowerTefenseGameServer.Elements
         /// <param name="app"></param>
         public void SetupReceiveCallback(Server _server)
         {
-            Console.WriteLine("         Mise en place pour " + _server.ToString());
-
             try
             {
                 AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, ReceiveDataCallback, this);

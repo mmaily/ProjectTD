@@ -1,5 +1,6 @@
 ﻿using DowerTefenseGameServer.Elements;
 using LibrairieTropBien.Network;
+using LibrairieTropBien.Network.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,23 @@ namespace DowerTefenseGameServer.Servers
     /// </summary>
     public class GameServer : Server
     {
+        // Correspondance clients / joueurs
+        private Dictionary<Client, Player> clients;
+
+
         /// <summary>
         /// Constructeur de base du serveur de jeu
         /// </summary>
-        public GameServer(Client _attack, Client _defense)
+        public GameServer(Dictionary<Client, Player> _clients)
         {
-            _attack.SetupReceiveCallback(this);
-            _defense.SetupReceiveCallback(this);
+            // Récupération de la liste des clients
+            this.clients = _clients;
+            Parallel.ForEach(clients, c =>
+            {
+                // Changement du callback
+                c.Key.ReceiveDataCallback = this.OnReiceivedData;
+                c.Key.SetupReceiveCallback(this);
+            });
         }
 
         /// <summary>

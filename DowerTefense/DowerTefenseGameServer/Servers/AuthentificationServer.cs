@@ -157,6 +157,9 @@ namespace DowerTefenseGameServer.Servers
         /// <param name="_client"></param>
         private void ProcessMatchmaking(Client _client, string _role)
         {
+            // Info console
+            Console.WriteLine("Joueur " + _client.Name + " recherche un match en tant que " + _role);
+
             // Match trouvé ou non
             bool matchFound = false;
             // Opposant compatible

@@ -110,9 +110,16 @@ namespace DowerTefenseGame.Screens
         {
             currentScreen.Update(gameTime);
         }
+
         public void SetGraphics(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
+        }
+
+
+        public void UpdateGameScreenMode(bool _vsAI)
+        {
+            ((GameScreen)Screens["GameScreen"]).VsAI = _vsAI;
         }
     }   
 

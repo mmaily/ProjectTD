@@ -137,7 +137,13 @@ namespace DowerTefenseGameServer.Servers
             // Si tout le monde est prêt
             if (allReady)
             {
-                // Ouais !
+                Parallel.ForEach(clients, c =>
+                {
+                    // Lancement du jeu
+                    c.Key.Send("game", "starting");
+                });
+
+                GameServer gameServer = new GameServer(clients);
             }
         }
     }

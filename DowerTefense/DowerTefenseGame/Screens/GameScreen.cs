@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Input;
 using DowerTefenseGame.Units.Buildings;
 using DowerTefenseGame.Players;
 using System;
+using LibrairieTropBien.Network.Game;
+using DowerTefenseGame.Multiplayer;
+using LibrairieTropBien.Network;
 
 namespace DowerTefenseGame.Screens
 {
@@ -14,8 +17,8 @@ namespace DowerTefenseGame.Screens
     /// </summary>
     class GameScreen : Screen
     {
-        //Role adopté par ce GameScreen (Attaquant, défenseur, les deux pour débug, spectateur plus tard)
-        public string role = "both"; //attack, defense, spect, both(pour pouvoir switch en mode débug)
+        //Role adopté par ce GameScreen
+        public PlayerRole role = PlayerRole.Spectator;
         // Carte en cours
         private Map map;
         // Variables liées aux vagues
@@ -24,17 +27,23 @@ namespace DowerTefenseGame.Screens
         public static int waveLength = 10000;
         public double millisecPerFrame=1000;
         public double time;
+
         //Joueur (défenseur pour l'instant)
-        public DefensePlayer Player;
+        public DefensePlayer defenseplayer;
+
         //Faire jouer l'AI
-        private Boolean AiGame = false;
+        private Boolean vsAI = false;
+        public bool VsAI { get => vsAI; set => vsAI = value; }
+
+        // Chargement terminé (réception de toutes les infos joueurs)
+        private bool loaded = false;
 
         /// <summary>
         /// Constructeur principal
         /// </summary>
         public GameScreen()
         {
-            Player = new DefensePlayer();
+            defenseplayer = new DefensePlayer();
 
             // Init des vagues
             lastWaveTick = 0;
@@ -53,7 +62,19 @@ namespace DowerTefenseGame.Screens
             UIManager.GetInstance().SetRole(role);
             UIManager.GetInstance().Initialize(_graphics);
 
+            // Abonnement aux mises à jour du jeu
+            MultiplayerManager.GameUpdate += this.GameUpdate;
         }
+
+        /// <summary>
+        /// Traitement d'un message reçu pour le jeu
+        /// </summary>
+        /// <param name="message"></param>
+        private void GameUpdate(Message message)
+        {
+        }
+
+
 
         /// <summary>
         /// Chargement du contenu
@@ -72,6 +93,11 @@ namespace DowerTefenseGame.Screens
         /// <param name="_gameTime"></param>
         public override void Update(GameTime _gameTime)
         {
+            // Si le jeu n'est pas encore chargé
+            if (!loaded)
+            {
+                return;
+            }
 
             millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
 
@@ -101,7 +127,7 @@ namespace DowerTefenseGame.Screens
             UnitsManager.GetInstance().Update(_gameTime);
             // Mise à jour du gestionnaire de bâtiments
             BuildingsManager.GetInstance().Update(_gameTime);
-            if (AiGame) { 
+            if (VsAI) { 
             //Mise à jour des tâche de l'IA
             AiManager.GetInstance().Update(_gameTime, newWave);
             }
@@ -123,6 +149,13 @@ namespace DowerTefenseGame.Screens
             }
            
             spriteBatch.Begin();
+
+            // Si le jeu n'est pas encore chargé
+            if (!loaded)
+            {
+                _spriteBatch.DrawString(CustomContentManager.GetInstance().Fonts["font"], "Chargement...", new Vector2(50, 50), Color.White);
+            }
+
             //spriteBatch.Draw(CustomContentManager.GetInstance().Colors["grey"],Graphics.);
             // Affichage de la carte
             MapManager.GetInstance().Draw(spriteBatch);

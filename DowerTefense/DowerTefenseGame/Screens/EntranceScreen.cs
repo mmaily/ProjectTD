@@ -179,7 +179,8 @@ namespace DowerTefenseGame.Screens
                 switch (btn.Tag.ToString())
                 {
                     case "horsLigne":
-                        ScreenManager.GetInstance().SelectScreen("GameScreen");
+                        ScreenManager.GetInstance().UpdateGameScreenMode(true);
+                       ScreenManager.GetInstance().SelectScreen("GameScreen");
                         break;
                     case "matchmaking":
                         //MultiplayerManager.SearchMatch("");

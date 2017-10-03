@@ -40,7 +40,9 @@ namespace DowerTefenseGame.Multiplayer
         public static event LobbyUpdateEventHanlder LobbyUpdate;
         public delegate void LobbyUpdateEventHanlder(Message message);
 
-
+        //Mise à jour du jeu
+        public static event GameUpdateEventHanlder GameUpdate;
+        public delegate void GameUpdateEventHanlder(Message message);
 
         // Temp ?
         public static string name;
@@ -108,7 +110,7 @@ namespace DowerTefenseGame.Multiplayer
                     // C'est con
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // OMFG
             }
@@ -162,7 +164,7 @@ namespace DowerTefenseGame.Multiplayer
                 byte[] bMessage = message.GetArray();
                 authSocket.Send(bMessage, bMessage.Length, 0);
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw;
@@ -258,7 +260,6 @@ namespace DowerTefenseGame.Multiplayer
             return byReturn;
         }
 
-
         /// <summary>
         /// Traitement du message reçu selon l'état de la connexion et le sujet du message
         /// </summary>
@@ -310,6 +311,7 @@ namespace DowerTefenseGame.Multiplayer
                     LobbyUpdate?.Invoke(_message);
                     break;
                 case MultiplayerState.InGame:
+                    GameUpdate?.Invoke(_message);
                     break;
                 case MultiplayerState.InEndGameLobby:
                     break;
