@@ -15,6 +15,7 @@ namespace DowerTefenseGame.Multiplayer
         // Adresse et port du serveur
         private const string authServerIP = "86.200.78.166";
         private const string authServerIPlocal = "127.0.0.1";
+        private const string authServerIPDistant = "5.51.40.64";
         private const int authServerPort = 42666;
 
         // Socket de connexion
@@ -72,7 +73,7 @@ namespace DowerTefenseGame.Multiplayer
                 ProtocolType.Tcp);
 
             // Définition de l'addresse du serveur
-            IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPlocal), authServerPort);
+            IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPDistant), authServerPort);
 
             // Connexion au serveur avec cellback
             authSocket.Blocking = false;

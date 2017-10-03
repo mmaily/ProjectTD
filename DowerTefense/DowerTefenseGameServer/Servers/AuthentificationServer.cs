@@ -18,6 +18,7 @@ namespace DowerTefenseGameServer.Servers
     {
         // Port du serveur de connexion
         private const string localIP = "127.0.0.1";
+        private const string DistantIP = "5.51.40.64";
         private const int portNum = 42666;
 
         // Paramètres
@@ -50,7 +51,7 @@ namespace DowerTefenseGameServer.Servers
             lobbies = new List<LobbyServer>();
 
             // Adress IP locale
-            IPAddress local = IPAddress.Parse(localIP);
+            IPAddress local = IPAddress.Any;
 
             // Création d'un socket TCP/IP
             Socket listener = new Socket(AddressFamily.InterNetwork,

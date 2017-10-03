@@ -1,5 +1,4 @@
 ﻿using DowerTefenseGame.Managers;
-using DowerTefenseGame.Screens;
 using LibrairieTropBien.GUI;
 using LibrairieTropBien.Network;
 using LibrairieTropBien.Network.Game;
@@ -124,7 +123,7 @@ namespace DowerTefenseGame.Screens
         {
             while (!initialized)
             {
-                System.Threading.Thread.Sleep(10);
+                System.Threading.Thread.Sleep(1);
             }
 
             switch (_message.Subject)
