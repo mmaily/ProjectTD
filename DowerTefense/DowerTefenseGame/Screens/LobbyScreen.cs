@@ -117,6 +117,7 @@ namespace DowerTefenseGame.Screens
             {
                 element.Update();
             });
+            TreatMessages();
         }
 
         private void LobbyUpdate(Message _message)

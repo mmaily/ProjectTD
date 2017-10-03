@@ -24,7 +24,7 @@ namespace DowerTefenseGame.Screens
         public Screen()
         {
             UIElementsList = new List<GuiElement>();
-            Messages = new List<Message>;
+            Messages = new List<Message>();
             this.leftMargin = 5;
             this.topMargin = 5;
         }
