@@ -121,30 +121,32 @@ namespace DowerTefenseGame.Screens
 
         private void LobbyUpdate(Message _message)
         {
-            while (!initialized)
+            Messages.Add(_message);
+        }
+        public override void TreatMessages()
+        {
+            foreach(Message _message in Messages)
             {
-                System.Threading.Thread.Sleep(1);
-            }
-
-            switch (_message.Subject)
-            {
-                case "playerUpdate":
-                    // Récupération de l'objet joueur
-                    Player newPlayer = (Player)_message.received;
-                    // TODO SALE
-                    UpdatePlayer(newPlayer);
-                    break;
-                case "game":
-                    if (_message.received.Equals("starting"))
-                    {
-                        // Réglage du mode de l'écran de jeu
-                        ScreenManager.GetInstance().UpdateGameScreenMode(false);
-                       // Le jeu commence, on change d'écran
-                       ScreenManager.GetInstance().SelectScreen("GameScreen");
-                    }
-                    break;
-                default:
-                    break;
+                switch (_message.Subject)
+                {
+                    case "playerUpdate":
+                        // Récupération de l'objet joueur
+                        Player newPlayer = (Player)_message.received;
+                        // TODO SALE
+                        UpdatePlayer(newPlayer);
+                        break;
+                    case "game":
+                        if (_message.received.Equals("starting"))
+                        {
+                            // Réglage du mode de l'écran de jeu
+                            ScreenManager.GetInstance().UpdateGameScreenMode(false);
+                            // Le jeu commence, on change d'écran
+                            ScreenManager.GetInstance().SelectScreen("GameScreen");
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

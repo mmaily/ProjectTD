@@ -19,6 +19,8 @@ namespace DowerTefenseGame.Screens
         private GraphicsDeviceManager Graphics;
         // Écran courant
         Screen currentScreen;
+        //Ecran à charger
+        Screen loadingScreen;
         //Dictionnaire des Screen
         public Dictionary<String, Screen> Screens;
 
@@ -58,10 +60,10 @@ namespace DowerTefenseGame.Screens
         /// <param name="_id">Identifiant de l'écran à charger</param>
         public void SelectScreen(String _screenName)
         {
-            currentScreen = (Screen)Screens[_screenName];
+            loadingScreen = (Screen)Screens[_screenName];
             Initialize();
             LoadContent();
-
+            currentScreen = loadingScreen;
         }
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace DowerTefenseGame.Screens
         private void Initialize()
         {
             // Init de l'écran
-            currentScreen.Initialize(Graphics);
+            loadingScreen.Initialize(Graphics);
         }
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace DowerTefenseGame.Screens
         public virtual void LoadContent()
         {
             // On charge le contenu de l'écran actuel
-            currentScreen.LoadContent();
+           loadingScreen.LoadContent();
         }
 
         /// <summary>
