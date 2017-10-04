@@ -9,6 +9,7 @@ using System.Linq;
 using DowerTefenseGame.Units.Buildings;
 using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings;
+using LibrairieTropBien.Network;
 
 namespace DowerTefenseGame.Managers
 {
@@ -30,6 +31,10 @@ namespace DowerTefenseGame.Managers
         public Map CurrentMap { get; set; }
         //Dictionnaire qui associe unité spawné et tours ensemble
         public Dictionary<String, String> UnitSpawned;
+        #region Gestion des unités Dummies (buildings)
+        //Catalogue des entités de bases 
+        public List<Entity> DummyEntit;
+        #endregion
 
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -38,6 +43,7 @@ namespace DowerTefenseGame.Managers
         {
             mobs = new List<Unit>();
             projs = new List<Projectile>();
+            DummyEntit = new List<Entity>();
             CurrentMap = MapManager.GetInstance().CurrentMap;
             SetSpawnerDictionnary();
         }
@@ -182,6 +188,18 @@ namespace DowerTefenseGame.Managers
         {
             UnitSpawned = new Dictionary<String, String>();
             UnitSpawned.Add("BasicSpawner", "Unit");
+        }
+        public Boolean SetDummyEntities(List<Message> Messages)
+        {
+            Boolean success = false;
+            foreach(Message _message in Messages)
+            {
+                Entity entity = (Entity)_message.received;
+                DummyEntit.Add(entity);
+                success = DummyEntit.Count!=0 ? true : false;
+            
+            }
+            return success;
         }
     }
 }

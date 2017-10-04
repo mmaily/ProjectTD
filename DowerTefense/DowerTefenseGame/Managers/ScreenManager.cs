@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DowerTefenseGame.Screens;
 using System.Collections.Generic;
+using LibrairieTropBien.Network.Game;
 
 namespace DowerTefenseGame.Screens
 {
@@ -122,6 +123,8 @@ namespace DowerTefenseGame.Screens
         public void UpdateGameScreenMode(bool _vsAI)
         {
             ((GameScreen)Screens["GameScreen"]).VsAI = _vsAI;
+            //TODO : Enelver ce mode de débug et mettre défenseur
+            ((GameScreen)Screens["GameScreen"]).role = PlayerRole.Debug;
         }
     }   
 

@@ -74,7 +74,7 @@ namespace DowerTefenseGame.Managers
 
         #endregion
 
-        #region Gestion des unités Dummies
+        #region Gestion des bâtiments Dummies 
         //Catalogue des bâtiment de bases (utile pour display les info de construcion par exemple)
         public List<Building> Dummies;
         #endregion

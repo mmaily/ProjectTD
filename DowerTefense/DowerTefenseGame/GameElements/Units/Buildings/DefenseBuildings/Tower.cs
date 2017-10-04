@@ -9,10 +9,12 @@ using DowerTefenseGame.GameElements.Projectiles;
 using DowerTefenseGame.Units;
 using LibrairieTropBien.GUI;
 using DowerTefenseGame.Screens;
+using System.Runtime.Serialization;
 
 namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
 {
-    public class Tower : Building
+    [Serializable()]
+    public class Tower : Building, ISerializable
     {
 
         protected List<Projectile> projectileList;//  Liste de ses munitions en vol
@@ -166,5 +168,6 @@ namespace DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings
             Building other = (Tower)this.MemberwiseClone();
             return other;
         }
+
     }
 }

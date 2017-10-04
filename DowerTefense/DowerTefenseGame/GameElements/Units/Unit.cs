@@ -1,9 +1,13 @@
-﻿namespace DowerTefenseGame.GameElements.Units
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace DowerTefenseGame.GameElements.Units
 {
+    [Serializable()]
     /// <summary>
     /// Unité de démonstration
     /// </summary>
-    public class Unit : Entity
+    public class Unit : Entity , ISerializable
     {
 
         /// <summary>

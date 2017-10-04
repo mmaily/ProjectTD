@@ -46,6 +46,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DowerTefenseGame\DowerTefenseGame.csproj">
+      <Project>{57F57672-F64C-47BA-93DB-9259832AB5E2}</Project>
+      <Name>DowerTefenseGame</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LibrairieTropBien\LibrairieTropBien.csproj">
       <Project>{A2A33BCD-10C9-45CA-920B-43869C71A68D}</Project>
       <Name>LibrairieTropBien</Name>

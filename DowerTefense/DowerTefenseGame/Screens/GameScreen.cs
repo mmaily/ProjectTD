@@ -18,7 +18,7 @@ namespace DowerTefenseGame.Screens
     class GameScreen : Screen
     {
         //Role adopté par ce GameScreen
-        public PlayerRole role = PlayerRole.Spectator;
+        public PlayerRole role = PlayerRole.Debug;
         // Carte en cours
         private Map map;
         // Variables liées aux vagues
@@ -85,6 +85,7 @@ namespace DowerTefenseGame.Screens
             MapManager mapManager = MapManager.GetInstance();
             //Récupération de la carte en cours
             map = mapManager.CurrentMap;
+            loaded = true;
         }
 
         /// <summary>
