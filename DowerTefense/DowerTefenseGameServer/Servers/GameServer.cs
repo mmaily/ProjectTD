@@ -72,7 +72,7 @@ namespace DowerTefenseGameServer.Servers
             }
         }
         //Génère la liste Bâtiments défensif, Bâtiments offensif et Entity
-        protected void GenerateDummiesDictionnary()
+        protected void GenerateDummies()
         {
             //TODO : On désérialise
             #region Les unités
@@ -125,7 +125,7 @@ namespace DowerTefenseGameServer.Servers
                 if (clients[c].Role == PlayerRole.Attacker)
                 {
                     c.Send("Unit", DummyUnits);
-                    c.Send("Spawner", DummySpawners);  
+                    c.Send("Spawner", DummySpawners);
                 }
                 // Envoie bât def et unités
                 if (clients[c].Role == PlayerRole.Defender)
