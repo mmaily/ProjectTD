@@ -13,6 +13,7 @@ using DowerTefenseGame.Screens;
 using System.Threading.Tasks;
 using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 using LibrairieTropBien.Network.Game;
+using DowerTefenseGame.Multiplayer;
 
 namespace DowerTefenseGame.Managers
 {
@@ -50,11 +51,11 @@ namespace DowerTefenseGame.Managers
         #endregion
 
         // Carte en cours
-        private Map currentMap;
+        public Map currentMap { get; set; }
 
         #region ==Element d'interface (boutons, bar de progression)
         // Éléments d'interface
-        private List<GuiElement> UIElementsList;
+        public List<GuiElement> UIElementsList;
         //Liste des boutons de la liste locked
         private List<Button> lockedButton;
         private Dictionary<Button,InfoPopUp> PopUp;
@@ -262,25 +263,11 @@ namespace DowerTefenseGame.Managers
                         && (building.Cost <= defensePlayer.totalGold))
                     {
                         // On créé un bâtiment de ce type
-                        // TODO : Ici faire une copie de l'instance de building
                         // Que l'on place sur cette tuile
+                        // On envoie la requete de construction d'une tour au serveur
                         building = (Tower)building.DeepCopy();
-                        building.CreateOnEventListener();
                         building.SetTile(SelectedTile);
-                        InfoPopUp info = new InfoPopUp(new Rectangle((int)((SelectedTile.getTilePosition().X - 0.5) * currentMap.tileSize),
-                                                            (int)((SelectedTile.getTilePosition().Y - 0.5) * currentMap.tileSize),
-                                                            currentMap.tileSize, currentMap.tileSize))
-                        {
-                            Name = "TowerInfo",
-                            Tag = "InfoPopUp",
-                            font = CustomContentManager.GetInstance().Fonts["font"],
-                            texture = CustomContentManager.GetInstance().Colors["pixel"],
-                            Enabled = true
-                        };
-                        UIElementsList.Add(info);
-                        building.SetInfoPopUp(info);
-                        // Retrait du coût du bâtiment
-                        defensePlayer.totalGold -= building.Cost;
+                        MultiplayerManager.Send("towerUpdate", building);                       
                     }
                 }
                 // Si le bouton est une construction attaque
@@ -290,17 +277,9 @@ namespace DowerTefenseGame.Managers
                     Building building = Dummies.Find(b => b.name.Equals(btn.Name));
                     if (building.Cost <= attackPlayer.totalGold)
                     {
-                        SpawnerBuilding spawnbuilding =(SpawnerBuilding)building.DeepCopy();
-                        attackPlayer.totalGold -= spawnbuilding.Cost;
-                        UpdateBtnLists(spawnbuilding);
-                        BuildingsManager.GetInstance().FreeBuildingsList.Add(spawnbuilding);
-                        if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawnbuilding.PowerNeeded))
-                        {
-                            spawnbuilding.powered = true;
-                            attackPlayer.usedEnergy += spawnbuilding.PowerNeeded;
-                        }
+                        SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.DeepCopy();
+                        MultiplayerManager.Send("spawnerUpdate", building);
                     }
-
                 }
                 #region ===Gestion de l'appui sur les boutons de l'attaquand sur sa liste
                 if (btn.Tag.Equals("ActiveList") && attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (ActiveList[btn].PowerNeeded) && !(ActiveList[btn].powered))
@@ -595,9 +574,6 @@ namespace DowerTefenseGame.Managers
             btnBuild.OnRelease += Btn_OnClick;
             UIElementsList.Add(btnBuild);
             //Add la popUp qui va bien
-            //InfoPopUp info = new InfoPopUp(new Rectangle(btnBuild.elementBox.Left,
-            //                                             btnBuild.elementBox.Top,
-            //MapManager.GetInstance().CurrentMap.tileSize, currentMap.tileSize))
             InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
             {
                 Name = "ActiveSpawnInfo",

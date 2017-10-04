@@ -34,7 +34,7 @@ namespace DowerTefenseGame.Screens
             players = new Dictionary<PlayerRole, GuiElement>();
 
             // Abonnement aux mises à jour du lobby
-            Multiplayer.MultiplayerManager.LobbyUpdate += this.LobbyUpdate;
+            MultiplayerManager.LobbyUpdate += this.LobbyUpdate;
         }
 
         /// <summary>

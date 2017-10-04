@@ -9,6 +9,7 @@ using System;
 using LibrairieTropBien.Network.Game;
 using DowerTefenseGame.Multiplayer;
 using LibrairieTropBien.Network;
+using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 
 namespace DowerTefenseGame.Screens
 {
@@ -72,6 +73,17 @@ namespace DowerTefenseGame.Screens
         /// <param name="message"></param>
         private void GameUpdate(Message message)
         {
+            switch (message.Subject)
+            {
+                case "towerUpdate":
+
+                    BuildingsManager.GetInstance().WaitingForConstruction.Add((Tower)message.received);
+                    break;
+                case "spawnerUpdate":
+
+                    BuildingsManager.GetInstance().WaitingForConstruction.Add((SpawnerBuilding)message.received);
+                    break;
+            }
         }
 
 

@@ -4,6 +4,7 @@ using DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings;
 using DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefenseGame.Units;
 using DowerTefenseGame.Units.Buildings;
+using LibrairieTropBien.GUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -53,7 +54,7 @@ namespace DowerTefenseGame.Managers
         /// </summary>
         public List<SpawnerBuilding> FreeBuildingsList { get; set; }
         /// <summary>
-        /// Liste de tous les bâtiments libre
+        /// Liste de tous les bâtiments défensifs
         /// </summary>
         public List<Building> DefenseBuildingsList { get; set; }
         /// <summary>
@@ -65,7 +66,7 @@ namespace DowerTefenseGame.Managers
 
         // Ratio entre l'image de la tour et la taille des tiles
         public float imageRatio;
-
+        
 
         /// <summary>
         /// Constructeur
@@ -110,8 +111,48 @@ namespace DowerTefenseGame.Managers
             //Update le temps de jeu écoule
             this.gameTime = _gameTime;
 
+            #region =====Construction des bâtiments en attente=====
+            //Construire la liste des tours en attente
+            foreach (Building bd in WaitingForConstruction)
+            {
+                // Retrait du coût du bâtiment
+                if (bd.GetType() == typeof(Tower))
+                {
+                    bd.CreateOnEventListener();
+                    InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * UIManager.GetInstance().currentMap.tileSize),
+                                                        (int)((bd.GetTile().getTilePosition().Y - 0.5) * UIManager.GetInstance().currentMap.tileSize),
+                                                        UIManager.GetInstance().currentMap.tileSize, UIManager.GetInstance().currentMap.tileSize))
+                    {
+                        Name = bd.GetType().ToString() + "Info",
+                        Tag = "InfoPopUp",
+                        font = CustomContentManager.GetInstance().Fonts["font"],
+                        texture = CustomContentManager.GetInstance().Colors["pixel"],
+                        Enabled = true
+                    };
+                    UIManager.GetInstance().UIElementsList.Add(info);
+                    bd.SetInfoPopUp(info);
+                    UIManager.GetInstance().defensePlayer.totalGold -= bd.Cost;
+                }
+                if (bd.GetType() == typeof(SpawnerBuilding))
+                {
+                    //On le cast en spawner pour appliquer les méthodes propres aux spawner
+                    SpawnerBuilding spawner = (SpawnerBuilding)bd;
+                    UIManager.GetInstance().attackPlayer.totalGold -= bd.Cost;
+                    UIManager.GetInstance().UpdateBtnLists(spawner); 
+                    BuildingsManager.GetInstance().FreeBuildingsList.Add(spawner);
+                    if (UIManager.GetInstance().attackPlayer.totalEnergy - UIManager.GetInstance().attackPlayer.usedEnergy >= (spawner.PowerNeeded))
+                    {
+                        spawner.powered = true;
+                        UIManager.GetInstance().attackPlayer.usedEnergy += spawner.PowerNeeded;
+                    }
+                }
+
+            }
+            //Une fois traitée, on vide les éléments de la waiting List
+            WaitingForConstruction.Clear();
+            #endregion 
             //Apelle les bâtiments à faire leur actions respectives (si il y a des buildings)
-             BuildingDuty?.Invoke();
+            BuildingDuty?.Invoke();
             
         }
 
