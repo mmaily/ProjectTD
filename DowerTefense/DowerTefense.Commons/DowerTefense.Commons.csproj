@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6751A0F8-F676-4DF7-87F9-F06528F8C6B9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DowerTefense.Commons</RootNamespace>
+    <AssemblyName>DowerTefense.Commons</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Engines\BuildingEngine.cs" />
+    <Compile Include="Engines\MapEngine.cs" />
+    <Compile Include="Engines\UnitEngine.cs" />
+    <Compile Include="GameElements\Map\Map.cs" />
+    <Compile Include="GameElements\Map\Tile.cs" />
+    <Compile Include="GameElements\Map\XmlMap.cs" />
+    <Compile Include="GameElements\Projectiles\Projectile.cs" />
+    <Compile Include="GameElements\Projectiles\SingleTargetProjectile.cs" />
+    <Compile Include="GameElements\Units\Building.cs" />
+    <Compile Include="GameElements\Units\Buildings\AttackBuildings\BasicSpawner.cs" />
+    <Compile Include="GameElements\Units\Buildings\AttackBuildings\SpawnerBuilding.cs" />
+    <Compile Include="GameElements\Units\Buildings\DefenseBuildings\BasicTower.cs" />
+    <Compile Include="GameElements\Units\Buildings\DefenseBuildings\RapidFireTower.cs" />
+    <Compile Include="GameElements\Units\Buildings\DefenseBuildings\Tower.cs" />
+    <Compile Include="GameElements\Units\Entity.cs" />
+    <Compile Include="GameElements\Units\Unit.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibrairieTropBien\LibrairieTropBien.csproj">
+      <Project>{a2a33bcd-10c9-45ca-920b-43869c71a68d}</Project>
+      <Name>LibrairieTropBien</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

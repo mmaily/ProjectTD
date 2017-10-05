@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A2A33BCD-10C9-45CA-920B-43869C71A68D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibrairieTropBien</RootNamespace>
-    <AssemblyName>LibrairieTropBien</AssemblyName>
+    <ProjectGuid>{21BB7573-6ABE-4C3B-838D-68EAD92E292B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DowerTefense.Server</RootNamespace>
+    <AssemblyName>DowerTefense.Server</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,30 +33,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C3.MonoGame.Primitives2D">
-      <HintPath>Libraries\C3.MonoGame.Primitives2D.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\Button.cs" />
-    <Compile Include="GUI\GuiElement.cs" />
-    <Compile Include="GUI\InfoPopUp.cs" />
-    <Compile Include="GUI\ProgressBar.cs" />
-    <Compile Include="Network\Game\Player.cs" />
-    <Compile Include="Network\Message.cs" />
-    <Compile Include="Network\MultiplayerState.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Servers\AuthentificationServer.cs" />
+    <Compile Include="DowerTefenseGameServer.cs" />
+    <Compile Include="Elements\Client.cs" />
+    <Compile Include="Servers\BackupDummies.cs" />
+    <Compile Include="Servers\GameManager.cs" />
+    <Compile Include="Servers\GameServer.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="Servers\LobbyServer.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DowerTefense.Commons\DowerTefense.Commons.csproj">
+      <Project>{6751A0F8-F676-4DF7-87F9-F06528F8C6B9}</Project>
+      <Name>DowerTefense.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DowerTefense.Game\DowerTefense.Game.csproj">
+      <Project>{57F57672-F64C-47BA-93DB-9259832AB5E2}</Project>
+      <Name>DowerTefense.Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LibrairieTropBien\LibrairieTropBien.csproj">
+      <Project>{A2A33BCD-10C9-45CA-920B-43869C71A68D}</Project>
+      <Name>LibrairieTropBien</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
