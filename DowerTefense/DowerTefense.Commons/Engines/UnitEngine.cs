@@ -17,58 +17,12 @@ namespace DowerTefense.Commons.Managers
     public static class UnitEngine
     {
 
-        // Liste des unités courantes sur le terrain
-        public List<Unit> mobs;
-        //Liste des projectiles
-        public List<Projectile> projs;
-        // Carte en cours
-        public Map CurrentMap { get; set; }
-        //Dictionnaire qui associe unité spawné et tours ensemble
-        public Dictionary<String, String> UnitSpawned;
-        #region Gestion des unités Dummies (buildings)
-        //Catalogue des entités de bases 
-        public List<Entity> DummyEntit;
-        #endregion
-
-        /// <summary>
-        /// Constructeur du gestionnaire d'unité
-        /// </summary>
-        private UnitEngine()
-        {
-            mobs = new List<Unit>();
-            projs = new List<Projectile>();
-            DummyEntit = new List<Entity>();
-            CurrentMap = MapEngine.GetInstance().CurrentMap;
-            SetSpawnerDictionnary();
-        }
-
-        /// <summary>
-        /// Mise à jour des unités
-        /// </summary>
-        /// <param name="_gameTime"></param>
-        public void Update(GameTime _gameTime)
-        {
-            #region === Gestion du déplacement des unités ===
-
-
-
-            #endregion
-            #region === Récupération de des listes actuelles de Projectile pour Draw ==
-            projs.Clear();
-            foreach (Tower bt in BuildingEngine.GetInstance().DefenseBuildingsList)
-            {
-                projs.AddRange(bt.GetProjectileList());
-            }
-            #endregion
-
-        }
-
         /// <summary>
         /// Traitement des unités : avance, décès, victoire
         /// TODO : gold si dead ?
         /// </summary>
         /// <param name="mobs"></param>
-        public static void ProcessMobs(ref List<Unit> mobs)
+        public static void ProcessMobs(ref List<Unit> mobs, GameTime _gameTime, byte _tileSize)
         {
             // Pour chaque mob de la liste
             foreach (Unit mob in mobs)
@@ -83,13 +37,13 @@ namespace DowerTefense.Commons.Managers
                 }
 
                 // Quantité de déplacement disponible
-                float movementAvailable = mob.Speed * CurrentMap.tileSize * _gameTime.ElapsedGameTime.Milliseconds / 1000;
+                float movementAvailable = mob.Speed * _tileSize * _gameTime.ElapsedGameTime.Milliseconds / 1000;
 
                 // Tant que l'unité peut encore se déplacer et n'est pas morte
                 while (movementAvailable != 0 && !mob.Dead)
                 {
                     // Destination
-                    Vector2 destinationPosition = mob.DestinationTile.getTilePosition() * CurrentMap.tileSize;
+                    Vector2 destinationPosition = mob.DestinationTile.getTilePosition() * _tileSize;
                     // Quantité de mouvement nécessaire pour le déplacement
                     Vector2 movement = destinationPosition - mob.Position;
                     // Etude de faisabilité du déplacement
@@ -122,7 +76,7 @@ namespace DowerTefense.Commons.Managers
                         {
                             // Si la tuile destination était une base, on détruit le mob et on recommence
                             mob.Dead = true;
-                            UIManager.GetInstance().defensePlayer.lives -= mob.AttackPower;
+                            //UIManager.GetInstance().defensePlayer.lives -= mob.AttackPower;
                         }
                         else
                         {
@@ -144,52 +98,34 @@ namespace DowerTefense.Commons.Managers
         }
        
         /// <summary>
-        /// Affichage des unités
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            // Pour chaque unité de la liste des mobs
-            foreach (Unit mob in mobs)
-            {
-                // Affichage de l'unité sur la carte
-                spriteBatch.Draw(CustomContentManager.GetInstance().Textures[mob.name], mob.Position, Color.White);
-            }
-
-            foreach (Projectile proj in projs)
-            {
-                // Affichage de l'unité sur la carte
-                spriteBatch.Draw(CustomContentManager.GetInstance().Textures[proj.name], proj.position, Color.White);
-            }
-
-        }
-
-
-        /// <summary>
         /// Récupère la liste des unités sur la carte triées selon leur avancement sur le chemin
         /// </summary>
+        /// <param name="_units">Liste des unités à trier</param>
         /// <returns>Liste des unités triées</returns>
-        public List<Entity> GetSortedUnitList()
+        public static List<Entity> GetSortedUnitList(List<Entity> _units)
         {
-            List<Entity> sortedList = mobs.OrderBy(m => m.DistanceTraveled).ToList<Entity>();
+            List<Entity> sortedList = _units.OrderBy(m => m.DistanceTraveled).ToList<Entity>();
             return sortedList;
         }
-        public void SetSpawnerDictionnary()
-        {
-            UnitSpawned = new Dictionary<String, String>();
-            UnitSpawned.Add("BasicSpawner", "Unit");
-        }
-        public Boolean SetDummyEntities(List<Message> Messages)
-        {
-            Boolean success = false;
-            foreach(Message _message in Messages)
-            {
-                Entity entity = (Entity)_message.received;
-                DummyEntit.Add(entity);
-                success = DummyEntit.Count!=0 ? true : false;
+
+
+        //public void SetSpawnerDictionnary()
+        //{
+        //    UnitSpawned = new Dictionary<String, String>();
+        //    UnitSpawned.Add("BasicSpawner", "Unit");
+        //}
+
+        //public Boolean SetDummyEntities(List<Message> Messages)
+        //{
+        //    Boolean success = false;
+        //    foreach(Message _message in Messages)
+        //    {
+        //        Entity entity = (Entity)_message.received;
+        //        DummyEntit.Add(entity);
+        //        success = DummyEntit.Count!=0 ? true : false;
             
-            }
-            return success;
-        }
+        //    }
+        //    return success;
+        //}
     }
 }

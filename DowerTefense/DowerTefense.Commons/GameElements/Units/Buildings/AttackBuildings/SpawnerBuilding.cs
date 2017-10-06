@@ -1,11 +1,7 @@
-﻿using DowerTefense.Commons.GameElements;
-using DowerTefense.Commons.GameElements.Units;
+﻿using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.Managers;
 using System;
-using System.Collections.Generic;
-using System.Windows.Media;
 using Microsoft.Xna.Framework;
-using DowerTefense.Commons.GameElements.Projectiles;
 using LibrairieTropBien.GUI;
 using System.Runtime.Serialization;
 

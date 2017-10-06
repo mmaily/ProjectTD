@@ -125,7 +125,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DowerTefenseGameLibrary\DowerTefenseGameLibrary.csproj">
+    <ProjectReference Include="..\DowerTefense.Commons\DowerTefense.Commons.csproj">
       <Project>{6751a0f8-f676-4df7-87f9-f06528f8c6b9}</Project>
       <Name>DowerTefenseGameLibrary</Name>
     </ProjectReference>
