@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DowerTefense.Game.Players
 {
-    class AttackPlayer
+    public class AttackPlayer
     {
         public int totalEnergy;
         public int usedEnergy;

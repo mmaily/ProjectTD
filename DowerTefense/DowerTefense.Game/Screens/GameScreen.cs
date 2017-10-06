@@ -19,9 +19,6 @@ namespace DowerTefense.Game.Screens
         //Role adopté par ce GameScreen
         public PlayerRole role = PlayerRole.Debug;
 
-        //Joueur (défenseur pour l'instant)
-        public DefensePlayer defenseplayer;
-
         //Faire jouer l'AI
         private Boolean vsAI = false;
         public bool VsAI { get => vsAI; set => vsAI = value; }
@@ -36,9 +33,7 @@ namespace DowerTefense.Game.Screens
         {
             defenseplayer = new DefensePlayer();
 
-            // Init des vagues
-            lastWaveTick = 0;
-            waveCount = 0;
+
         }
         
         public override void Initialize(GraphicsDeviceManager _graphics)
@@ -103,24 +98,7 @@ namespace DowerTefense.Game.Screens
             millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
 
             time = _gameTime.TotalGameTime.TotalMilliseconds;
-            #region === Calcul des vagues ===
 
-            // Calcul du cycle de 30 secondes
-            bool newWave = false;
-            // Durée depuis ancien tic
-            int timeSince = (int)(_gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
-            // Si le tic est vieux de 30 secondes
-            if(timeSince > waveLength)
-            {
-                // Vague suivante
-                waveCount++;
-                // Sauvegarde horodatage
-                lastWaveTick = _gameTime.TotalGameTime.TotalMilliseconds;
-                // Nouvelle vague
-                newWave = true;
-
-            }
-            #endregion
 
             // Mise à jour du gestionnaire de carte
             MapManager.GetInstance().Update(_gameTime);

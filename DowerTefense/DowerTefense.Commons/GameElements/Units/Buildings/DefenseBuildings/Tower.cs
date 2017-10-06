@@ -1,8 +1,5 @@
-﻿using DowerTefense.Commons.GameElements;
-using DowerTefense.Commons.GameElements.Units;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using DowerTefense.Commons.GameElements.Projectiles;
 using DowerTefense.Commons.Units;
@@ -14,7 +11,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
     public class Tower : Building, ISerializable
     {
 
-        protected List<Projectile> projectileList;//  Liste de ses munitions en vol
+        public List<Projectile> projectileList;//  Liste de ses munitions en vol
         protected Entity target;//Cible actuelle
         private int idTargetRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
@@ -68,6 +65,19 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         }
 
         public override void OnDuty()
+        {
+            base.OnDuty();
+            //Update sa liste de target, choisi sa cible principale et tire
+            Fire();
+            //Update la liste des projectiles
+            UpdateProjectileList();
+            //Update ses projectile pour checker les collisions
+            foreach (Projectile projectile in projectileList)
+            {
+                projectile.Update();
+            }
+        }
+        public void Update()
         {
             base.OnDuty();
             //Update sa liste de target, choisi sa cible principale et tire

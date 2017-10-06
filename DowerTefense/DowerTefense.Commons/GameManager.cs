@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using DowerTefense.Commons.Units.Buildings;
 using DowerTefense.Commons.Units;
+using DowerTefense.Commons.GameElements.Units;
+using DowerTefense.Commons.Managers;
+using DowerTefense.Commons.GameElements;
+using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
+using DowerTefense.Game.Players;
+using DowerTefense.Commons.GameElements.Projectiles;
 
 namespace DowerTefense.Server.Servers
 {
@@ -35,7 +41,25 @@ namespace DowerTefense.Server.Servers
         public List<Building> WaitingForConstruction { get; set; }
 
         #endregion
-
+        #region===Projectiles===
+        public List<Projectile> projectiles;
+        #endregion
+        #region ===Unités
+        public List<Unit> mobs;
+        #endregion
+        #region===Waves===
+        public double lastWaveTick;
+        public byte waveCount;
+        public int waveLength;
+        #endregion
+        #region===Map====
+        public byte tileSize;
+        public Map map;
+        #endregion
+        #region===Player===
+        public DefensePlayer defensePlayer;
+        public AttackPlayer attackPlayer;
+        #endregion
         /// <summary>
         /// Initialisation du jeu
         /// </summary>
@@ -43,11 +67,22 @@ namespace DowerTefense.Server.Servers
         {
             base.Initialize();
 
-            // Initialisation des listes de bâtiments
+            #region ===Initialisation des bâtiments===
             LockedBuildingsList = new List<SpawnerBuilding>();
             FreeBuildingsList = new List<SpawnerBuilding>();
             DefenseBuildingsList = new List<Building>();
             WaitingForConstruction = new List<Building>();
+            #endregion
+            #region===Initialisation des vagues===
+            lastWaveTick = 0;
+            waveCount = 0;
+            tileSize = 8;
+            map = new Map();
+            #endregion
+            #region===Initialisation des Joueurs===
+            defensePlayer = new DefensePlayer();
+            attackPlayer = new AttackPlayer();
+            #endregion
         }
 
         /// <summary>
@@ -56,17 +91,38 @@ namespace DowerTefense.Server.Servers
         /// <param name="gameTime"></param>
         protected override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            #region === Calcul des vagues ===
 
-            //Check si les unités pénétrent dans la surface-union
-            foreach (Entity unit in UnitEngine.GetInstance().mobs)
+            // Calcul du cycle de 30 secondes
+            bool newWave = false;
+            // Durée depuis ancien tic
+            int timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
+            // Si le tic est vieux de 30 secondes
+            if (timeSince > waveLength)
             {
-                UnitRangeEventArgs arg = new UnitRangeEventArgs(unit);
-                UnitInRange?.Invoke(this, arg);
-            }
+                // Vague suivante
+                waveCount++;
+                // Sauvegarde horodatage
+                lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
+                // Nouvelle vague
+                newWave = true;
 
-            //Update le temps de jeu écoule
-            this.gameTime = _gameTime;
+            }
+            #endregion
+            #region ===Update des unités ===
+            base.Update(gameTime);
+            //Cette méthode renvoie les gold gagnés à cet update + fais bouger les unités
+            defensePlayer.totalGold += UnitEngine.ProcessMobs(ref mobs, gameTime, map.tileSize);
+            #endregion
+            #region ===Update des tours et liste de projectile ===
+            projectiles.Clear();
+            Parallel.ForEach(DefenseBuildingsList, tower =>
+            {
+                Tower t = (Tower)tower;
+                tower.Update();
+                projectiles.AddRange(t.projectileList);
+            });
+            #endregion
 
             #region =====Construction des bâtiments en attente=====
             //Construire la liste des tours en attente
@@ -76,14 +132,14 @@ namespace DowerTefense.Server.Servers
                 if (bd.GetType() == typeof(Tower))
                 {
                     bd.CreateOnEventListener();
-                    InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * UIManager.GetInstance().currentMap.tileSize),
-                                                        (int)((bd.GetTile().getTilePosition().Y - 0.5) * UIManager.GetInstance().currentMap.tileSize),
-                                                        UIManager.GetInstance().currentMap.tileSize, UIManager.GetInstance().currentMap.tileSize))
+                    InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * map.tileSize),
+                                                        (int)((bd.GetTile().getTilePosition().Y - 0.5) * map.tileSize),
+                                                        map.tileSize, map.tileSize))
                     {
                         Name = bd.GetType().ToString() + "Info",
                         Tag = "InfoPopUp",
                         font = CustomContentManager.GetInstance().Fonts["font"],
-                        texture = CustomContentManager.GetInstance().Colors["pixel"],
+                        texture = CustomContentManager.GetInstance.Colors["pixel"],
                         Enabled = true
                     };
                     UIManager.GetInstance().UIElementsList.Add(info);
@@ -108,13 +164,11 @@ namespace DowerTefense.Server.Servers
             //Une fois traitée, on vide les éléments de la waiting List
             WaitingForConstruction.Clear();
             #endregion 
-            //Apelle les bâtiments à faire leur actions respectives (si il y a des buildings)
-            BuildingDuty?.Invoke();
-
+            //TODO : Apelle les bâtiments à faire leur actions respectives (si il y a des buildings)
 
         }
 
-
+        //TODO : Créer une méthode appelée à la mort d'une unité
 
 
 

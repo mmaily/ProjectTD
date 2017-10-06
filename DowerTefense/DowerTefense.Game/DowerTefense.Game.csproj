@@ -87,8 +87,6 @@
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\UIManager.cs" />
     <Compile Include="Managers\MultiplayerManager.cs" />
-    <Compile Include="Players\AttackPlayer.cs" />
-    <Compile Include="Players\DefensePlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\Editor.cs" />

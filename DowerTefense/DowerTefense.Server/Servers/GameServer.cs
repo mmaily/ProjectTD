@@ -1,17 +1,8 @@
-﻿using DowerTefense.Commons.GameElements.Units;
-using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
-using DowerTefense.Commons.Units;
-using DowerTefense.Commons.Units.Buildings;
+﻿
 using DowerTefense.Server.Elements;
 using LibrairieTropBien.Network;
 using LibrairieTropBien.Network.Game;
-using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DowerTefense.Server.Servers

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DowerTefense.Game.Players
 {
-    class DefensePlayer
+    public class DefensePlayer
     {
         public int startingGold=200;
         public int totalGold { get; set; }

@@ -13,6 +13,7 @@ using DowerTefense.Game.Screens;
 using System.Threading.Tasks;
 using LibrairieTropBien.Network.Game;
 using DowerTefense.Game.Multiplayer;
+using DowerTefense.Commons.GameElements;
 
 namespace DowerTefense.Game.Managers
 {
@@ -20,11 +21,8 @@ namespace DowerTefense.Game.Managers
     /// <summary>
     /// Gestionnaire d'unité
     /// </summary>
-    public static class UIManager
+    public class UIManager
     {
-
-        // Instance du gestionnaire d'unité
-        private static UIManager instance = null;
 
         /// <summary>
         /// Tuile sélectionnée

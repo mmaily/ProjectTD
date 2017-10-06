@@ -40,7 +40,6 @@
     <Compile Include="DowerTefenseGameServer.cs" />
     <Compile Include="Elements\Client.cs" />
     <Compile Include="Servers\BackupDummies.cs" />
-    <Compile Include="Servers\GameManager.cs" />
     <Compile Include="Servers\GameServer.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Servers\LobbyServer.cs" />

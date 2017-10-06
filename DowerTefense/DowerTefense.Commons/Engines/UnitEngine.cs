@@ -22,8 +22,9 @@ namespace DowerTefense.Commons.Managers
         /// TODO : gold si dead ?
         /// </summary>
         /// <param name="mobs"></param>
-        public static void ProcessMobs(ref List<Unit> mobs, GameTime _gameTime, byte _tileSize)
+        public static int ProcessMobs(ref List<Unit> mobs, GameTime _gameTime, byte _tileSize)
         {
+            int goldToAdd = 0;
             // Pour chaque mob de la liste
             foreach (Unit mob in mobs)
             {
@@ -31,6 +32,7 @@ namespace DowerTefense.Commons.Managers
                 if (mob.HealthPoints <= 0)
                 {
                     mob.Dead = true;
+                    goldToAdd += mob.GoldValue;
                     //UIManager.GetInstance().defensePlayer.totalGold += mob.GoldValue;
 
                     continue;
@@ -95,6 +97,7 @@ namespace DowerTefense.Commons.Managers
 
             // Suppression de toutes les unités mortes
             mobs.RemoveAll(deadMob => deadMob.Dead);
+            return goldToAdd;
         }
        
         /// <summary>
