@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using DowerTefense.Game.GameElements;
-using DowerTefense.Game.GameElements.Projectiles;
-using DowerTefense.Game.GameElements.Units.Buildings.DefenseBuildings;
-using DowerTefense.Game.Units.Buildings;
 using Microsoft.Xna.Framework;
+using DowerTefense.Commons.GameElements;
+using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
+using DowerTefense.Commons.Units.Buildings;
+using DowerTefense.Commons.GameElements.Projectiles;
 
 namespace DowerTefense.Game.Managers
 {
@@ -16,54 +16,32 @@ namespace DowerTefense.Game.Managers
     /// </summary>
     public static class CustomContentManager
     {
-        // Instance du gestionnaire de contenu
-        private static CustomContentManager instance;
 
         // Dictionnaire de textures
-        public Dictionary<String, Texture2D> Textures;
+        static Dictionary<String, Texture2D> Textures;
         // Dictionnaire de polices
-        public Dictionary<String, SpriteFont> Fonts;
+        static Dictionary<String, SpriteFont> Fonts;
         //Dictionnaire des couleurs
-        public Dictionary<String, Texture2D> Colors;
-        // Gestionnaire de contenu (parent)
-        private ContentManager contentManager;
-        public byte textureSize;
+        static Dictionary<String, Texture2D> Colors;
+        static byte textureSize;
+        //Content Managr parent
+        static ContentManager contentManager;
 
-        /// <summary>
-        /// Constructeur du gestionnaire de contenu
-        /// </summary>
-        private CustomContentManager()
+        public static void Initialize()
         {
             // Initialisation des dictionnaires
             Textures = new Dictionary<String, Texture2D>();
             Fonts = new Dictionary<String, SpriteFont>();
             Colors = new Dictionary<String, Texture2D>();
         }
-
-        /// <summary>
-        /// Récupération de l'instance du gestionnaire de contenu
-        /// Création si n'existe pas encore
-        /// </summary>
-        /// <returns></returns>
-        public static CustomContentManager GetInstance()
-        {
-            // Si l'instance n'est pas encore crée
-            if (instance == null)
-            {
-                instance = new CustomContentManager();
-            }
-            // On retourne l'instance
-            return instance;
-        }
-
         /// <summary>
         /// Chargement des textures
         /// </summary>
         /// <param name="_content"></param>
-        public void LoadTextures(ContentManager _content, GraphicsDevice _graphicsDevice)
+        public static void LoadTextures(ContentManager _content, GraphicsDevice _graphicsDevice)
         {
 
-            this.contentManager = _content;
+            contentManager = _content;
 
             // Ajout de la texture d'unité
             AddTexture("Pawn", "unit");
@@ -119,7 +97,7 @@ namespace DowerTefense.Game.Managers
         /// </summary>
         /// <param name="_file"></param>
         /// <param name="_name"></param>
-        public void AddTexture(String _file, String _name = "")
+        public static void AddTexture(String _file, String _name = "")
         {
             // Chargement de la texture demandée
             Texture2D newTexture = contentManager.Load<Texture2D>(_file);
@@ -141,7 +119,7 @@ namespace DowerTefense.Game.Managers
         /// </summary>
         /// <param name="_font"></param>
         /// <param name="_fontName"></param>
-        public void AddFonts(String _font, String _fontName)
+        public static void AddFonts(String _font, String _fontName)
         {
             // Chargement de la police demandée
             SpriteFont newFont = contentManager.Load<SpriteFont>(_font);
@@ -157,7 +135,7 @@ namespace DowerTefense.Game.Managers
                 Fonts.Add(_fontName, newFont);
             }
         }
-        public void AddColors(Texture2D _color, String _colorName = "")
+        public static void AddColors(Texture2D _color, String _colorName = "")
         {
 
             // Le nom est il renseigné ?

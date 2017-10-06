@@ -1,15 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using DowerTefense.Game.Managers;
-using DowerTefense.Game.GameElements;
 using Microsoft.Xna.Framework.Input;
-using DowerTefense.Game.Units.Buildings;
 using DowerTefense.Game.Players;
 using System;
 using LibrairieTropBien.Network.Game;
 using DowerTefense.Game.Multiplayer;
 using LibrairieTropBien.Network;
-using DowerTefense.Game.GameElements.Units.Buildings.DefenseBuildings;
+using DowerTefense.Commons.GameElements;
 
 namespace DowerTefense.Game.Screens
 {
@@ -20,14 +18,6 @@ namespace DowerTefense.Game.Screens
     {
         //Role adopté par ce GameScreen
         public PlayerRole role = PlayerRole.Debug;
-        // Carte en cours
-        private Map map;
-        // Variables liées aux vagues
-        private double lastWaveTick;
-        private int waveCount;
-        public static int waveLength = 10000;
-        public double millisecPerFrame=1000;
-        public double time;
 
         //Joueur (défenseur pour l'instant)
         public DefensePlayer defenseplayer;
@@ -93,9 +83,7 @@ namespace DowerTefense.Game.Screens
         /// </summary>
         public override void LoadContent()
         {
-            // Chargement du gestionnaire de carte
-            MapManager mapManager = MapManager.GetInstance();
-            //Récupération de la carte en cours
+
             map = mapManager.CurrentMap;
             loaded = true;
         }

@@ -26,8 +26,6 @@ namespace DowerTefense.Game
             graphics = new GraphicsDeviceManager(this);
             // Dossier racine du contenu
             Content.RootDirectory = "Content";
-            // Initialisation du gestionnaire de contenu
-            CustomContentManager.GetInstance();
 
         }
 
@@ -37,7 +35,8 @@ namespace DowerTefense.Game
         protected override void Initialize()
         {
             //Envoie le graphic au screenManager
-            ScreenManager.GetInstance().SetGraphics(this.graphics);
+            ScreenManager.Initialize();
+            ScreenManager.SetGraphics(this.graphics);
 
             // Initialisation des composants
             base.Initialize();
@@ -55,17 +54,15 @@ namespace DowerTefense.Game
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Use the Content_manager to load all the content, the different "Screens" can then acces them
-            CustomContentManager.GetInstance().LoadTextures(Content,graphics.GraphicsDevice);
+            CustomContentManager.LoadTextures(Content,graphics.GraphicsDevice);
 
-            // Réglage de la taille de l'écran selon la carte
-            //graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize;
-            //graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth+4) * MapManager.GetInstance().CurrentMap.tileSize;
+            // Réglage de la taille de l'écran
             graphics.PreferredBackBufferHeight = 400;
             graphics.PreferredBackBufferWidth = 600;
             graphics.ApplyChanges();
 
             //Demande l'affichage du premier écran
-            ScreenManager.GetInstance().SelectScreen("EntranceScreen");
+            ScreenManager.SelectScreen("EntranceScreen");
 
 
         }
@@ -88,7 +85,7 @@ namespace DowerTefense.Game
             base.Update(gameTime);
 
             // Mise à jour de l'écran actif
-            ScreenManager.GetInstance().Update(gameTime);
+            ScreenManager.Update(gameTime);
 
         }
 
@@ -107,7 +104,7 @@ namespace DowerTefense.Game
             spriteBatch.Begin();
 
             // Affichage de l'écran en cours
-            ScreenManager.GetInstance().Draw(spriteBatch);
+            ScreenManager.Draw(spriteBatch);
 
             // Fin de l'affichage
             spriteBatch.End();

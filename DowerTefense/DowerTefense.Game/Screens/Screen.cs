@@ -9,7 +9,7 @@ namespace DowerTefense.Game.Screens
 {
 
 
-    abstract class Screen
+    public abstract class Screen
     {
         public GraphicsDeviceManager Graphics;
         public SpriteBatch spriteBatch;
