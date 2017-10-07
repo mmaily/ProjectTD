@@ -8,6 +8,7 @@ using LibrairieTropBien.Network.Game;
 using DowerTefense.Game.Multiplayer;
 using LibrairieTropBien.Network;
 using DowerTefense.Commons.GameElements;
+using DowerTefense.Commons;
 
 namespace DowerTefense.Game.Screens
 {
@@ -16,6 +17,10 @@ namespace DowerTefense.Game.Screens
     /// </summary>
     class GameScreen : Screen
     {
+        #region===Jeu===
+        private GameEngine game;
+        private Map map;
+        #endregion
         //Role adopté par ce GameScreen
         public PlayerRole role = PlayerRole.Debug;
 
@@ -38,13 +43,18 @@ namespace DowerTefense.Game.Screens
         
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
+            #region Initialisation du jeu et des variables associée===
+            game = new GameEngine();
+            map = game.map;
+            #endregion
+
             //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
             spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             // Init de l'UI
-            Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize+topMargin*2;
-            Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width+leftMargin*2;
-            Graphics.ApplyChanges();
+            //Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize+topMargin*2;
+            //Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width+leftMargin*2;
+            //Graphics.ApplyChanges();
             UIManager.GetInstance().SetRole(role);
             UIManager.GetInstance().Initialize(_graphics);
 
@@ -94,6 +104,8 @@ namespace DowerTefense.Game.Screens
             {
                 return;
             }
+            //Update du jeu en interne
+            game.Update(_gameTime);
 
             millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
 
@@ -112,11 +124,7 @@ namespace DowerTefense.Game.Screens
             }
             // Mise à jour du gestionnaire d'interface
             UIManager.GetInstance().Update(_gameTime, newWave, timeSince);
-            if (newWave == true)
-            {
-                BuildingsManager.GetInstance().lockBuildings();
-                UIManager.GetInstance().CreateLockedList();
-            }
+
         }
 
         public override void Draw(SpriteBatch _spriteBatch)

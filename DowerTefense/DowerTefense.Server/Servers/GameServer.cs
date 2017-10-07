@@ -31,7 +31,7 @@ namespace DowerTefense.Server.Servers
             });
 
             // Création du jeu
-            using (var game = new GameManager())
+            using (var game = new GameManager(clients))
                 game.Run();
         }
 
@@ -41,17 +41,26 @@ namespace DowerTefense.Server.Servers
         /// <param name="_messageReceived"></param>
         protected override void ProcessMessage(Message _messageReceived, Client _client)
         {
-            // Traitement des différents cas
-            switch (_messageReceived.Subject)
+            //On lock pour éviter les accès concurrentiels
+            lock (Request)
             {
-                case "towerUpdate":
-
-                    break;
-                default:
-                    break;
+                Request.Add(_messageReceived);
             }
+            //// Traitement des différents cas
+            //switch (_messageReceived.Subject)
+            //{
+            //    case "towerUpdate":
+
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
 
+        ///<summary>
+        ///Méthode déclenché par un événement worth mentionning dans le jeu
+        ///Elle envoie cet événement au Translator qui décide quoi en faire (Envoyer, à qui ?)
+        ///</summary>
 
         
     }

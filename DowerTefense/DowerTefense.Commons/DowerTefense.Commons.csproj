@@ -57,7 +57,7 @@
     <Compile Include="GameElements\Units\Buildings\DefenseBuildings\Tower.cs" />
     <Compile Include="GameElements\Units\Entity.cs" />
     <Compile Include="GameElements\Units\Unit.cs" />
-    <Compile Include="GameManager.cs" />
+    <Compile Include="GameEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />
