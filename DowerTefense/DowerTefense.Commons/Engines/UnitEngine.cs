@@ -111,24 +111,5 @@ namespace DowerTefense.Commons.Managers
             return sortedList;
         }
 
-
-        //public void SetSpawnerDictionnary()
-        //{
-        //    UnitSpawned = new Dictionary<String, String>();
-        //    UnitSpawned.Add("BasicSpawner", "Unit");
-        //}
-
-        //public Boolean SetDummyEntities(List<Message> Messages)
-        //{
-        //    Boolean success = false;
-        //    foreach(Message _message in Messages)
-        //    {
-        //        Entity entity = (Entity)_message.received;
-        //        DummyEntit.Add(entity);
-        //        success = DummyEntit.Count!=0 ? true : false;
-            
-        //    }
-        //    return success;
-        //}
     }
 }

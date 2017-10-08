@@ -49,7 +49,7 @@ namespace DowerTefense.Game.Screens
                 Text = "Ici nom du joueur",
                 TextColor = Color.White,
                 BackgroundColor = Color.DarkRed,
-                font = CustomContentManager.GetInstance().Fonts["font"],
+                font = CustomContentManager.Fonts["font"],
                 GreyedOut = false,
             };
 
@@ -59,7 +59,7 @@ namespace DowerTefense.Game.Screens
                 Text = "",
                 TextColor = Color.White,
                 BackgroundColor = Color.DarkRed,
-                font = CustomContentManager.GetInstance().Fonts["font"],
+                font = CustomContentManager.Fonts["font"],
                 GreyedOut = false,
             };
 
@@ -73,7 +73,7 @@ namespace DowerTefense.Game.Screens
                 Name = "Ready",
                 Tag = "ready",
                 Text = "ready",
-                font = CustomContentManager.GetInstance().Fonts["font"],
+                font = CustomContentManager.Fonts["font"],
                 BackgroundColor = Color.Indigo,
                 GreyedOut = true,
             };
@@ -140,9 +140,9 @@ namespace DowerTefense.Game.Screens
                         if (_message.received.Equals("starting"))
                         {
                             // Réglage du mode de l'écran de jeu
-                            ScreenManager.GetInstance().UpdateGameScreenMode(false);
+                            ScreenManager.UpdateGameScreenMode(false);
                             // Le jeu commence, on change d'écran
-                            ScreenManager.GetInstance().SelectScreen("GameScreen");
+                            ScreenManager.SelectScreen("GameScreen");
                         }
                         break;
                     default:
@@ -177,7 +177,7 @@ namespace DowerTefense.Game.Screens
             });
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.GetInstance().Textures["cursor"];
+            Texture2D fap = CustomContentManager.Textures["cursor"];
             _spriteBatch.Draw(fap, lol, Color.White);
         }
 

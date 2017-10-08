@@ -41,8 +41,10 @@ namespace DowerTefense.Game.Managers
         private SpriteFont deFaultFont;
         // Décalage de l'interface
         public int leftUIOffset;
+        public Vector2 marginOffset = Vector2.One*5;
         //Rectangle-zone pour l'ui
         public Rectangle zoneUi;
+        private float imageRatio;
         // Taille des boutons
         private byte btnSize = 35;
         //Offset de la map par rapport au coin sup droit
@@ -50,10 +52,11 @@ namespace DowerTefense.Game.Managers
         #endregion
         #region Copie des éléments du jeu
         private GameEngine game;
-        #endregion
         // Carte en cours
         public Map currentMap { get; set; }
-
+        #endregion
+        private double millisecPerFrame;
+        private double time;
         #region ==Element d'interface (boutons, bar de progression)
         // Éléments d'interface
         public List<GuiElement> UIElementsList;
@@ -73,12 +76,12 @@ namespace DowerTefense.Game.Managers
         #region Gestion du lock des spawn
         private Dictionary<Button, SpawnerBuilding> ActiveList;
         private Dictionary<Button, SpawnerBuilding> LockedList;
-
         #endregion
 
         #region Gestion des bâtiments Dummies 
         //Catalogue des bâtiment de bases (utile pour display les info de construcion par exemple)
         public List<Building> Dummies;
+
         #endregion
         /// <summary>
         /// Constructeur du gestionnaire d'unité
@@ -90,11 +93,11 @@ namespace DowerTefense.Game.Managers
             // Récupération du décalage gauche de l'interface
             currentMap = currentMap;
             mapOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
-
             leftUIOffset = currentMap.mapWidth * currentMap.tileSize +(int)mapOffset.Y * 2;
             //Création d'une zone pour l'ui
             zoneUi = new Rectangle(leftUIOffset,(int)mapOffset.Y, 300, currentMap.mapHeight * currentMap.tileSize);
-
+            //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
+            this.imageRatio = (float)game.map.tileSize / (float)CustomContentManager.textureSize;
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.Fonts["font"];
             //Instanciation des joueurs
@@ -112,13 +115,13 @@ namespace DowerTefense.Game.Managers
             foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
             {
                newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
-               newBuilding.DeleteOnEventListener();
+               //newBuilding.DeleteOnEventListener();
                Dummies.Add(newBuilding);
             }
             foreach (SpawnerBuilding.NameEnum spawn in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
             {
                 newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
-                newBuilding.DeleteOnEventListener(); // On le "désactive" en le rendant désabonnant de son event listener d'action
+                //newBuilding.DeleteOnEventListener(); // On le "désactive" en le rendant désabonnant de son event listener d'action
                 Dummies.Add(newBuilding);
             }
             #endregion
@@ -261,7 +264,7 @@ namespace DowerTefense.Game.Managers
                         && (building.Cost <= defensePlayer.totalGold))
                     {
                         building = (Tower)building.DeepCopy();
-                        building.SetTile(SelectedTile);
+                        building.SetTile(SelectedTile, game.map);
                         // Ajout à la liste des bâtiments
                         game.WaitingForConstruction.Add(building);
                         //On signale le changement dans le log
@@ -319,13 +322,13 @@ namespace DowerTefense.Game.Managers
         /// Mise à jour de l'interface
         /// </summary>
         /// <param name="_gameTime"></param>
-        public void Update(GameTime _gameTime, bool _newWave, int _timeSince)
+        public void Update(GameTime _gameTime)
         {
             // Mise à jour de la sélection de tuile
             UpdateSelectedTile();
 
             // Mise à jour de l'état de la bar de vague
-            progressBarWaves.State = _timeSince;
+            progressBarWaves.State = game.timeSince;
             
             // Mise à jour de tous les élémets d'interface
             Parallel.ForEach(UIElementsList, element =>
@@ -363,6 +366,15 @@ namespace DowerTefense.Game.Managers
                 PopUp[(Button)element].Enabled = element.Enabled;
                 PopUp[(Button)element].Update();
             });
+            //Lock de la liste si newWave et attaquant
+            if(role == PlayerRole.Attacker && game.newWave == true)
+            {
+                CreateLockedList();
+            }
+            #region Calcul des frame/seconde
+            millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
+            time = _gameTime.TotalGameTime.TotalMilliseconds;
+            #endregion
 
         }
         /// <summary>
@@ -427,13 +439,40 @@ namespace DowerTefense.Game.Managers
         /// <param name="_spriteBatch"></param>
         public void Draw(SpriteBatch _spriteBatch)
         {
+            #region === Affichage map ===
+
+
+            // Pour chaque tuile de la carte
+            foreach (Tile tile in game.map.Tiles)
+            {
+                // On affiche la texture correspondant à la nature de la carte
+                _spriteBatch.Draw(CustomContentManager.Textures[tile.TileType.ToString()], new Vector2(tile.line * game.map.tileSize, tile.column * game.map.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
+                // Si cette tuile est sélectionnée ou sous le curseur
+                if (tile.selected || tile.overviewed)
+                {
+                    // On affiche la texture "sélectionnée" sur cette tuile
+                    _spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], new Vector2(tile.line * game.map.tileSize, tile.column * game.map.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
+                    // On reset le boolée "sous le curseur"
+                    tile.overviewed = false;
+                }
+
+            }
+            #endregion
             #region ==Rectangle droite contenant l'ui==
             _spriteBatch.Draw(CustomContentManager.Colors["pixel"], zoneUi, Color.Purple);
-            #endregion 
+            #endregion
+            #region==Frames/seconde===
+            int offset = 340;
+            if (millisecPerFrame != 0)
+            {
+                
+                _spriteBatch.DrawString(CustomContentManager.Fonts["font"], Math.Ceiling(1000 / (millisecPerFrame)).ToString(), new Vector2(leftUIOffset, offset), Color.White);
+            }
+            #endregion
             #region === Infos globales ===
 
             //Display le nombre de Spawner
-            int offset = 360;
+            offset = 360;
             _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + defensePlayer.lives, new Vector2(leftUIOffset, offset), Color.White);
             if (mode.Equals("defense"))
             {
@@ -454,7 +493,6 @@ namespace DowerTefense.Game.Managers
             _spriteBatch.DrawString(deFaultFont, currentMap.Name + " -- Mode : " + mode, new Vector2(leftUIOffset, 5), Color.Wheat);
 
             #endregion
-
             #region === Infos tuile et construction ===
 
 

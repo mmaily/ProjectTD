@@ -3,7 +3,6 @@ using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.Managers;
 using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 using Microsoft.Xna.Framework;
 
 namespace DowerTefense.Commons.GameElements.Projectiles
@@ -38,10 +37,10 @@ namespace DowerTefense.Commons.GameElements.Projectiles
         {
 
         }
-        public void Update()
+        public void Update(GameTime _gameTime)
         {
             UpdateDirection();
-            UpdatePosition();
+            UpdatePosition(_gameTime);
             CheckCollision();
         }
 
@@ -50,9 +49,9 @@ namespace DowerTefense.Commons.GameElements.Projectiles
             direction = -(position - target.Position);
             direction.Normalize();
         }
-        public void UpdatePosition()
+        public void UpdatePosition(GameTime _gameTime)
         {
-            position += direction * speed*BuildingEngine.GetInstance().gameTime.ElapsedGameTime.Milliseconds/1000;
+            position += direction * speed*_gameTime.ElapsedGameTime.Milliseconds/1000;
         }
         public void CheckCollision()
         {
@@ -62,7 +61,7 @@ namespace DowerTefense.Commons.GameElements.Projectiles
             if (Vector2.Distance(this.position, target.Position) < tol)
             {
                 ApplyEffectOnImpact();
-                    OnHitEventArgs arg = new OnHitEventArgs(this);
+                OnHitEventArgs arg = new OnHitEventArgs(this);
                 OnHit?.Invoke(this, arg);
 
 

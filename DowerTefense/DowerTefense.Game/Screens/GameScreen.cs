@@ -47,9 +47,6 @@ namespace DowerTefense.Game.Screens
         /// </summary>
         public GameScreen()
         {
-            defenseplayer = new DefensePlayer();
-
-
         }
         
         public override void Initialize(GraphicsDeviceManager _graphics)
@@ -59,8 +56,6 @@ namespace DowerTefense.Game.Screens
             map = game.map;
             #endregion
             #region Calcul de l'échelle de scaling selon taille des Tile
-            //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
-            this.imageRatio = (float)map.tileSize / (float)CustomContentManager.GetInstance().textureSize;
             marginOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
             #endregion
             //Récupération de l'écran et instancition du spriteBatch
@@ -128,76 +123,39 @@ namespace DowerTefense.Game.Screens
             game.Update(_gameTime);
             //Envoie des changements au serveur
             ClientTranslator.SendGameUpdate(game.Changes);
-            millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
-
-            time = _gameTime.TotalGameTime.TotalMilliseconds;
-
-
-            // Mise à jour du gestionnaire de carte
-            MapManager.GetInstance().Update(_gameTime);
-            // Mise à jour du gestionnaire d'unités
-            UnitsManager.GetInstance().Update(_gameTime);
-            // Mise à jour du gestionnaire de bâtiments
-            BuildingsManager.GetInstance().Update(_gameTime);
-            if (VsAI) { 
-            //Mise à jour des tâche de l'IA
-            AiManager.GetInstance().Update(_gameTime, newWave);
-            }
+            //if (VsAI) { 
+            ////Mise à jour des tâche de l'IA
+            //AiManager.GetInstance().Update(_gameTime, newWave);
+            //}
             // Mise à jour du gestionnaire d'interface
-            UIManager.GetInstance().Update(_gameTime, newWave, timeSince);
+            uiManager.Update(_gameTime);
 
         }
 
         public override void Draw(SpriteBatch _spriteBatch)
-        {
-            if (millisecPerFrame != 0)
-            {
-                int offset = 340;
-                _spriteBatch.DrawString(CustomContentManager.GetInstance().Fonts["font"], Math.Ceiling(1000 / (millisecPerFrame)).ToString(), new Vector2(UIManager.GetInstance().leftUIOffset, offset), Color.White);
-            }
-           
+        {         
             spriteBatch.Begin();
 
             // Si le jeu n'est pas encore chargé
             if (!loaded)
             {
-                _spriteBatch.DrawString(CustomContentManager.GetInstance().Fonts["font"], "Chargement...", new Vector2(50, 50), Color.White);
+                _spriteBatch.DrawString(CustomContentManager.Fonts["font"], "Chargement...", new Vector2(50, 50), Color.White);
             }
 
             //spriteBatch.Draw(CustomContentManager.GetInstance().Colors["grey"],Graphics.);
             // Affichage de la carte
-            MapManager.GetInstance().Draw(spriteBatch);
-            // Affichage des bâtiments
-            BuildingsManager.GetInstance().Draw(spriteBatch);
-            // Affichage des unités
-            UnitsManager.GetInstance().Draw(spriteBatch);
+            //MapManager.GetInstance().Draw(spriteBatch);
+            //// Affichage des bâtiments
+            //BuildingsManager.GetInstance().Draw(spriteBatch);
+            //// Affichage des unités
+            //UnitsManager.GetInstance().Draw(spriteBatch);
             // Affichage de l'interface
-            UIManager.GetInstance().Draw(spriteBatch);
+            uiManager.Draw(spriteBatch);
 
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.GetInstance().Textures["cursor"];
+            Texture2D fap = CustomContentManager.Textures["cursor"];
             spriteBatch.Draw(fap, lol, Color.White);
-            #region === Affichage map ===
-
-
-            // Pour chaque tuile de la carte
-            foreach (Tile tile in CurrentMap.Tiles)
-            {
-                // On affiche la texture correspondant à la nature de la carte
-                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
-                // Si cette tuile est sélectionnée ou sous le curseur
-                if (tile.selected || tile.overviewed)
-                {
-                    // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
-                    // On reset le boolée "sous le curseur"
-                    tile.overviewed = false;
-                }
-
-            }
-            #endregion
-
             spriteBatch.End();
             
         }

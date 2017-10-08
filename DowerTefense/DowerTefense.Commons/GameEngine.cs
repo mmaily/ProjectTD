@@ -10,6 +10,7 @@ using DowerTefense.Commons.GameElements;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Game.Players;
 using DowerTefense.Commons.GameElements.Projectiles;
+using LibrairieTropBien.Network;
 
 namespace DowerTefense.Commons
 {
@@ -18,6 +19,9 @@ namespace DowerTefense.Commons
     /// </summary>
     public class GameEngine
     {
+        #region Dictionaire dummies
+        public Dictionary<string, string> UnitSpawned { get; private set; }
+        #endregion
         #region === Buildings ===
 
         /// <summary>
@@ -27,7 +31,7 @@ namespace DowerTefense.Commons
         /// <summary>
         /// Liste de tous les bâtiments libre
         /// </summary>
-        public List<SpawnerBuilding> FreeBuildingsList { get; set; }
+        public List<SpawnerBuilding> FreeBuildingsList;
         /// <summary>
         /// Liste de tous les bâtiments défensifs
         /// </summary>
@@ -42,6 +46,8 @@ namespace DowerTefense.Commons
         public List<Projectile> projectiles;
         #endregion
         #region ===Unités
+        public bool newWave;
+        public int timeSince;
         public List<Unit> mobs;
         #endregion
         #region===Waves===
@@ -127,6 +133,10 @@ namespace DowerTefense.Commons
             Changes.Add(Dmobs, false);
             Initial = new Dictionary<Dictionary<string, object>, bool>(Changes);
             #endregion
+            #region===Initialisation des listes Dummies===
+            //SetSpawnerDictionnary();
+            #endregion
+
             #region ===Initialisation des bâtiments===
             LockedBuildingsList = new List<SpawnerBuilding>();
             FreeBuildingsList = new List<SpawnerBuilding>();
@@ -159,9 +169,9 @@ namespace DowerTefense.Commons
             #region === Calcul des vagues ===
 
             // Calcul du cycle de 30 secondes
-            bool newWave = false;
+            newWave = false;
             // Durée depuis ancien tic
-            int timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
+            timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
             // Si le tic est vieux de 30 secondes
             if (timeSince > waveLength)
             {
@@ -180,7 +190,7 @@ namespace DowerTefense.Commons
             if (gold != 0)
             {
                 defensePlayer.totalGold += gold;
-                Changes[defensePlayer.totalGold] =true;
+                Changes[DdefensePlayer] =true;
             }
             
             #endregion
@@ -189,52 +199,52 @@ namespace DowerTefense.Commons
             Parallel.ForEach(DefenseBuildingsList, tower =>
             {
                 Tower t = (Tower)tower;
-                tower.Update();
+                t.Update(gameTime, mobs);
                 projectiles.AddRange(t.projectileList);
             });
             #endregion
             #region===Lock des spawner===
             if (newWave == true)
             {
-                BuildingsManager.GetInstance().lockBuildings();
-                UIManager.GetInstance().CreateLockedList();
+                LockSpawners();
+                
             }
             #endregion 
             #region ====Construction des bâtiments en attente====
             //Construire la liste des tours en attente
             foreach (Building bd in WaitingForConstruction)
             {
-                // Retrait du coût du bâtiment
-                if (bd.GetType() == typeof(Tower))
-                {
-                    bd.CreateOnEventListener();
-                    InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * map.tileSize),
-                                                        (int)((bd.GetTile().getTilePosition().Y - 0.5) * map.tileSize),
-                                                        map.tileSize, map.tileSize))
-                    {
-                        Name = bd.GetType().ToString() + "Info",
-                        Tag = "InfoPopUp",
-                        font = CustomContentManager.GetInstance().Fonts["font"],
-                        texture = CustomContentManager.GetInstance.Colors["pixel"],
-                        Enabled = true
-                    };
-                    UIManager.GetInstance().UIElementsList.Add(info);
-                    bd.SetInfoPopUp(info);
-                    UIManager.GetInstance().defensePlayer.totalGold -= bd.Cost;
-                }
-                if (bd.GetType() == typeof(SpawnerBuilding))
-                {
-                    //On le cast en spawner pour appliquer les méthodes propres aux spawner
-                    SpawnerBuilding spawner = (SpawnerBuilding)bd;
-                    UIManager.GetInstance().attackPlayer.totalGold -= bd.Cost;
-                    UIManager.GetInstance().UpdateBtnLists(spawner);
-                    BuildingEngine.GetInstance().FreeBuildingsList.Add(spawner);
-                    if (UIManager.GetInstance().attackPlayer.totalEnergy - UIManager.GetInstance().attackPlayer.usedEnergy >= (spawner.PowerNeeded))
-                    {
-                        spawner.powered = true;
-                        UIManager.GetInstance().attackPlayer.usedEnergy += spawner.PowerNeeded;
-                    }
-                }
+                //// Retrait du coût du bâtiment
+                //if (bd.GetType() == typeof(Tower))
+                //{
+                //    bd.CreateOnEventListener();
+                //    InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * map.tileSize),
+                //                                        (int)((bd.GetTile().getTilePosition().Y - 0.5) * map.tileSize),
+                //                                        map.tileSize, map.tileSize))
+                //    {
+                //        Name = bd.GetType().ToString() + "Info",
+                //        Tag = "InfoPopUp",
+                //        font = CustomContentManager.GetInstance().Fonts["font"],
+                //        texture = CustomContentManager.GetInstance.Colors["pixel"],
+                //        Enabled = true
+                //    };
+                //    UIManager.GetInstance().UIElementsList.Add(info);
+                //    bd.SetInfoPopUp(info);
+                //    UIManager.GetInstance().defensePlayer.totalGold -= bd.Cost;
+                //}
+                //if (bd.GetType() == typeof(SpawnerBuilding))
+                //{
+                //    //On le cast en spawner pour appliquer les méthodes propres aux spawner
+                //    SpawnerBuilding spawner = (SpawnerBuilding)bd;
+                //    UIManager.GetInstance().attackPlayer.totalGold -= bd.Cost;
+                //    UIManager.GetInstance().UpdateBtnLists(spawner);
+                //    BuildingEngine.GetInstance().FreeBuildingsList.Add(spawner);
+                //    if (UIManager.GetInstance().attackPlayer.totalEnergy - UIManager.GetInstance().attackPlayer.usedEnergy >= (spawner.PowerNeeded))
+                //    {
+                //        spawner.powered = true;
+                //        UIManager.GetInstance().attackPlayer.usedEnergy += spawner.PowerNeeded;
+                //    }
+                //}
 
             }
             //Une fois traitée, on vide les éléments de la waiting List
@@ -244,12 +254,44 @@ namespace DowerTefense.Commons
 
         }
 
-        //TODO : Créer une méthode appelée à la mort d'une unité
+
+        //public void SetSpawnerDictionnary()
+        //{
+        //    UnitSpawned = new Dictionary<String, String>();
+        //    UnitSpawned.Add("BasicSpawner", "Unit");
+        //}
+
+        public Boolean SetDummyEntities(List<Message> Messages)
+        {
+            Boolean success = false;
+            foreach (Message _message in Messages)
+            {
+                //Entity entity = (Entity)_message.received;
+                //DummyEntity.Add(entity);
+                //success = DummyEntity.Count != 0 ? true : false;
+
+            }
+            return success;
+        }
 
 
+        /// <summary>
+        /// Retourne une liste contenant les spawners verrouillés pour la prochaine vague
+        /// </summary>
+        /// <param name="spawners">Liste de tous les spawners du joueur</param>
+        /// <returns>Liste des spawners actifs</returns>
+        public void LockSpawners()
+        {
+            // Init de la liste de retour
+            List<SpawnerBuilding> lockedSpawners = new List<SpawnerBuilding>();
 
+            // Pour tous les spawners de la liste en paramètre
+            foreach (SpawnerBuilding sp in FreeBuildingsList.FindAll(sp => sp.powered))
+            {
+                lockedSpawners.Add((SpawnerBuilding)sp.DeepCopy());
+            }
 
-
+        }
 
     }
 }

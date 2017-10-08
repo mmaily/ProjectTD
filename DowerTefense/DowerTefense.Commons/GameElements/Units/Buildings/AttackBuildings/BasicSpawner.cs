@@ -1,6 +1,5 @@
-﻿using DowerTefense.Commons.Units.Buildings;
-using DowerTefenseCommons.Managers;
-using DowerTefenseCommons.Units.Buildings;
+﻿using DowerTefense.Commons.GameElements.Units;
+using DowerTefense.Commons.Units.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +18,7 @@ namespace DowerTefenseCommons.GameElements.Units.Buildings.AttackBuildings
         {
             this.name = "BasicSpawner";
             this.UnitName = "Basic Unit";
+            this.Unit = new Unit();
         }
     }
 }

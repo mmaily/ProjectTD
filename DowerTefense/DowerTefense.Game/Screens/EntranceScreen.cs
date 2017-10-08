@@ -15,7 +15,6 @@ namespace DowerTefense.Game.Screens
     {
         // Bouton de connexion au service
         private Button connectionButton;
-
         /// <summary>
         /// Constructeur de l'écran d'acceuil
         /// </summary>
@@ -34,7 +33,6 @@ namespace DowerTefense.Game.Screens
             Graphics.PreferredBackBufferHeight = 400;
             Graphics.PreferredBackBufferWidth = 600;
             Graphics.ApplyChanges();
-            UIElementsList = new List<GuiElement>();
             #region Création du bouton Versus IA
             // Bouton de contruction de tour basique
             int height = 100;
@@ -45,7 +43,7 @@ namespace DowerTefense.Game.Screens
                 Tag = "horsLigne"
 
             };
-            newButton.SetText("Versus IA", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetText("Versus IA", CustomContentManager.Fonts["font"]);
             newButton.BackgroundColor = Color.DarkGreen;
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
@@ -56,7 +54,7 @@ namespace DowerTefense.Game.Screens
                 Name = "Matchmaking",
                 Tag = "matchmaking"
             };
-            newButton.SetText("Matchmaking", CustomContentManager.GetInstance().Fonts["font"]);
+            newButton.SetText("Matchmaking", CustomContentManager.Fonts["font"]);
             newButton.BackgroundColor = Color.Blue;
             newButton.TextColor = Color.White;
             newButton.OnRelease += Btn_OnClick;
@@ -71,8 +69,8 @@ namespace DowerTefense.Game.Screens
                 Tag = "editor"
 
             };
-            newButton.SetText("EDITEUR MAP", CustomContentManager.GetInstance().Fonts["font"]);
-            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.SetText("EDITEUR MAP", CustomContentManager.Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             #endregion
@@ -84,7 +82,7 @@ namespace DowerTefense.Game.Screens
                 Tag = "connect",
                 BackgroundColor = Color.DarkRed,
             };
-            connectionButton.SetText("Connexion", CustomContentManager.GetInstance().Fonts["font"]);
+            connectionButton.SetText("Connexion", CustomContentManager.Fonts["font"]);
             connectionButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(connectionButton);
 
@@ -98,7 +96,7 @@ namespace DowerTefense.Game.Screens
                 Text = "Attack",
                 BackgroundColor = Color.Wheat,
                 TextColor = Color.Black,
-                font = CustomContentManager.GetInstance().Fonts["font"],
+                font = CustomContentManager.Fonts["font"],
             };
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
@@ -109,14 +107,12 @@ namespace DowerTefense.Game.Screens
                 Text = "Defense",
                 BackgroundColor = Color.Wheat,
                 TextColor = Color.Black,
-                font = CustomContentManager.GetInstance().Fonts["font"],
+                font = CustomContentManager.Fonts["font"],
 
             };
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             #endregion
-
-
             // Abonnement aux modifications de l'état de connexion du compte
             MultiplayerManager.StateChanged += StateChanged;
 
@@ -154,7 +150,7 @@ namespace DowerTefense.Game.Screens
                     // TODO : remettre bouton en état
                     break;
                 case MultiplayerState.InLobby:
-                    ScreenManager.GetInstance().SelectScreen("Lobby");
+                    ScreenManager.SelectScreen("Lobby");
                     break;
                 case MultiplayerState.InGame:
                     break;
@@ -179,8 +175,8 @@ namespace DowerTefense.Game.Screens
                 switch (btn.Tag.ToString())
                 {
                     case "horsLigne":
-                        ScreenManager.GetInstance().UpdateGameScreenMode(true);
-                       ScreenManager.GetInstance().SelectScreen("GameScreen");
+                        ScreenManager.UpdateGameScreenMode(true);
+                       ScreenManager.SelectScreen("GameScreen");
                         break;
                     case "matchmaking":
                         //MultiplayerManager.SearchMatch("");
@@ -189,7 +185,7 @@ namespace DowerTefense.Game.Screens
                         MultiplayerManager.SearchMatch(btn.Name);
                         break;
                     case "editor":
-                        ScreenManager.GetInstance().SelectScreen("Editor");
+                        ScreenManager.SelectScreen("Editor");
                         break;
                     case "connect":
                         // Si le compte est déconnecté
@@ -238,7 +234,7 @@ namespace DowerTefense.Game.Screens
             });
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.GetInstance().Textures["cursor"];
+            Texture2D fap = CustomContentManager.Textures["cursor"];
             _spriteBatch.Draw(fap, lol, Color.White);
         }
     }

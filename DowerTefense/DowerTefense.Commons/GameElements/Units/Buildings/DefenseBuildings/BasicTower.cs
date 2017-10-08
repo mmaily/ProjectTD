@@ -3,7 +3,6 @@ using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.Managers;
 using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 using Microsoft.Xna.Framework;
 using DowerTefense.Commons.GameElements.Projectiles;
 

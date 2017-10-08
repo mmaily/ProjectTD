@@ -63,7 +63,7 @@ namespace DowerTefense.Game
             graphics.PreferredBackBufferWidth = 600;
             graphics.ApplyChanges();
 
-            //Demande l'affichage du premier écran
+            ////Demande l'affichage du premier écran
             ScreenManager.SelectScreen("EntranceScreen");
 
 

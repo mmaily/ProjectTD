@@ -15,7 +15,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 
         public List<Projectile> projectileList;//  Liste de ses munitions en vol
         protected Entity target;//Cible actuelle
-        private int idTargetRemoval; // Quand une cible quitte la range, on récupère son index pour actualiser la targetList
         private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
         protected String projectileName;
         public enum NameEnum
@@ -42,7 +41,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             projectileList = new List<Projectile>();
 
             //On initialise l'index pour remove les unité en dehors de la range à -1 (désactivé au début)
-            this.idTargetRemoval = -1;
             this.idBulletRemoval = -1;
         }
         
@@ -51,9 +49,9 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         /// Constructeur avec tuile de position
         /// </summary>
         /// <param name="_tile">Tuile de position</param>
-        public Tower(Tile _tile) : this()
+        public Tower(Tile _tile, Map map) : this()
         {
-            this.SetTile(_tile);
+            this.SetTile(_tile, map);
 
         }
 
@@ -61,9 +59,9 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         /// Réglage de la tuile de position
         /// </summary>
         /// <param name="_tile">Tuile</param>
-        public override void SetTile(Tile _tile)
+        public override void SetTile(Tile _tile, Map map)
         {
-            base.SetTile(_tile);
+            base.SetTile(_tile, map);
         }
         #region ===Ancienne méthode OnDuty();===
         //public override void OnDuty()
@@ -90,7 +88,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             //Update ses projectile pour checker les collisions
             foreach (Projectile projectile in projectileList)
             {
-                projectile.Update();
+                projectile.Update(gameTime);
             }
         }
         private void CreateHitListener(Projectile projectile)
@@ -99,9 +97,9 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         }
         private void RemoveBulletOnImpact(object sender, Projectile.OnHitEventArgs args)
         {
+            //TODO : Prévenir les clients quand un projectile disparait (à voir)
             idBulletRemoval = projectileList.IndexOf(args.proj);
             args.proj.OnHit -= new Projectile.HitHandler(RemoveBulletOnImpact);
-
             args.proj = null;
         }
         //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok

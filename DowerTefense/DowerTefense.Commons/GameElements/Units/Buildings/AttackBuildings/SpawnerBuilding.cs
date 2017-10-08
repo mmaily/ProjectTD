@@ -1,9 +1,10 @@
 ﻿using DowerTefense.Commons.GameElements.Units;
-using DowerTefense.Commons.Managers;
 using System;
 using Microsoft.Xna.Framework;
 using LibrairieTropBien.GUI;
 using System.Runtime.Serialization;
+using DowerTefense.Commons.GameElements;
+using System.Collections.Generic;
 
 namespace DowerTefense.Commons.Units.Buildings
 {
@@ -17,8 +18,8 @@ namespace DowerTefense.Commons.Units.Buildings
         public int PowerNeeded { get; protected set; } // Energie requise par le bâtiment
         public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
         protected Unit Unit;// Type d'unité qu'il spawn
-        protected String UnitName; 
-        public MapEngine mapManager = MapEngine.GetInstance();
+        protected String UnitName;
+        private Map map;
         public enum NameEnum
         {
             BasicSpawner, // Spawner d'unité de base
@@ -33,36 +34,49 @@ namespace DowerTefense.Commons.Units.Buildings
             setName();
             this.NbreOfInstantSpawn = 1;
         }
-        public override void OnDuty()
+        #region ===Méthode OnDuty() obsolète===
+        //public override void OnDuty()
+        //{
+        //    base.OnDuty();
+        //    if (CanSpawn())
+        //    {
+        //        SpawnUnit();
+        //    }
+        //}
+        #endregion
+        public void Update(GameTime _gameTime, Map _map,ref List<Unit> mobs)
         {
-            base.OnDuty();
+            this.gameTime = _gameTime;
+            this.map = _map;
             if (CanSpawn())
             {
-                SpawnUnit();
+                SpawnUnit(ref mobs);
             }
         }
-
         public Boolean CanSpawn()
         {
             Boolean canSpawn = false;
-            if(this.locked && this.powered && BuildingEngine.GetInstance().gameTime.TotalGameTime.TotalMilliseconds>lastSpawn+(1/SpawnRate)*1000)
+            if(this.locked && this.powered && gameTime.TotalGameTime.TotalMilliseconds>lastSpawn+(1/SpawnRate)*1000)
             {
                 canSpawn = true;
             }
             return canSpawn;
         }
-        public void SpawnUnit()
+        public void SpawnUnit(ref List<Unit> mobs)
         {
             for(int i = 0; i < NbreOfInstantSpawn; i++)
             {
-                this.Unit = (Unit)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units." + UnitEngine.GetInstance().UnitSpawned[this.name]));
+                this.Unit = Unit.DeepCopy();
                 // On définit sa position comme étant celle du spawn
-                Unit.UpdatePosition(mapManager.CurrentMap.Spawns[0].getTilePosition() * mapManager.CurrentMap.tileSize);
+                Unit.UpdatePosition(map.Spawns[0].getTilePosition() * map.tileSize);
                 // On définit sa destination comme étant la tuile suivante
-                Unit.DestinationTile = mapManager.CurrentMap.Spawns[0].NextTile;
+                Unit.DestinationTile = map.Spawns[0].NextTile;
                 // On l'ajoute à la liste des mobs
-                UnitEngine.GetInstance().mobs.Add(Unit);
-                lastSpawn = (int)Math.Floor(BuildingEngine.GetInstance().gameTime.TotalGameTime.TotalMilliseconds);
+                lock (mobs)
+                {
+                    mobs.Add(Unit);
+                }
+                lastSpawn = (int)Math.Floor(gameTime.TotalGameTime.TotalMilliseconds);
             }
 
         }
@@ -77,7 +91,7 @@ namespace DowerTefense.Commons.Units.Buildings
         public void Lock()
         {
             this.locked = true;
-            this.CreateOnEventListener();
+            //this.CreateOnEventListener();
         }
         public override Building DeepCopy()
         {

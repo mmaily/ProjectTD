@@ -23,5 +23,10 @@ namespace DowerTefense.Commons.GameElements.Units
             this.AttackPower = 1;
             this.HealthPoints = 10;
         }
+        public Unit DeepCopy()
+        {
+            Unit other = (Unit)this.MemberwiseClone();
+            return other;
+        }
     }
 }
