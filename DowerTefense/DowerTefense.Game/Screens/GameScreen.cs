@@ -65,13 +65,15 @@ namespace DowerTefense.Game.Screens
             //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
             spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
-            // Init de l'UI
-            //Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize+topMargin*2;
-            //Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width+leftMargin*2;
-            //Graphics.ApplyChanges();
+
             uiManager = new UIManager(game);
             uiManager.SetRole(role);
             uiManager.Initialize(_graphics);
+
+            // Init de l'UI
+            Graphics.PreferredBackBufferHeight = (map.mapHeight) * map.tileSize+topMargin*2;
+            Graphics.PreferredBackBufferWidth = (map.mapWidth ) * map.tileSize + uiManager.zoneUi.Width+leftMargin*2;
+            Graphics.ApplyChanges();
 
             // Abonnement aux mises à jour du jeu
             MultiplayerManager.GameUpdate += this.GameUpdate;
