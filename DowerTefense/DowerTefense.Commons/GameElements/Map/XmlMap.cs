@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 //Source https://www.codeproject.com/Articles/1789/Object-Serialization-using-C
 namespace DowerTefense.Commons.GameElements

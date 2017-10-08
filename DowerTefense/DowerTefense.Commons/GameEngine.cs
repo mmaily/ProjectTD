@@ -145,7 +145,9 @@ namespace DowerTefense.Commons
             DefenseBuildingsList = new List<Building>();
             WaitingForConstruction = new List<Building>();
             #endregion
-            #region===Initialisation des vagues===
+            #region===Initialisation des unités, projectiles et vagues===
+            mobs = new List<Unit>();
+            projectiles = new List<Projectile>();
             lastWaveTick = 0;
             waveCount = 0;
             tileSize = 8;
@@ -154,6 +156,7 @@ namespace DowerTefense.Commons
             defensePlayer = new DefensePlayer();
             attackPlayer = new AttackPlayer();
             #endregion
+
         }
         
         /// <summary>

@@ -51,6 +51,9 @@ namespace DowerTefense.Game.Screens
         
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
+            #region Initialise la liste des ordres du serveur
+            orders = new List<Message>();
+            #endregion
             #region Initialisation du jeu et des variables associée
             game = new GameEngine();
             game.Initialize();
