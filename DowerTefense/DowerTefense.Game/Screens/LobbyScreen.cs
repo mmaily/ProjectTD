@@ -18,15 +18,11 @@ namespace DowerTefense.Game.Screens
         private Dictionary<PlayerRole, GuiElement> players;
         private Button readyButton;
 
-        private bool initialized = false;
-
         /// <summary>
         /// Constructeur de base
         /// </summary>
         public LobbyScreen()
         {
-            initialized = false;
-
             // Init liste éléments GUI
             UIElementsList = new List<GuiElement>();
 
@@ -82,7 +78,6 @@ namespace DowerTefense.Game.Screens
 
             MultiplayerManager.Send("lol", "casseToiOMG");
 
-            initialized = true;
         }
 
         /// <summary>

@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using LibrairieTropBien.GUI;
 using LibrairieTropBien.Network;
+using DowerTefense.Game.Managers;
+using Microsoft.Xna.Framework.Input;
 
 namespace DowerTefense.Game.Screens
 {
@@ -12,7 +14,7 @@ namespace DowerTefense.Game.Screens
     public abstract class Screen
     {
         public GraphicsDeviceManager Graphics;
-        public SpriteBatch spriteBatch;
+        //public SpriteBatch spriteBatch;
         /// <summary>
         /// Liste des éléments graphiques de l'écran
         /// </summary>
@@ -34,8 +36,12 @@ namespace DowerTefense.Game.Screens
         {
 
         }
-        public virtual void Draw(SpriteBatch spritebatch)
+        public virtual void Draw(SpriteBatch _spriteBatch)
         {
+            // Affichage du curseur
+            Vector2 lol = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
+            Texture2D fap = CustomContentManager.Textures["cursor"];
+            _spriteBatch.Draw(fap, lol, Color.White);
         }
         public virtual void Draw(SpriteBatch spritebatch, Vector2 pos, Color col)
         {

@@ -17,7 +17,7 @@ namespace DowerTefense.Commons
     /// <summary>
     /// Jeu proprement dit
     /// </summary>
-    public class GameEngine
+    public class GameEngine : Microsoft.Xna.Framework.Game
     {
         #region Dictionaire dummies
         public Dictionary<string, string> UnitSpawned { get; private set; }

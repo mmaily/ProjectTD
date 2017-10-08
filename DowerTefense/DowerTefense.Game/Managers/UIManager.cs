@@ -27,7 +27,6 @@ namespace DowerTefense.Game.Managers
     /// </summary>
     public class UIManager
     {
-        UIManager instance = null;
         /// <summary>
         /// Tuile sélectionnée
         /// </summary>
@@ -92,25 +91,29 @@ namespace DowerTefense.Game.Managers
         {
             this.game = game;
             currentMap = game.map;
+
             // Récupération du décalage gauche de l'interface
             currentMap = currentMap;
             mapOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
             leftUIOffset = currentMap.mapWidth * currentMap.tileSize + (int)mapOffset.Y * 2;
+
             //Création d'une zone pour l'ui
             zoneUi = new Rectangle(leftUIOffset, (int)mapOffset.Y, 300, currentMap.mapHeight * currentMap.tileSize);
+
             //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
             this.imageRatio = (float)game.map.tileSize / (float)CustomContentManager.textureSize;
+
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.Fonts["font"];
-            //Instanciation des joueurs
 
+            //Instanciation des joueurs
             defensePlayer = game.defensePlayer;
             attackPlayer = game.attackPlayer;
-
 
             // Initialisation de la liste des éléments d'interface
             UIElementsList = new List<GuiElement>();
             PopUp = new Dictionary<Button, InfoPopUp>();
+
             #region === Remplir le catalogue des unités de base==
             Dummies = new List<Building>();
             Building newBuilding;
@@ -128,16 +131,7 @@ namespace DowerTefense.Game.Managers
                 Dummies.Add(newBuilding);
             }
             #endregion
-            instance = this;
-        }
 
-        /// <summary>
-        /// Récupération de l'instance du gestionnaire d'interface
-        /// </summary>
-        /// <returns></returns>
-        public UIManager GetInstance()
-        {
-            return instance;
         }
 
         public void Initialize(GraphicsDeviceManager _graphics)

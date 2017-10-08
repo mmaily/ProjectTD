@@ -27,8 +27,6 @@ namespace DowerTefense.Game.Screens
         public static Dictionary<String, Screen> Screens;
         public static void Initialize()
         {
-            // Init de l'écran
-            //loadingScreen.Initialize(Graphics);
             //Initialisation des Screens
             // Instance du gestionnaire d'écran
         //Dictionnaire des Screen
@@ -37,7 +35,7 @@ namespace DowerTefense.Game.Screens
             Screens.Add("GameScreen", new GameScreen());
             Screens.Add("Editor", new Editor());
             Screens.Add("Lobby", new LobbyScreen());
-            currentScreen = (Screen)Screens["EntranceScreen"];
+            currentScreen = (Screen)Screens["GameScreen"];
         }
         /// <summary>
         /// Chargement d'un écran spécifique (temporaire)

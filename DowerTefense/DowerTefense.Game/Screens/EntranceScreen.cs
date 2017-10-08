@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using LibrairieTropBien.GUI;
 using DowerTefense.Game.Managers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using DowerTefense.Game.Multiplayer;
 using LibrairieTropBien.Network;
 
@@ -227,15 +225,11 @@ namespace DowerTefense.Game.Screens
         /// <param name="_spriteBatch"></param>
         public override void Draw(SpriteBatch _spriteBatch)
         {
-            base.Draw(_spriteBatch);
             Parallel.ForEach(UIElementsList, element =>
             {
                 element.Draw(_spriteBatch);
             });
-            // Affichage du curseur
-            Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.Textures["cursor"];
-            _spriteBatch.Draw(fap, lol, Color.White);
+            base.Draw(_spriteBatch);
         }
     }
 }

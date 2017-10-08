@@ -56,7 +56,7 @@ namespace DowerTefense.Game.Screens
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
-            spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
+            //spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             uiZone = new Rectangle(0, 0, 200, 400);
 
             #region ===Interface===
@@ -189,44 +189,44 @@ namespace DowerTefense.Game.Screens
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch);
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
             #region ===Affichage des Tiles modèles===
             foreach (Tile tile in modelTiles)
             {
                 // On affiche la texture correspondant à la nature de la carte
-                spriteBatch.Draw(CustomContentManager.Textures[tile.TileType.ToString()], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                _spriteBatch.Draw(CustomContentManager.Textures[tile.TileType.ToString()], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                 // Si cette tuile est sélectionnée ou sous le curseur
                 if (tile.selected || tile.overviewed)
                 {
                     // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                    _spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                     // On reset le boolée "sous le curseur"
                     tile.overviewed = false;
                 }
             }
-            spriteBatch.DrawRectangle(uiZone, Color.Beige);
-            spriteBatch.DrawRectangle(tileZone, Color.Beige);
+            _spriteBatch.DrawRectangle(uiZone, Color.Beige);
+            _spriteBatch.DrawRectangle(tileZone, Color.Beige);
             #region === Zone de la map ===
-            spriteBatch.DrawRectangle(mapZone, Color.Beige);
+            _spriteBatch.DrawRectangle(mapZone, Color.Beige);
             for (int j = 0; j < EditedMap.GetLength(0); j++)
             {
                 for (int k = 0; k < EditedMap.GetLength(1); k++)
                 {
                     // On affiche la texture correspondant à la nature de la carte
-                    spriteBatch.Draw(CustomContentManager.Textures[EditedMap[j,k].TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                    _spriteBatch.Draw(CustomContentManager.Textures[EditedMap[j,k].TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                     // Si cette tuile est sélectionnée ou sous le curseur
                     if (EditedMap[j, k].selected || EditedMap[j, k].overviewed)
                     {   
                         if (SelectedTile != null)
                         {
                             // On affiche la texture "sélectionnée" sur cette tuile
-                            spriteBatch.Draw(CustomContentManager.Textures[SelectedTile.TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                            _spriteBatch.Draw(CustomContentManager.Textures[SelectedTile.TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                             // On reset le boolée "sous le curseur"
                         }
                         else
                         {
                             // On affiche la texture "sélectionnée" sur cette tuile
-                            spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                            _spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                             // On reset le boolée "sous le curseur"
                         }
 
@@ -240,16 +240,16 @@ namespace DowerTefense.Game.Screens
             #region Affiche l'interface et le curseur
             Parallel.ForEach(UIElementsList, element =>
             {
-                element.Draw(spriteBatch);
+                element.Draw(_spriteBatch);
             });
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
             Texture2D fap = CustomContentManager.Textures["cursor"];
-            spriteBatch.Draw(fap, lol, Color.White);
+            _spriteBatch.Draw(fap, lol, Color.White);
             #endregion
             //Gestion des Tiles modèles
 
-            spriteBatch.End();
+            _spriteBatch.End();
 
 
         }
