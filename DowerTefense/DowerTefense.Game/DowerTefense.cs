@@ -34,6 +34,8 @@ namespace DowerTefense.Game
         /// </summary>
         protected override void Initialize()
         {
+            //Initialisation du content
+            CustomContentManager.Initialize();
             //Envoie le graphic au screenManager
             ScreenManager.Initialize();
             ScreenManager.SetGraphics(this.graphics);

@@ -95,6 +95,7 @@
     <Compile Include="Managers\ScreenManager.cs" />
     <Compile Include="Screens\LobbyScreen.cs" />
     <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Translator\ClientTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="C3.MonoGame.Primitives2D">

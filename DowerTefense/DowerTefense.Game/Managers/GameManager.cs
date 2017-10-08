@@ -16,9 +16,7 @@ namespace DownerTefense.Game.Managers
 
         public static void Initialize()
         {
-            //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
-            this.imageRatio = (float)CurrentMap.tileSize / (float)CustomContentManager.GetInstance().textureSize;
-            marginOffset = new Vector2(ScreenManager.GetInstance().Screens["GameScreen"].leftMargin, ScreenManager.GetInstance().Screens["GameScreen"].topMargin);
+
         }
 
         /// <summary>
@@ -36,25 +34,6 @@ namespace DownerTefense.Game.Managers
         /// <param name="_spriteBatch"></param>
         public static void Draw(SpriteBatch _spriteBatch)
         {
-            #region === Affichage map ===
-
-
-            // Pour chaque tuile de la carte
-            foreach (Tile tile in CurrentMap.Tiles)
-            {
-                // On affiche la texture correspondant à la nature de la carte
-                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
-                // Si cette tuile est sélectionnée ou sous le curseur
-                if (tile.selected || tile.overviewed)
-                {
-                    // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
-                    // On reset le boolée "sous le curseur"
-                    tile.overviewed = false;
-                }
-
-            }
-            #endregion
 
             // Affichage des bâtiments
             //foreach (Building building in DefenseBuildingsList)

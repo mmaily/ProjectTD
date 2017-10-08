@@ -14,6 +14,7 @@ namespace DowerTefense.Server.Servers
     {
         // Correspondance clients / joueurs
         private Dictionary<Client, Player> clients;
+        private List<Message> Requests;
 
 
         /// <summary>
@@ -29,9 +30,9 @@ namespace DowerTefense.Server.Servers
                 c.Key.ReceiveDataCallback = this.OnReiceivedData;
                 c.Key.SetupReceiveCallback(this);
             });
-
-            // Création du jeu
-            using (var game = new GameManager(clients))
+            Requests = new List<Message>();
+            // Création du jeu, on lui file client et liste des requêtes
+            using (var game = new GameManager(clients, ref Requests))
                 game.Run();
         }
 
@@ -42,19 +43,10 @@ namespace DowerTefense.Server.Servers
         protected override void ProcessMessage(Message _messageReceived, Client _client)
         {
             //On lock pour éviter les accès concurrentiels
-            lock (Request)
+            lock (Requests)
             {
-                Request.Add(_messageReceived);
+                Requests.Add(_messageReceived);
             }
-            //// Traitement des différents cas
-            //switch (_messageReceived.Subject)
-            //{
-            //    case "towerUpdate":
-
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
 
         ///<summary>

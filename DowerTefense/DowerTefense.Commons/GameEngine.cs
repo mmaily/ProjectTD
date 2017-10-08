@@ -55,7 +55,25 @@ namespace DowerTefense.Commons
         #endregion
         #region===Dictionnaire des changements===
         //Le translator utilise ce dictionnaire pour transmettre les info entre Client et serveur
-        public Dictionary<object, bool> Changes;
+        public Dictionary<Dictionary<String, object>, bool> Changes;
+        //Celui là sert à pouvoir réinitialiser le premier plus vite
+        public Dictionary<Dictionary<String, object>, bool> Initial;
+        //Mini-dictionnaire
+        public Dictionary<String, object> DdefensePlayer;
+
+        public Dictionary<String, object> DattackPlayer;
+
+        public Dictionary<String, object> DLockedBuildingsList;
+
+        public Dictionary<String, object> DDefenseBuildingsList;
+
+        public Dictionary<String, object> Dprojectiles;
+
+        public Dictionary<String, object> DFreeBuildingsList;
+
+        public Dictionary<String, object> DWaitingForConstruction;
+
+        public Dictionary<String, object> Dmobs;
         #endregion
         #region===Player===
         public DefensePlayer defensePlayer;
@@ -72,14 +90,42 @@ namespace DowerTefense.Commons
         public void Initialize()
         {
             #region===Initialise le dictionnaire des changements===
-            Changes = new Dictionary<object, bool>();
-            Changes.Add(defensePlayer.totalGold, false);
-            Changes.Add(attackPlayer.totalGold, false);
-            Changes.Add(LockedBuildingsList, false);
-            Changes.Add(DefenseBuildingsList, false);
-            Changes.Add(projectiles, false);
-            Changes.Add(FreeBuildingsList, false);
-            Changes.Add(mobs, false);
+            //Ces mini-dicionnaire contiennent l'objet qui à changé et son nom
+            //De cette façon les Translators sont standardisés
+            DdefensePlayer = new Dictionary<String, object>();
+            DdefensePlayer.Add("defensePlayer", defensePlayer);
+
+            DattackPlayer = new Dictionary<String, object>();
+            DattackPlayer.Add("attackPlayer", attackPlayer);
+
+            DLockedBuildingsList = new Dictionary<String, object>();
+            DLockedBuildingsList.Add("LockedBuildingsList", LockedBuildingsList);
+
+            DDefenseBuildingsList = new Dictionary<String, object>();
+            DDefenseBuildingsList.Add("DefenseBuildingsList", DefenseBuildingsList);
+
+            Dprojectiles = new Dictionary<String, object>();
+            Dprojectiles.Add("projectiles", projectiles);
+
+            DFreeBuildingsList = new Dictionary<String, object>();
+            DFreeBuildingsList.Add("FreeBuildingsList", FreeBuildingsList);
+
+            DWaitingForConstruction = new Dictionary<String, object>();
+            DWaitingForConstruction.Add("WaitingForConstruction", WaitingForConstruction);
+
+            Dmobs = new Dictionary<String, object>();
+            Dmobs.Add("mobs", Dmobs);
+            //Dictionnaire de suivi des changements
+            Changes = new Dictionary<Dictionary<String, object>, bool>();
+            Changes.Add(DdefensePlayer, false);
+            Changes.Add(DattackPlayer, false);
+            Changes.Add(DLockedBuildingsList, false);
+            Changes.Add(DDefenseBuildingsList, false);
+            Changes.Add(Dprojectiles, false);
+            Changes.Add(DFreeBuildingsList, false);
+            Changes.Add(DWaitingForConstruction, false);
+            Changes.Add(Dmobs, false);
+            Initial = new Dictionary<Dictionary<string, object>, bool>(Changes);
             #endregion
             #region ===Initialisation des bâtiments===
             LockedBuildingsList = new List<SpawnerBuilding>();
@@ -105,6 +151,11 @@ namespace DowerTefense.Commons
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
+            #region===On repasse le dictionnaire de changements à son état initial===
+            //TODO : Boucle assez lourde... Peut être multitread si ça ralentit
+            Changes = new Dictionary<Dictionary<string, object>, bool>(Initial);
+            #endregion
+
             #region === Calcul des vagues ===
 
             // Calcul du cycle de 30 secondes
@@ -149,10 +200,7 @@ namespace DowerTefense.Commons
                 UIManager.GetInstance().CreateLockedList();
             }
             #endregion 
-
-
-
-            #region =====Construction des bâtiments en attente=====
+            #region ====Construction des bâtiments en attente====
             //Construire la liste des tours en attente
             foreach (Building bd in WaitingForConstruction)
             {

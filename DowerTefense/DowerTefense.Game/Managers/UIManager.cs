@@ -1,12 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using DowerTefense.Game.GameElements;
 using C3.MonoGame;
 using LibrairieTropBien.GUI;
 using Microsoft.Xna.Framework.Input;
-using DowerTefense.Game.Units.Buildings;
 using System;
-using DowerTefense.Game.Units;
 using DowerTefense.Game.Players;
 using System.Collections.Generic;
 using DowerTefense.Game.Screens;
@@ -14,6 +11,11 @@ using System.Threading.Tasks;
 using LibrairieTropBien.Network.Game;
 using DowerTefense.Game.Multiplayer;
 using DowerTefense.Commons.GameElements;
+using DowerTefense.Commons.Units.Buildings;
+using DowerTefense.Commons.Units;
+using DowerTefense.Commons;
+using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
+using DowerTefense.Commons.Managers;
 
 namespace DowerTefense.Game.Managers
 {
@@ -23,7 +25,7 @@ namespace DowerTefense.Game.Managers
     /// </summary>
     public class UIManager
     {
-
+        UIManager instance = null;
         /// <summary>
         /// Tuile sélectionnée
         /// </summary>
@@ -46,7 +48,9 @@ namespace DowerTefense.Game.Managers
         //Offset de la map par rapport au coin sup droit
         private Vector2 mapOffset;
         #endregion
-
+        #region Copie des éléments du jeu
+        private GameEngine game;
+        #endregion
         // Carte en cours
         public Map currentMap { get; set; }
 
@@ -79,22 +83,24 @@ namespace DowerTefense.Game.Managers
         /// <summary>
         /// Constructeur du gestionnaire d'unité
         /// </summary>
-        private UIManager()
+        public UIManager(GameEngine game)
         {
+            this.game = game;
+            currentMap = game.map;
             // Récupération du décalage gauche de l'interface
-            currentMap = MapManager.GetInstance().CurrentMap;
-            mapOffset = new Vector2(ScreenManager.GetInstance().Screens["GameScreen"].leftMargin, ScreenManager.GetInstance().Screens["GameScreen"].topMargin);
+            currentMap = currentMap;
+            mapOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
 
             leftUIOffset = currentMap.mapWidth * currentMap.tileSize +(int)mapOffset.Y * 2;
             //Création d'une zone pour l'ui
             zoneUi = new Rectangle(leftUIOffset,(int)mapOffset.Y, 300, currentMap.mapHeight * currentMap.tileSize);
 
             // Récupération de la police par défaut
-            deFaultFont = CustomContentManager.GetInstance().Fonts["font"];
+            deFaultFont = CustomContentManager.Fonts["font"];
             //Instanciation des joueurs
 
-             defensePlayer = new DefensePlayer();
-             attackPlayer = new AttackPlayer();
+             defensePlayer = game.defensePlayer;
+             attackPlayer = game.attackPlayer;
 
 
             // Initialisation de la liste des éléments d'interface
@@ -116,20 +122,15 @@ namespace DowerTefense.Game.Managers
                 Dummies.Add(newBuilding);
             }
             #endregion
+            instance = this;
         }
 
         /// <summary>
         /// Récupération de l'instance du gestionnaire d'interface
         /// </summary>
         /// <returns></returns>
-        public static UIManager GetInstance()
+        public UIManager GetInstance()
         {
-            if (instance == null)
-            {
-
-                instance = new UIManager();
-
-            }
             return instance;
         }
 
@@ -153,7 +154,7 @@ namespace DowerTefense.Game.Managers
                         Tag = "defenseBuild",
                         PopUpAttached = true
                     };
-                    btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+                    btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                     btnBuild.OnRelease += Btn_OnClick;
                     UIElementsList.Add(btnBuild);
                     //Add la popUp qui va bien
@@ -161,8 +162,8 @@ namespace DowerTefense.Game.Managers
                     {
                         Name = tower.ToString() + "Info",
                         Tag = "InfoPopUp",
-                        font = CustomContentManager.GetInstance().Fonts["font"],
-                        texture = CustomContentManager.GetInstance().Colors["pixel"]
+                        font = CustomContentManager.Fonts["font"],
+                        texture = CustomContentManager.Colors["pixel"]
                     };
                     PopUp.Add(btnBuild, info);
                     Dummies.Find(b => b.name.Equals(btnBuild.Name)).SetInfoPopUp(info);
@@ -184,7 +185,7 @@ namespace DowerTefense.Game.Managers
                         Tag = "attackBuild",
                         PopUpAttached = true
                     };
-                    btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+                    btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                     btnBuild.OnRelease += Btn_OnClick;
                     UIElementsList.Add(btnBuild);
                     //Add la popUp qui va bien
@@ -192,8 +193,8 @@ namespace DowerTefense.Game.Managers
                     {
                         Name = spawner.ToString() + "Info",
                         Tag = "InfoPopUp",
-                        font = CustomContentManager.GetInstance().Fonts["font"],
-                        texture = CustomContentManager.GetInstance().Colors["pixel"]
+                        font = CustomContentManager.Fonts["font"],
+                        texture = CustomContentManager.Colors["pixel"]
                     };
                     PopUp.Add(btnBuild, info);
                     Dummies.Find(b => b.name.Equals(btnBuild.Name)).SetInfoPopUp(info);
@@ -205,8 +206,8 @@ namespace DowerTefense.Game.Managers
                 {
                     Name = "ArmyCompo",
                     Tag = "attackBuild",
-                    font= CustomContentManager.GetInstance().Fonts["font"],
-                    texture = CustomContentManager.GetInstance().Colors["pixel"]
+                    font= deFaultFont,
+                    texture = CustomContentManager.Colors["pixel"]
                 };
                 panel.setText("Lol");
                 UIElementsList.Add(panel);
@@ -236,7 +237,7 @@ namespace DowerTefense.Game.Managers
             progressBarWaves = new ProgressBar(15, 15, (int)(currentMap.mapWidth * currentMap.tileSize * 0.90) - 15, 15)
             {
                 Name = "ProgressBarWave",
-                Max = GameScreen.waveLength,
+                Max = game.waveLength,
                 Tag = "UI",
             };
 
@@ -259,14 +260,13 @@ namespace DowerTefense.Game.Managers
                         && SelectedTile.building == null
                         && (building.Cost <= defensePlayer.totalGold))
                     {
-                        // On créé un bâtiment de ce type
-                        // Que l'on place sur cette tuile
-                        // On envoie la requete de construction d'une tour au serveur
                         building = (Tower)building.DeepCopy();
                         building.SetTile(SelectedTile);
                         // Ajout à la liste des bâtiments
-                        BuildingsManager.GetInstance().DefenseBuildingsList.Add(building);
-                        MultiplayerManager.Send("towerUpdate", building);                       
+                        game.WaitingForConstruction.Add(building);
+                        //On signale le changement dans le log
+                        //TODO : A un moment il faut clear la liste WaitingFrConstruction
+                        game.Changes[game.DWaitingForConstruction] = true;
                     }
                 }
                 // Si le bouton est une construction attaque
@@ -280,7 +280,7 @@ namespace DowerTefense.Game.Managers
                         MultiplayerManager.Send("spawnerUpdate", building);
                     }
                 }
-                #region ===Gestion de l'appui sur les boutons de l'attaquand sur sa liste
+                #region ===Gestion de l'appui sur les boutons de l'attaquant sur sa liste active===
                 if (btn.Tag.Equals("ActiveList") && attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (ActiveList[btn].PowerNeeded) && !(ActiveList[btn].powered))
                 {
                     ActiveList[btn].powered = true;
@@ -377,7 +377,7 @@ namespace DowerTefense.Game.Managers
             // Récupération de la position de la souris
             Point mousePosition = mouseState.Position;
             //On check si la souris est dans la zone map
-            if (MapManager.GetInstance().GetMapZone().Contains(mousePosition))
+            if (MapEngine.GetMapZone(currentMap).Contains(mousePosition))
             {
                 // On récupère la tuile visée
                 Tile selectedTile = currentMap.Tiles[mousePosition.X / currentMap.tileSize, mousePosition.Y / currentMap.tileSize];
@@ -428,7 +428,7 @@ namespace DowerTefense.Game.Managers
         public void Draw(SpriteBatch _spriteBatch)
         {
             #region ==Rectangle droite contenant l'ui==
-            _spriteBatch.Draw(CustomContentManager.GetInstance().Colors["pixel"], zoneUi, Color.Purple);
+            _spriteBatch.Draw(CustomContentManager.Colors["pixel"], zoneUi, Color.Purple);
             #endregion 
             #region === Infos globales ===
 
@@ -446,9 +446,9 @@ namespace DowerTefense.Game.Managers
                 _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
             }
             offset = 400;
-            _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + BuildingsManager.GetInstance().FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
+            _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + game.FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             offset = 420;
-            _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + BuildingsManager.GetInstance().DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
+            _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + game.DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
 
             // Affichage du nom de la carte
             _spriteBatch.DrawString(deFaultFont, currentMap.Name + " -- Mode : " + mode, new Vector2(leftUIOffset, 5), Color.Wheat);
@@ -569,7 +569,7 @@ namespace DowerTefense.Game.Managers
                 Tag = "ActiveList",
                 PopUpAttached = true
             };
-            btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+            btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
             btnBuild.OnRelease += Btn_OnClick;
             UIElementsList.Add(btnBuild);
             //Add la popUp qui va bien
@@ -577,8 +577,8 @@ namespace DowerTefense.Game.Managers
             {
                 Name = "ActiveSpawnInfo",
                 Tag = "InfoPopUp",
-                font = CustomContentManager.GetInstance().Fonts["font"],
-                texture = CustomContentManager.GetInstance().Colors["pixel"]
+                font = CustomContentManager.Fonts["font"],
+                texture = CustomContentManager.Colors["pixel"]
             };
             PopUp.Add(btnBuild,info);
             _building.SetInfoPopUp(info);
@@ -591,7 +591,7 @@ namespace DowerTefense.Game.Managers
         {
             lockedButton.Clear();
             LockedList.Clear();
-            foreach (SpawnerBuilding sp in BuildingsManager.GetInstance().LockedBuildingsList)
+            foreach (SpawnerBuilding sp in game.LockedBuildingsList)
             {
                 Button btnBuild = new Button(leftUIOffset + 30 + LockedList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 4, btnSize, btnSize)
                 {
@@ -599,7 +599,7 @@ namespace DowerTefense.Game.Managers
                     Tag = "LockedList",
                     PopUpAttached = true
                 };
-                btnBuild.SetTexture(CustomContentManager.GetInstance().Textures[btnBuild.Name], false);
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 btnBuild.OnRelease += Btn_OnClick;
                 btnBuild.GreyedOut = true;
                 lockedButton.Add(btnBuild);
@@ -608,8 +608,8 @@ namespace DowerTefense.Game.Managers
                 {
                     Name = "LockedSpawnInfo",
                     Tag = "InfoPopUp",
-                    font = CustomContentManager.GetInstance().Fonts["font"],
-                    texture = CustomContentManager.GetInstance().Colors["pixel"]
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
                 };
                 PopUp.Add(btnBuild,info);
                 sp.SetInfoPopUp(info);

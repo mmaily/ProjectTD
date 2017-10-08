@@ -20,11 +20,12 @@ namespace DowerTefense.Server.Elements
         /// <summary>
         /// Constructeur
         /// </summary>
-        public GameManager(Dictionary<Client, Player> _clients)
+        public GameManager(Dictionary<Client, Player> _clients, ref List<Message> _Requests)
         {
             Content.RootDirectory = "Content";
             game = new GameEngine();
             this.clients = _clients;
+            this.Requests = _Requests;
         }
 
         /// <summary>

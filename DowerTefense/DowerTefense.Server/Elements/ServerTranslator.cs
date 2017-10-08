@@ -1,5 +1,6 @@
 ﻿using DowerTefense.Commons;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
+using DowerTefense.Commons.Units;
 using LibrairieTropBien.Network;
 using LibrairieTropBien.Network.Game;
 using System;
@@ -23,33 +24,46 @@ namespace DowerTefense.Server.Elements
                 {
                     Translate(ref game, message);
                 }
+                requests.Clear();
             }
-            requests.Clear();
+
         }
 
         //Méthode qui transforme le message en action sur le jeu
     public static void Translate(ref GameEngine game, Message message)
         {
+            //TODO : faire tous les cas qui intéressent le serveur
             switch (message.Subject)
             {
-                case "newTower":
-                    //TODO : Faire envoyer un string par le client, et chercher la tour correspondante dans les Dummies
-                    game.DefenseBuildingsList.Add((Tower)message.received);
+                case "DdefenseList":
+                    game.DefenseBuildingsList = (List<Building>)message.received;
+                    break;
+                case "DWaitingForConstruction":
+                    //TODO : Gérer la différenciation entre Tower et Spawning
+                    game.DefenseBuildingsList.AddRange((List<Building>)message.received);
                     break;
             }
+
         }
     
-    public static void SendGameUpdate(Dictionary<object,bool> Changes, ref Dictionary<Client, Player> clients)
+    public static void SendGameUpdate(Dictionary<Dictionary<String, object>, bool> Changes, ref Dictionary<Client, Player> clients)
         {
             Parallel.ForEach(clients.Keys, c =>
             {
                 //Si dans le dictionnaire il y un objet qui a la valeur True, alors il a changé et on l'envoie aux clients
-                foreach (object obj in Changes.Where(change => change.Value==true))
+                //Là attention, il y a un Dictionnaire qui contient des dictionnaires. Les sous dictionnaire contiennent
+                //la paire objet/nom de l'objet, et ce mini-dictionnaire est associé à un boolean pour savoir si ça a changé
+                foreach (var dic in Changes.Where(pair => pair.Value == true))
                 {
-                    //TODO : A mon avis ça marche pas ça
-                    c.Send(obj.ToString(),obj);
+                    //Une fois qu'on a trouvé les changement, on extrait les paires objet/nom et on les envoie
+                    foreach (var underDic in dic.Key)
+                    {
+                        //Les sous dictionnaires sont définis dans le GameEngine
+                        c.Send(underDic.Key, underDic.Value);
+                    }
+
                 }
-                
+
             });
 
         }

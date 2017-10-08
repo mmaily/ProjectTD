@@ -24,7 +24,7 @@ namespace DowerTefense.Game.Screens
         //Ecran à charger
         static Screen loadingScreen;
         //Dictionnaire des Screen
-        static Dictionary<String, Screen> Screens;
+        public static Dictionary<String, Screen> Screens;
         public static void Initialize()
         {
             // Init de l'écran

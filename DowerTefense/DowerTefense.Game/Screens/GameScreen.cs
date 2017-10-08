@@ -9,6 +9,8 @@ using DowerTefense.Game.Multiplayer;
 using LibrairieTropBien.Network;
 using DowerTefense.Commons.GameElements;
 using DowerTefense.Commons;
+using System.Collections.Generic;
+using DownerTefense.Game.Translator;
 
 namespace DowerTefense.Game.Screens
 {
@@ -17,10 +19,19 @@ namespace DowerTefense.Game.Screens
     /// </summary>
     class GameScreen : Screen
     {
-        #region===Jeu===
+        #region Jeu
         private GameEngine game;
         private Map map;
         #endregion
+        #region Liste des ordres Serveur
+        private List<Message> orders;
+        #endregion
+        #region Interface Visuelle
+        private float imageRatio;
+        private Vector2 marginOffset;
+        private UIManager uiManager;
+        #endregion
+
         //Role adopté par ce GameScreen
         public PlayerRole role = PlayerRole.Debug;
 
@@ -43,11 +54,15 @@ namespace DowerTefense.Game.Screens
         
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
-            #region Initialisation du jeu et des variables associée===
+            #region Initialisation du jeu et des variables associée
             game = new GameEngine();
             map = game.map;
             #endregion
-
+            #region Calcul de l'échelle de scaling selon taille des Tile
+            //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
+            this.imageRatio = (float)map.tileSize / (float)CustomContentManager.GetInstance().textureSize;
+            marginOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
+            #endregion
             //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
             spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
@@ -55,8 +70,9 @@ namespace DowerTefense.Game.Screens
             //Graphics.PreferredBackBufferHeight = (MapManager.GetInstance().CurrentMap.mapHeight) * MapManager.GetInstance().CurrentMap.tileSize+topMargin*2;
             //Graphics.PreferredBackBufferWidth = (MapManager.GetInstance().CurrentMap.mapWidth ) * MapManager.GetInstance().CurrentMap.tileSize+UIManager.GetInstance().zoneUi.Width+leftMargin*2;
             //Graphics.ApplyChanges();
-            UIManager.GetInstance().SetRole(role);
-            UIManager.GetInstance().Initialize(_graphics);
+            uiManager = new UIManager(game);
+            uiManager.SetRole(role);
+            uiManager.Initialize(_graphics);
 
             // Abonnement aux mises à jour du jeu
             MultiplayerManager.GameUpdate += this.GameUpdate;
@@ -68,17 +84,21 @@ namespace DowerTefense.Game.Screens
         /// <param name="message"></param>
         private void GameUpdate(Message message)
         {
-            switch (message.Subject)
+            lock (orders)
             {
-                case "towerUpdate":
-
-                    BuildingsManager.GetInstance().WaitingForConstruction.Add((Tower)message.received);
-                    break;
-                case "spawnerUpdate":
-
-                    BuildingsManager.GetInstance().WaitingForConstruction.Add((SpawnerBuilding)message.received);
-                    break;
+                orders.Add(message);
             }
+            //switch (message.Subject)
+            //{
+            //    case "towerUpdate":
+
+            //        BuildingsManager.GetInstance().WaitingForConstruction.Add((Tower)message.received);
+            //        break;
+            //    case "spawnerUpdate":
+
+            //        BuildingsManager.GetInstance().WaitingForConstruction.Add((SpawnerBuilding)message.received);
+            //        break;
+            //}
         }
 
 
@@ -88,8 +108,6 @@ namespace DowerTefense.Game.Screens
         /// </summary>
         public override void LoadContent()
         {
-
-            map = mapManager.CurrentMap;
             loaded = true;
         }
 
@@ -104,9 +122,12 @@ namespace DowerTefense.Game.Screens
             {
                 return;
             }
+            //Update en fonction des ordres du serveur, et clear automatique de la liste d'ordres
+            ClientTranslator.UpdateGame(ref game, ref orders);
             //Update du jeu en interne
             game.Update(_gameTime);
-
+            //Envoie des changements au serveur
+            ClientTranslator.SendGameUpdate(game.Changes);
             millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
 
             time = _gameTime.TotalGameTime.TotalMilliseconds;
@@ -157,6 +178,26 @@ namespace DowerTefense.Game.Screens
             Vector2 lol = Mouse.GetState().Position.ToVector2();
             Texture2D fap = CustomContentManager.GetInstance().Textures["cursor"];
             spriteBatch.Draw(fap, lol, Color.White);
+            #region === Affichage map ===
+
+
+            // Pour chaque tuile de la carte
+            foreach (Tile tile in CurrentMap.Tiles)
+            {
+                // On affiche la texture correspondant à la nature de la carte
+                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
+                // Si cette tuile est sélectionnée ou sous le curseur
+                if (tile.selected || tile.overviewed)
+                {
+                    // On affiche la texture "sélectionnée" sur cette tuile
+                    spriteBatch.Draw(contentManager.Textures["Mouseover"], new Vector2(tile.line * CurrentMap.tileSize, tile.column * CurrentMap.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
+                    // On reset le boolée "sous le curseur"
+                    tile.overviewed = false;
+                }
+
+            }
+            #endregion
+
             spriteBatch.End();
             
         }

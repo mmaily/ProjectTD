@@ -12,6 +12,7 @@ namespace DowerTefense.Commons.GameElements.Units
     /// </summary>
     public abstract class Entity : ISerializable
     {
+        protected GameTime gameTime;
         /// <summary>
         /// Prochaine tuile de destination de cette unité
         /// </summary>

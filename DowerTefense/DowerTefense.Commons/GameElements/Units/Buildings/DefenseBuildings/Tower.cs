@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using DowerTefense.Commons.GameElements.Projectiles;
 using DowerTefense.Commons.Units;
 using System.Runtime.Serialization;
+using LibrairieTropBien.GUI;
+using DowerTefense.Commons.Managers;
 
 namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 {
@@ -63,25 +65,26 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         {
             base.SetTile(_tile);
         }
-
-        public override void OnDuty()
+        #region ===Ancienne méthode OnDuty();===
+        //public override void OnDuty()
+        //{
+        //    base.OnDuty();
+        //    //Update sa liste de target, choisi sa cible principale et tire
+        //    Fire();
+        //    //Update la liste des projectiles
+        //    UpdateProjectileList();
+        //    //Update ses projectile pour checker les collisions
+        //    foreach (Projectile projectile in projectileList)
+        //    {
+        //        projectile.Update();
+        //    }
+        //}
+        #endregion
+        public void Update(GameTime _gameTime, List<Unit> mobs)
         {
-            base.OnDuty();
+            this.gameTime = _gameTime;
             //Update sa liste de target, choisi sa cible principale et tire
-            Fire();
-            //Update la liste des projectiles
-            UpdateProjectileList();
-            //Update ses projectile pour checker les collisions
-            foreach (Projectile projectile in projectileList)
-            {
-                projectile.Update();
-            }
-        }
-        public void Update()
-        {
-            base.OnDuty();
-            //Update sa liste de target, choisi sa cible principale et tire
-            Fire();
+            Fire(mobs);
             //Update la liste des projectiles
             UpdateProjectileList();
             //Update ses projectile pour checker les collisions
@@ -94,7 +97,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         {
             projectile.OnHit += new Projectile.HitHandler(RemoveBulletOnImpact);
         }
-
         private void RemoveBulletOnImpact(object sender, Projectile.OnHitEventArgs args)
         {
             idBulletRemoval = projectileList.IndexOf(args.proj);
@@ -103,13 +105,14 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             args.proj = null;
         }
         //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok
-        public Entity ChooseTarget()
+        public Entity ChooseTarget(List<Unit> mobs)
         {
 
             if (this.target == null || this.target.Dead || Vector2.Distance(this.Position, this.target.Position) > this.Range)
             {
                 target = null;
-                foreach (Entity unit in UnitsManager.GetInstance().GetSortedUnitList())
+                //TODO : Faire une liste intermédiaire selon le typede focus
+                foreach (Entity unit in UnitEngine.GetSortedUnitList(mobs))
                 {
                     if (Vector2.Distance(this.Position, unit.Position) < this.Range)
                         target = unit;
@@ -121,22 +124,22 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         }
         public Boolean CanFire()
         {
-            return BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1 / this.RateOfFire;
+            return gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1 / this.RateOfFire;
         }
-        public void Fire()
+        public void Fire(List<Unit> mobs)
         {
             if (CanFire())
             {
                 //Si le cooldown est bon, elle s'active, sinon c'est déjà fini pour elle
 
-                target = ChooseTarget();
+                target = ChooseTarget(mobs);
 
                 if (target != null)
                 {
 
 
                     //Enregistre le temps du dernier tir en ms
-                    LastShot = BuildingsManager.GetInstance().gameTime.TotalGameTime.TotalMilliseconds;
+                    LastShot = gameTime.TotalGameTime.TotalMilliseconds;
                     //Elle tire sur sa cible
 
                     Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, this.projectileName);
@@ -159,7 +162,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
                 }
             }
         }
-
         public List<Projectile> GetProjectileList()
         {
             return this.projectileList;

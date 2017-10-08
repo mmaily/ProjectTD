@@ -11,15 +11,15 @@ using DowerTefense.Game.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using C3.MonoGame;
-using DowerTefense.Game.GameElements;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using DowerTefense.Commons.GameElements;
 
 namespace DowerTefense.Game.Screens
 {
     class Editor : Screen
     {
-        public CustomContentManager contentManager;
+        
         #region === Variables liées à l'interface ===
         public Rectangle uiZone; //Zone de l'UI, avec les Tiles modèles, bouton pour vérifier la cohérence de la map
         public Rectangle tileZone; //Zone qui contient toutes les Tiles modèles
@@ -58,8 +58,6 @@ namespace DowerTefense.Game.Screens
             this.Graphics = _graphics;
             spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             uiZone = new Rectangle(0, 0, 200, 400);
-            //Charge le manager
-            this.contentManager = CustomContentManager.GetInstance();
 
             #region ===Interface===
             //On rempli toutes les cases avec les type de Tile existantes
@@ -110,8 +108,8 @@ namespace DowerTefense.Game.Screens
                 Tag = "reset"
 
             };
-            newButton.SetText("Reset", CustomContentManager.GetInstance().Fonts["font"]);
-            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.SetText("Reset", CustomContentManager.Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             //On sauve la map ou bien ?
@@ -121,8 +119,8 @@ namespace DowerTefense.Game.Screens
                 Tag = "saveMap"
 
             };
-            newButton.SetText("Save", CustomContentManager.GetInstance().Fonts["font"]);
-            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.SetText("Save", CustomContentManager.Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             //On charge une map ou bien ?
@@ -132,8 +130,8 @@ namespace DowerTefense.Game.Screens
                 Tag = "openMap"
 
             };
-            newButton.SetText("Open", CustomContentManager.GetInstance().Fonts["font"]);
-            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.SetText("Open", CustomContentManager.Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             //On retourne au menu ou bien ??!
@@ -143,8 +141,8 @@ namespace DowerTefense.Game.Screens
                 Tag = "back"
 
             };
-            newButton.SetText("Back", CustomContentManager.GetInstance().Fonts["font"]);
-            newButton.SetTexture(CustomContentManager.GetInstance().Textures[newButton.Name], false);
+            newButton.SetText("Back", CustomContentManager.Fonts["font"]);
+            newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
             newButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(newButton);
             #endregion
@@ -152,7 +150,6 @@ namespace DowerTefense.Game.Screens
         public override void LoadContent()
         {
             base.LoadContent();
-
         }
         private void Btn_OnClick(object sender, EventArgs e)
         {
@@ -172,7 +169,7 @@ namespace DowerTefense.Game.Screens
                         GenerateMap(openMap(mapName));
                         break;
                     case "back":
-                        ScreenManager.GetInstance().SelectScreen("EntranceScreen");
+                        ScreenManager.SelectScreen("EntranceScreen");
                         break;
                     default:
                         break;
@@ -197,12 +194,12 @@ namespace DowerTefense.Game.Screens
             foreach (Tile tile in modelTiles)
             {
                 // On affiche la texture correspondant à la nature de la carte
-                spriteBatch.Draw(contentManager.Textures[tile.TileType.ToString()], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                spriteBatch.Draw(CustomContentManager.Textures[tile.TileType.ToString()], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                 // Si cette tuile est sélectionnée ou sous le curseur
                 if (tile.selected || tile.overviewed)
                 {
                     // On affiche la texture "sélectionnée" sur cette tuile
-                    spriteBatch.Draw(contentManager.Textures["Mouseover"], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                    spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], tileZoneOffset + new Vector2(tile.column, tile.line) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                     // On reset le boolée "sous le curseur"
                     tile.overviewed = false;
                 }
@@ -216,20 +213,20 @@ namespace DowerTefense.Game.Screens
                 for (int k = 0; k < EditedMap.GetLength(1); k++)
                 {
                     // On affiche la texture correspondant à la nature de la carte
-                    spriteBatch.Draw(contentManager.Textures[EditedMap[j,k].TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                    spriteBatch.Draw(CustomContentManager.Textures[EditedMap[j,k].TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                     // Si cette tuile est sélectionnée ou sous le curseur
                     if (EditedMap[j, k].selected || EditedMap[j, k].overviewed)
                     {   
                         if (SelectedTile != null)
                         {
                             // On affiche la texture "sélectionnée" sur cette tuile
-                            spriteBatch.Draw(contentManager.Textures[SelectedTile.TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                            spriteBatch.Draw(CustomContentManager.Textures[SelectedTile.TileType.ToString()], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                             // On reset le boolée "sous le curseur"
                         }
                         else
                         {
                             // On affiche la texture "sélectionnée" sur cette tuile
-                            spriteBatch.Draw(contentManager.Textures["Mouseover"], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
+                            spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], mapZoneOffset + new Vector2(j, k) * tileSize, null, null, null, 0f, Vector2.One * 0.5f, Color.White);
                             // On reset le boolée "sous le curseur"
                         }
 
@@ -247,7 +244,7 @@ namespace DowerTefense.Game.Screens
             });
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.GetInstance().Textures["cursor"];
+            Texture2D fap = CustomContentManager.Textures["cursor"];
             spriteBatch.Draw(fap, lol, Color.White);
             #endregion
             //Gestion des Tiles modèles

@@ -18,12 +18,12 @@ namespace DowerTefense.Game.Managers
     {
 
         // Dictionnaire de textures
-        static Dictionary<String, Texture2D> Textures;
+        public static Dictionary<String, Texture2D> Textures;
         // Dictionnaire de polices
-        static Dictionary<String, SpriteFont> Fonts;
+        public static Dictionary<String, SpriteFont> Fonts;
         //Dictionnaire des couleurs
-        static Dictionary<String, Texture2D> Colors;
-        static byte textureSize;
+        public static Dictionary<String, Texture2D> Colors;
+        public static byte textureSize;
         //Content Managr parent
         static ContentManager contentManager;
 

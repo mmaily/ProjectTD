@@ -42,7 +42,7 @@ namespace DowerTefense.Commons.Units
         {
 
         }
-        public virtual void Update() { };
+        public virtual void Update() { }
 
         /// <summary>
         /// Récupération de la tuile de position

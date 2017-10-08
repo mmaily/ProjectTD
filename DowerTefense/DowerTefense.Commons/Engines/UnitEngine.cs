@@ -105,9 +105,9 @@ namespace DowerTefense.Commons.Managers
         /// </summary>
         /// <param name="_units">Liste des unités à trier</param>
         /// <returns>Liste des unités triées</returns>
-        public static List<Entity> GetSortedUnitList(List<Entity> _units)
+        public static List<Unit> GetSortedUnitList(List<Unit> _units)
         {
-            List<Entity> sortedList = _units.OrderBy(m => m.DistanceTraveled).ToList<Entity>();
+            List<Unit> sortedList = _units.OrderBy(m => m.DistanceTraveled).ToList<Unit>();
             return sortedList;
         }
 
