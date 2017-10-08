@@ -107,20 +107,20 @@ namespace DowerTefense.Game.Managers
 
 
             // Initialisation de la liste des éléments d'interface
-            UIElementsList = new List<GuiElement>(); UIElementsList = new List<GuiElement>();
+            UIElementsList = new List<GuiElement>();
             PopUp = new Dictionary<Button, InfoPopUp>();
             #region === Remplir le catalogue des unités de base==
             Dummies = new List<Building>();
             Building newBuilding;
             foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
             {
-               newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
+               newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
                //newBuilding.DeleteOnEventListener();
                Dummies.Add(newBuilding);
             }
             foreach (SpawnerBuilding.NameEnum spawn in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
             {
-                newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefenseGame.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
+                newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
                 //newBuilding.DeleteOnEventListener(); // On le "désactive" en le rendant désabonnant de son event listener d'action
                 Dummies.Add(newBuilding);
             }

@@ -55,12 +55,8 @@
       <Project>{6751A0F8-F676-4DF7-87F9-F06528F8C6B9}</Project>
       <Name>DowerTefense.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DowerTefense.Game\DowerTefense.Game.csproj">
-      <Project>{57F57672-F64C-47BA-93DB-9259832AB5E2}</Project>
-      <Name>DowerTefense.Game</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibrairieTropBien\LibrairieTropBien.csproj">
-      <Project>{A2A33BCD-10C9-45CA-920B-43869C71A68D}</Project>
+      <Project>{a2a33bcd-10c9-45ca-920b-43869c71a68d}</Project>
       <Name>LibrairieTropBien</Name>
     </ProjectReference>
   </ItemGroup>
