@@ -11,7 +11,7 @@ namespace DowerTefense.Server
     /// Source : https://docs.microsoft.com/en-us/dotnet/framework/network-programming/asynchronous-server-socket-example PUTAIN ENCORE UN TRUC NUL OMG
     /// Source 2 en fait : https://docs.microsoft.com/en-us/dotnet/framework/network-programming/using-tcp-services
     /// </summary>
-    public static class DowerTefense.Server
+    public static class DowerTefenseServer
     {
 
         /// <summary>
