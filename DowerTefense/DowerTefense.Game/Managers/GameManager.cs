@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DownerTefense.Game.Managers
+namespace DowerTefense.Game.Managers
 {
     /// <summary>
     /// Gestionnaire du jeu

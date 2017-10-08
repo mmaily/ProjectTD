@@ -10,7 +10,7 @@ using DowerTefense.Game.Multiplayer;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Commons.Units;
 
-namespace DownerTefense.Game.Translator
+namespace DowerTefense.Game.Translator
 {
     class ClientTranslator
     {

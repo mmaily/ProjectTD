@@ -10,7 +10,7 @@ using LibrairieTropBien.Network;
 using DowerTefense.Commons.GameElements;
 using DowerTefense.Commons;
 using System.Collections.Generic;
-using DownerTefense.Game.Translator;
+using DowerTefense.Game.Translator;
 
 namespace DowerTefense.Game.Screens
 {
