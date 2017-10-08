@@ -95,6 +95,9 @@ namespace DowerTefense.Commons
 
         public void Initialize()
         {
+            #region===Map===
+            map = new Map();
+            #endregion
             #region===Initialise le dictionnaire des changements===
             //Ces mini-dicionnaire contiennent l'objet qui à changé et son nom
             //De cette façon les Translators sont standardisés
@@ -136,7 +139,6 @@ namespace DowerTefense.Commons
             #region===Initialisation des listes Dummies===
             //SetSpawnerDictionnary();
             #endregion
-
             #region ===Initialisation des bâtiments===
             LockedBuildingsList = new List<SpawnerBuilding>();
             FreeBuildingsList = new List<SpawnerBuilding>();
@@ -147,7 +149,6 @@ namespace DowerTefense.Commons
             lastWaveTick = 0;
             waveCount = 0;
             tileSize = 8;
-            map = new Map();
             #endregion
             #region===Initialisation des Joueurs===
             defensePlayer = new DefensePlayer();

@@ -53,6 +53,7 @@ namespace DowerTefense.Game.Screens
         {
             #region Initialisation du jeu et des variables associée
             game = new GameEngine();
+            game.Initialize();
             map = game.map;
             #endregion
             #region Calcul de l'échelle de scaling selon taille des Tile
