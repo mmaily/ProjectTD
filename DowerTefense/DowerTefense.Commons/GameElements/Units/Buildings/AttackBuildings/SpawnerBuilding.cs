@@ -1,12 +1,11 @@
-﻿using DowerTefense.Commons.GameElements.Units;
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using LibrairieTropBien.GUI;
 using System.Runtime.Serialization;
-using DowerTefense.Commons.GameElements;
 using System.Collections.Generic;
+using DowerTefense.Commons.Units;
 
-namespace DowerTefense.Commons.Units.Buildings
+namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
 {
     [Serializable()]
     public class SpawnerBuilding : Building, ISerializable

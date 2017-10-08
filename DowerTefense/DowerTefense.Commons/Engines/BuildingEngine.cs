@@ -1,10 +1,4 @@
-﻿using DowerTefense.Commons.GameElements.Units;
-using DowerTefense.Commons.Units;
-using DowerTefense.Commons.Units.Buildings;
-using System;
-using System.Collections.Generic;
-
-namespace DowerTefense.Commons.Managers
+﻿namespace DowerTefense.Commons.Managers
 {
 
     /// <summary>

@@ -5,8 +5,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using DowerTefense.Commons.GameElements;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
-using DowerTefense.Commons.Units.Buildings;
 using DowerTefense.Commons.GameElements.Projectiles;
+using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 
 namespace DowerTefense.Game.Managers
 {

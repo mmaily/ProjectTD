@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using DowerTefense.Commons.Units.Buildings;
 using DowerTefense.Commons.Units;
 using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.Managers;
@@ -11,6 +10,7 @@ using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Game.Players;
 using DowerTefense.Commons.GameElements.Projectiles;
 using LibrairieTropBien.Network;
+using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 
 namespace DowerTefense.Commons
 {

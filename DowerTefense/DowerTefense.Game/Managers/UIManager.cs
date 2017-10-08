@@ -11,11 +11,12 @@ using System.Threading.Tasks;
 using LibrairieTropBien.Network.Game;
 using DowerTefense.Game.Multiplayer;
 using DowerTefense.Commons.GameElements;
-using DowerTefense.Commons.Units.Buildings;
 using DowerTefense.Commons.Units;
 using DowerTefense.Commons;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Commons.Managers;
+using System.Reflection;
+using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 
 namespace DowerTefense.Game.Managers
 {
@@ -41,7 +42,7 @@ namespace DowerTefense.Game.Managers
         private SpriteFont deFaultFont;
         // Décalage de l'interface
         public int leftUIOffset;
-        public Vector2 marginOffset = Vector2.One*5;
+        public Vector2 marginOffset = Vector2.One * 5;
         //Rectangle-zone pour l'ui
         public Rectangle zoneUi;
         private float imageRatio;
@@ -62,7 +63,7 @@ namespace DowerTefense.Game.Managers
         public List<GuiElement> UIElementsList;
         //Liste des boutons de la liste locked
         private List<Button> lockedButton;
-        private Dictionary<Button,InfoPopUp> PopUp;
+        private Dictionary<Button, InfoPopUp> PopUp;
         // Exception pour la barre de progression
         private ProgressBar progressBarWaves;
         #endregion
@@ -93,17 +94,17 @@ namespace DowerTefense.Game.Managers
             // Récupération du décalage gauche de l'interface
             currentMap = currentMap;
             mapOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
-            leftUIOffset = currentMap.mapWidth * currentMap.tileSize +(int)mapOffset.Y * 2;
+            leftUIOffset = currentMap.mapWidth * currentMap.tileSize + (int)mapOffset.Y * 2;
             //Création d'une zone pour l'ui
-            zoneUi = new Rectangle(leftUIOffset,(int)mapOffset.Y, 300, currentMap.mapHeight * currentMap.tileSize);
+            zoneUi = new Rectangle(leftUIOffset, (int)mapOffset.Y, 300, currentMap.mapHeight * currentMap.tileSize);
             //Calcule le facteur d'échelle entre les texture (en général 64px) sur la taille des Tiles
             this.imageRatio = (float)game.map.tileSize / (float)CustomContentManager.textureSize;
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.Fonts["font"];
             //Instanciation des joueurs
 
-             defensePlayer = game.defensePlayer;
-             attackPlayer = game.attackPlayer;
+            defensePlayer = game.defensePlayer;
+            attackPlayer = game.attackPlayer;
 
 
             // Initialisation de la liste des éléments d'interface
@@ -112,15 +113,16 @@ namespace DowerTefense.Game.Managers
             #region === Remplir le catalogue des unités de base==
             Dummies = new List<Building>();
             Building newBuilding;
+            
             foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
             {
-               newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
-               //newBuilding.DeleteOnEventListener();
-               Dummies.Add(newBuilding);
+                newBuilding = (Building)Activator.CreateInstance(Assembly.Load("DowerTefense.Commons").GetType("DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
+                //newBuilding.DeleteOnEventListener();
+                Dummies.Add(newBuilding);
             }
             foreach (SpawnerBuilding.NameEnum spawn in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
             {
-                newBuilding = (Building)Activator.CreateInstance(Type.GetType("DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
+                newBuilding = (Building)Activator.CreateInstance(Assembly.Load("DowerTefense.Commons").GetType("DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
                 //newBuilding.DeleteOnEventListener(); // On le "désactive" en le rendant désabonnant de son event listener d'action
                 Dummies.Add(newBuilding);
             }
@@ -205,18 +207,19 @@ namespace DowerTefense.Game.Managers
                 }
                 #endregion
                 #region Interface de composition d'armée
-                panel = new GuiElement(leftUIOffset,600, zoneUi.Width,300)
+                panel = new GuiElement(leftUIOffset, 600, zoneUi.Width, 300)
                 {
                     Name = "ArmyCompo",
                     Tag = "attackBuild",
-                    font= deFaultFont,
+                    font = deFaultFont,
                     texture = CustomContentManager.Colors["pixel"]
                 };
                 panel.setText("Lol");
                 UIElementsList.Add(panel);
                 #endregion
             }
-            if (role == PlayerRole.Debug){
+            if (role == PlayerRole.Debug)
+            {
                 // Bouton de changement de mode
                 Button btnMode = new Button(Graphics.PreferredBackBufferWidth - btnSize, 0, btnSize, btnSize)
                 {
@@ -303,7 +306,7 @@ namespace DowerTefense.Game.Managers
                 {
                     if (btn.Name.Equals("ModeSwitch"))
                     {
-                        if (mode.Equals("defense")|| mode.Equals("both"))
+                        if (mode.Equals("defense") || mode.Equals("both"))
                         {
                             mode = "attack";
                         }
@@ -329,20 +332,21 @@ namespace DowerTefense.Game.Managers
 
             // Mise à jour de l'état de la bar de vague
             progressBarWaves.State = game.timeSince;
-            
+
             // Mise à jour de tous les élémets d'interface
             Parallel.ForEach(UIElementsList, element =>
             {
-                if (element.GetType().Equals(typeof(InfoPopUp))){
+                if (element.GetType().Equals(typeof(InfoPopUp)))
+                {
                     element.Update();
                 }
                 // Si l'élément est de type bouton
-                if (element.GetType().Equals(typeof(Button)) && element.Tag == role+"Build")
+                if (element.GetType().Equals(typeof(Button)) && element.Tag == role + "Build")
                 {
                     // On récupère le bâtiment associé
                     Building building = Dummies.Find(b => b.name.Equals(element.Name));
                     // On regarde le role adopté, et grise les boutons soit
-                    if(role.Equals("defense") || role.Equals("both"))
+                    if (role.Equals("defense") || role.Equals("both"))
                     {
                         element.GreyedOut = (building.Cost <= defensePlayer.totalGold) ? false : true;
                     }
@@ -354,7 +358,7 @@ namespace DowerTefense.Game.Managers
                 //On update le bouton
                 element.Update();
                 //On update la popUp associée
-                if (element.PopUpAttached==true)
+                if (element.PopUpAttached == true)
                 {
                     PopUp[(Button)element].Enabled = element.Enabled;
                     PopUp[(Button)element].Update();
@@ -367,7 +371,7 @@ namespace DowerTefense.Game.Managers
                 PopUp[(Button)element].Update();
             });
             //Lock de la liste si newWave et attaquant
-            if(role == PlayerRole.Attacker && game.newWave == true)
+            if (role == PlayerRole.Attacker && game.newWave == true)
             {
                 CreateLockedList();
             }
@@ -465,7 +469,7 @@ namespace DowerTefense.Game.Managers
             int offset = 340;
             if (millisecPerFrame != 0)
             {
-                
+
                 _spriteBatch.DrawString(CustomContentManager.Fonts["font"], Math.Ceiling(1000 / (millisecPerFrame)).ToString(), new Vector2(leftUIOffset, offset), Color.White);
             }
             #endregion
@@ -618,7 +622,7 @@ namespace DowerTefense.Game.Managers
                 font = CustomContentManager.Fonts["font"],
                 texture = CustomContentManager.Colors["pixel"]
             };
-            PopUp.Add(btnBuild,info);
+            PopUp.Add(btnBuild, info);
             _building.SetInfoPopUp(info);
 
             ActiveList.Add(btnBuild, (SpawnerBuilding)_building);
@@ -649,7 +653,7 @@ namespace DowerTefense.Game.Managers
                     font = CustomContentManager.Fonts["font"],
                     texture = CustomContentManager.Colors["pixel"]
                 };
-                PopUp.Add(btnBuild,info);
+                PopUp.Add(btnBuild, info);
                 sp.SetInfoPopUp(info);
                 LockedList.Add(btnBuild, (SpawnerBuilding)sp);
             }
