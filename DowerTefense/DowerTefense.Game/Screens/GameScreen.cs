@@ -57,7 +57,6 @@ namespace DowerTefense.Game.Screens
 
             //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
-            //spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
 
             // Création de l'interface utilisateur
             uiManager = new UIManager(game);
@@ -83,17 +82,6 @@ namespace DowerTefense.Game.Screens
             {
                 orders.Add(message);
             }
-            //switch (message.Subject)
-            //{
-            //    case "towerUpdate":
-
-            //        BuildingsManager.GetInstance().WaitingForConstruction.Add((Tower)message.received);
-            //        break;
-            //    case "spawnerUpdate":
-
-            //        BuildingsManager.GetInstance().WaitingForConstruction.Add((SpawnerBuilding)message.received);
-            //        break;
-            //}
         }
 
 

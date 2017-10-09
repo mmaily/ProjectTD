@@ -43,12 +43,6 @@ namespace DowerTefense.Game.Screens
             Texture2D fap = CustomContentManager.Textures["cursor"];
             _spriteBatch.Draw(fap, lol, Color.White);
         }
-        public virtual void Draw(SpriteBatch spritebatch, Vector2 pos, Color col)
-        {
-        }
-        public virtual void Draw(SpriteBatch spritebatch, Vector2 pos, Color col, string _what)
-        {
-        }
         public virtual void Update(GameTime gameTime)
         {
         }

@@ -556,22 +556,20 @@ namespace DowerTefense.Game.Managers
             #endregion
 
             // Affichage de tous les éléments d'interface
-            Parallel.ForEach(UIElementsList, element =>
+            foreach (GuiElement element in UIElementsList)
             {
                 element.Draw(_spriteBatch);
-
-            });
+            }
             //Affichage des bouttons de la liste vérouillée qui part en guerre
-            Parallel.ForEach(lockedButton, element =>
+            foreach (GuiElement element in lockedButton)
             {
                 element.Draw(_spriteBatch);
-            });
+            }
             //Affichage des popUp en dernier
-            Parallel.ForEach(PopUp.Values, element =>
+            foreach (GuiElement element in PopUp.Values)
             {
                 element.Draw(_spriteBatch);
-
-            });
+            }
         }
 
         /// <summary>

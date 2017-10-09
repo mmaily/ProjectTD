@@ -56,7 +56,6 @@ namespace DowerTefense.Game.Screens
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
-            //spriteBatch = new SpriteBatch(Graphics.GraphicsDevice);
             uiZone = new Rectangle(0, 0, 200, 400);
 
             #region ===Interface===
@@ -181,15 +180,14 @@ namespace DowerTefense.Game.Screens
         {
             UpdateSelectedTileMap();
             UpdateSelectedTileModel();
-            Parallel.ForEach(UIElementsList, element =>
+            foreach (GuiElement element in UIElementsList)
             {
                 element.Update();
-            });
+            }
         }
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch);
-            _spriteBatch.Begin();
             #region ===Affichage des Tiles modèles===
             foreach (Tile tile in modelTiles)
             {
@@ -249,7 +247,6 @@ namespace DowerTefense.Game.Screens
             #endregion
             //Gestion des Tiles modèles
 
-            _spriteBatch.End();
 
 
         }
