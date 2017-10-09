@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using DowerTefense.Commons.Units;
 using DowerTefense.Commons.GameElements.Units;
@@ -11,6 +10,7 @@ using DowerTefense.Game.Players;
 using DowerTefense.Commons.GameElements.Projectiles;
 using LibrairieTropBien.Network;
 using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
+using LibrairieTropBien.GUI;
 
 namespace DowerTefense.Commons
 {
@@ -40,6 +40,7 @@ namespace DowerTefense.Commons
         /// Liste de construction en attente pour le prochain update
         /// </summary>
         public List<Building> WaitingForConstruction { get; set; }
+        public object CustomContentManager { get; private set; }
 
         #endregion
         // Projectiles===
@@ -217,37 +218,38 @@ namespace DowerTefense.Commons
             //Construire la liste des tours en attente
             foreach (Building bd in WaitingForConstruction)
             {
-                //// Retrait du coût du bâtiment
-                //if (bd.GetType() == typeof(Tower))
-                //{
-                //    bd.CreateOnEventListener();
-                //    InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * map.tileSize),
-                //                                        (int)((bd.GetTile().getTilePosition().Y - 0.5) * map.tileSize),
-                //                                        map.tileSize, map.tileSize))
-                //    {
-                //        Name = bd.GetType().ToString() + "Info",
-                //        Tag = "InfoPopUp",
-                //        font = CustomContentManager.GetInstance().Fonts["font"],
-                //        texture = CustomContentManager.GetInstance.Colors["pixel"],
-                //        Enabled = true
-                //    };
-                //    UIManager.GetInstance().UIElementsList.Add(info);
-                //    bd.SetInfoPopUp(info);
-                //    UIManager.GetInstance().defensePlayer.totalGold -= bd.Cost;
-                //}
-                //if (bd.GetType() == typeof(SpawnerBuilding))
-                //{
-                //    //On le cast en spawner pour appliquer les méthodes propres aux spawner
-                //    SpawnerBuilding spawner = (SpawnerBuilding)bd;
-                //    UIManager.GetInstance().attackPlayer.totalGold -= bd.Cost;
-                //    UIManager.GetInstance().UpdateBtnLists(spawner);
-                //    BuildingEngine.GetInstance().FreeBuildingsList.Add(spawner);
-                //    if (UIManager.GetInstance().attackPlayer.totalEnergy - UIManager.GetInstance().attackPlayer.usedEnergy >= (spawner.PowerNeeded))
-                //    {
-                //        spawner.powered = true;
-                //        UIManager.GetInstance().attackPlayer.usedEnergy += spawner.PowerNeeded;
-                //    }
-                //}
+                // Retrait du coût du bâtiment
+                if (bd.GetType() == typeof(Tower))
+                {
+                    //InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * map.tileSize),
+                    //                                    (int)((bd.GetTile().getTilePosition().Y - 0.5) * map.tileSize),
+                    //                                    map.tileSize, map.tileSize))
+                    //{
+                    //    Name = bd.GetType().ToString() + "Info",
+                    //    Tag = "InfoPopUp",
+                    //    font = CustomContentManager.GetInstance().Fonts["font"],
+                    //    texture = CustomContentManager.GetInstance.Colors["pixel"],
+                    //    Enabled = true
+                    //};
+                    //UIManager.UIElementsList.Add(info);
+                    //bd.SetInfoPopUp(info);
+                    defensePlayer.totalGold -= bd.Cost;
+                    DefenseBuildingsList.Add(bd);
+                    Changes[DDefenseBuildingsList] = true;
+                }
+                if (bd.GetType() == typeof(SpawnerBuilding))
+                {
+                    //On le cast en spawner pour appliquer les méthodes propres aux spawner
+                    SpawnerBuilding spawner = (SpawnerBuilding)bd;
+                    attackPlayer.totalGold -= bd.Cost;
+                    FreeBuildingsList.Add(spawner);
+                    if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawner.PowerNeeded))
+                    {
+                        spawner.powered = true;
+                        attackPlayer.usedEnergy += spawner.PowerNeeded;
+                    }
+                    Changes[DFreeBuildingsList] = true;
+                }
 
             }
             //Une fois traitée, on vide les éléments de la waiting List

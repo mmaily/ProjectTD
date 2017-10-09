@@ -261,13 +261,14 @@ namespace DowerTefense.Game.Managers
                         && SelectedTile.building == null
                         && (building.Cost <= defensePlayer.totalGold))
                     {
+                        // C'est bon !
+                        // Copie du bâtiment à construire
                         building = (Tower)building.DeepCopy();
+                        // Installation sur la tuile
                         building.SetTile(SelectedTile, game.map);
                         // Ajout à la liste des bâtiments
-                        game.WaitingForConstruction.Add(building);
-                        //On signale le changement dans le log
-                        //TODO : A un moment il faut clear la liste WaitingFrConstruction
-                        game.Changes[game.DWaitingForConstruction] = true;
+                        // Envoi au serveur
+                        MultiplayerManager.Send("newBuilding", building);
                     }
                 }
                 // Si le bouton est une construction attaque
@@ -278,7 +279,7 @@ namespace DowerTefense.Game.Managers
                     if (building.Cost <= attackPlayer.totalGold)
                     {
                         SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.DeepCopy();
-                        MultiplayerManager.Send("spawnerUpdate", building);
+                        MultiplayerManager.Send("newBuilding", building);
                     }
                 }
                 #region ===Gestion de l'appui sur les boutons de l'attaquant sur sa liste active===

@@ -59,7 +59,7 @@ namespace DowerTefense.Commons.Units
         {
             tile = _tile;
             // On informe la tuile qu'un bâtiment est dessus
-            tile.building = this;
+            //tile.building = this;
             this.Position = tile.getTilePosition() * map.tileSize;
         }
         public virtual void SetInfoPopUp(InfoPopUp _info) { }

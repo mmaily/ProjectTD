@@ -42,6 +42,12 @@ namespace DowerTefense.Server.Elements
                     //TODO : Gérer la différenciation entre Tower et Spawning
                     game.DefenseBuildingsList.AddRange((List<Building>)message.received);
                     break;
+                case "newBuilding":
+                    // Réception d'un nouveau bâtiment
+                    game.WaitingForConstruction.Add((Building)message.received);
+                    break;
+                default:
+                    break;
             }
 
         }
