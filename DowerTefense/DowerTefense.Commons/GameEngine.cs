@@ -17,7 +17,7 @@ namespace DowerTefense.Commons
     /// <summary>
     /// Jeu proprement dit
     /// </summary>
-    public class GameEngine : Microsoft.Xna.Framework.Game
+    public class GameEngine
     {
         #region Dictionaire dummies
         public Dictionary<string, string> UnitSpawned { get; private set; }
@@ -42,9 +42,8 @@ namespace DowerTefense.Commons
         public List<Building> WaitingForConstruction { get; set; }
 
         #endregion
-        #region===Projectiles===
+        // Projectiles===
         public List<Projectile> projectiles;
-        #endregion
         #region ===Unités
         public bool newWave;
         public int timeSince;
