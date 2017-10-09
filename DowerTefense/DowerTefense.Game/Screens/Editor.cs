@@ -236,10 +236,10 @@ namespace DowerTefense.Game.Screens
 
             #endregion
             #region Affiche l'interface et le curseur
-            Parallel.ForEach(UIElementsList, element =>
+            foreach (GuiElement element in UIElementsList)
             {
                 element.Draw(_spriteBatch);
-            });
+            }
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
             Texture2D fap = CustomContentManager.Textures["cursor"];

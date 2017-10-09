@@ -48,7 +48,7 @@ namespace DowerTefense.Server.Elements
     
     public static void SendGameUpdate(Dictionary<Dictionary<String, object>, bool> Changes, ref Dictionary<Client, Player> clients)
         {
-            Parallel.ForEach(clients.Keys, c =>
+            foreach(Client c in clients.Keys)
             {
                 //Si dans le dictionnaire il y un objet qui a la valeur True, alors il a changé et on l'envoie aux clients
                 //Là attention, il y a un Dictionnaire qui contient des dictionnaires. Les sous dictionnaire contiennent
@@ -64,7 +64,7 @@ namespace DowerTefense.Server.Elements
 
                 }
 
-            });
+            }
 
         }
     }

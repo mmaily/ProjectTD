@@ -93,6 +93,18 @@ namespace DowerTefense.Game.Screens
         {
         }
 
+        int lol = 0;
+
+        public override void Draw(SpriteBatch _spriteBatch)
+        {         
+            // Affichage de l'interface
+            uiManager.Draw(_spriteBatch);
+
+            _spriteBatch.DrawString(CustomContentManager.Fonts["font"], "LOLILOL", new Vector2(lol++, lol++), Color.White);
+
+            base.Draw(_spriteBatch);
+        }
+
         /// <summary>
         /// Mise à jour du jeu
         /// </summary>
@@ -111,15 +123,9 @@ namespace DowerTefense.Game.Screens
             // Envoi des modifications
             ClientTranslator.SendGameUpdate(game.Changes);
 
+            lol = lol > 100 ? 0 : lol;
         }
 
-        public override void Draw(SpriteBatch _spriteBatch)
-        {         
-            // Affichage de l'interface
-            uiManager.Draw(_spriteBatch);
-
-            base.Draw(_spriteBatch);
-        }
     }
         
 

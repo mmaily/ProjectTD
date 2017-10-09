@@ -108,10 +108,10 @@ namespace DowerTefense.Game.Screens
         /// <param name="_gameTime"></param>
         public override void Update(GameTime _gameTime)
         {
-            Parallel.ForEach(UIElementsList, element =>
+            foreach (GuiElement element in UIElementsList)
             {
                 element.Update();
-            });
+            }
             TreatMessages();
         }
 
@@ -166,10 +166,10 @@ namespace DowerTefense.Game.Screens
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch);
-            Parallel.ForEach(UIElementsList, element =>
+            foreach (GuiElement element in UIElementsList)
             {
                 element.Draw(_spriteBatch);
-            });
+            }
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
             Texture2D fap = CustomContentManager.Textures["cursor"];

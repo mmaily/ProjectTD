@@ -24,12 +24,12 @@ namespace DowerTefense.Server.Servers
         {
             // Récupération de la liste des clients
             this.clients = _clients;
-            Parallel.ForEach(clients, c =>
+            foreach (Client c in clients.Keys)
             {
                 // Changement du callback
-                c.Key.ReceiveDataCallback = this.OnReiceivedData;
-                c.Key.SetupReceiveCallback(this);
-            });
+                c.ReceiveDataCallback = this.OnReiceivedData;
+                c.SetupReceiveCallback(this);
+            }
             Requests = new List<Message>();
             // Création du jeu, on lui file client et liste des requêtes
             using (var game = new GameManager(clients, ref Requests))

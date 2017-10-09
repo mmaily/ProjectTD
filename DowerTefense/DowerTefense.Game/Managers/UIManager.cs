@@ -117,7 +117,7 @@ namespace DowerTefense.Game.Managers
             #region === Remplir le catalogue des unités de base==
             Dummies = new List<Building>();
             Building newBuilding;
-            
+
             foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
             {
                 newBuilding = (Building)Activator.CreateInstance(Assembly.Load("DowerTefense.Commons").GetType("DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
@@ -329,7 +329,7 @@ namespace DowerTefense.Game.Managers
             progressBarWaves.State = game.timeSince;
 
             // Mise à jour de tous les élémets d'interface
-            Parallel.ForEach(UIElementsList, element =>
+            foreach (GuiElement element in UIElementsList)
             {
                 if (element.GetType().Equals(typeof(InfoPopUp)))
                 {
@@ -359,12 +359,14 @@ namespace DowerTefense.Game.Managers
                     PopUp[(Button)element].Update();
 
                 }
-            });
-            Parallel.ForEach(lockedButton, element =>
+            }
+
+            foreach (Button element in lockedButton)
             {
                 PopUp[(Button)element].Enabled = element.Enabled;
                 PopUp[(Button)element].Update();
-            });
+            }
+
             //Lock de la liste si newWave et attaquant
             if (role == PlayerRole.Attacker && game.newWave == true)
             {
@@ -432,6 +434,7 @@ namespace DowerTefense.Game.Managers
             #endregion
         }
 
+
         /// <summary>
         /// Affichage de l'interface
         /// </summary>
@@ -439,7 +442,6 @@ namespace DowerTefense.Game.Managers
         public void Draw(SpriteBatch _spriteBatch)
         {
             #region === Affichage map ===
-
 
             // Pour chaque tuile de la carte
             foreach (Tile tile in game.map.Tiles)
@@ -456,11 +458,13 @@ namespace DowerTefense.Game.Managers
                 }
 
             }
+
             #endregion
-            #region ==Rectangle droite contenant l'ui==
+
+            // Rectangle droite contenant l'ui
             _spriteBatch.Draw(CustomContentManager.Colors["pixel"], zoneUi, Color.Purple);
-            #endregion
-            #region==Frames/seconde===
+
+            #region == Frames/seconde ==
             int offset = 340;
             if (millisecPerFrame != 0)
             {
@@ -529,7 +533,7 @@ namespace DowerTefense.Game.Managers
             // Récupération de tous les éléments liés à la construction en défense
             List<GuiElement> buildElements = UIElementsList.FindAll(element => element.Tag.Equals("defenseBuild"));
             // Activation de tous les éléments d'inteface liés à la construction en défense
-            Parallel.ForEach(buildElements, element =>
+            foreach (GuiElement element in buildElements)
             {
                 if (SelectedTile != null)
                 {
@@ -539,20 +543,17 @@ namespace DowerTefense.Game.Managers
                     }
                 }//Si une tile est séléctionné+mode défense le booléen passe true
                 element.Enabled = drawButton;
-
-            });
+            }
             buildElements = UIElementsList.FindAll(element => element.Tag.Equals("attackBuild"));
             drawButton = false;
-            Parallel.ForEach(buildElements, element =>
+            foreach (GuiElement element in buildElements)
             {
-
                 if (mode.Equals("attack"))
                 {
                     drawButton = true;
                 }
                 element.Enabled = drawButton;
-
-            });
+            }
             #endregion
 
             // Affichage de tous les éléments d'interface

@@ -200,12 +200,12 @@ namespace DowerTefense.Commons
             #endregion
             #region ===Update des tours et liste de projectile ===
             projectiles.Clear();
-            Parallel.ForEach(DefenseBuildingsList, tower =>
+            foreach (Building tower in DefenseBuildingsList)
             {
                 Tower t = (Tower)tower;
                 t.Update(gameTime, mobs);
                 projectiles.AddRange(t.projectileList);
-            });
+            }
             #endregion
             #region===Lock des spawner===
             if (newWave == true)

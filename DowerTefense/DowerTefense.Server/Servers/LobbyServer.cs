@@ -68,13 +68,13 @@ namespace DowerTefense.Server.Servers
             _client.Send("playerUpdate", newPlayer);
 
             // Pour tous les joueurs déjà présents
-            Parallel.ForEach(clients, other =>
+            foreach (KeyValuePair<Client, Player> other in clients)
             {
                 // Info du nouveau joueur
                 other.Key.Send("playerUpdate", newPlayer);
                 // Info des joueurs déjà présents
                 _client.Send("playerUpdate", other.Value);
-            });
+            }
 
             // Ajout du joueur
             clients.Add(_client, newPlayer);
@@ -90,10 +90,10 @@ namespace DowerTefense.Server.Servers
             // Retrait du client
             clients.Remove(_client);
             // Pour tous les autres, info du départ
-            Parallel.ForEach(clients, other =>
+            foreach (Client other in clients.Keys)
             {
-                other.Key.Send("removeOpponant", _client.Name);
-            });
+                other.Send("removeOpponant", _client.Name);
+            }
         }
 
         /// <summary>
@@ -126,22 +126,22 @@ namespace DowerTefense.Server.Servers
             bool allReady = true;
 
             // Pour tous les clients
-            Parallel.ForEach(clients, other =>
+            foreach (KeyValuePair<Client, Player> other in clients)
             {
                 // Info de la modification
                 other.Key.Send("playerUpdate", clients[_clientModified]);
                 // On regarde l'état prêt
                 allReady = allReady && other.Value.Ready;
-            });
+            }
 
             // Si tout le monde est prêt
             if (allReady)
             {
-                Parallel.ForEach(clients, c =>
+                foreach (Client c in clients.Keys)
                 {
                     // Lancement du jeu
-                    c.Key.Send("game", "starting");
-                });
+                    c.Send("game", "starting");
+                }
 
                 GameServer gameServer = new GameServer(clients);
             }
