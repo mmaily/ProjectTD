@@ -266,9 +266,11 @@ namespace DowerTefense.Game.Managers
                         building = (Tower)building.DeepCopy();
                         // Installation sur la tuile
                         building.SetTile(SelectedTile, game.map);
+                        game.WaitingForConstruction.Add(building);
+                        game.Changes[game.DWaitingForConstruction] = true;
                         // Ajout à la liste des bâtiments
                         // Envoi au serveur
-                        MultiplayerManager.Send("newBuilding", building);
+                        //MultiplayerManager.Send("newBuilding", building);
                     }
                 }
                 // Si le bouton est une construction attaque

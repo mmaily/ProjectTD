@@ -38,6 +38,9 @@ namespace DowerTefense.Game.Translator
                 case "DdefenseList":
                     game.DefenseBuildingsList= (List<Building>)message.received;
                     break;
+                case "WaitingForConstruction":
+                    game.DefenseBuildingsList = (List<Building>)message.received;
+                    break;
             }
         }
 
@@ -53,6 +56,29 @@ namespace DowerTefense.Game.Translator
                 {
                     //Les sous dictionnaires sont définis dans le GameEngine
                     MultiplayerManager.Send(underDic.Key, underDic.Value);
+                }
+
+            }
+        }
+        public static void AutoGameUpdate(Dictionary<Dictionary<String, object>, bool> Changes, ref List<Message> orders)
+        {
+            //Si dans le dictionnaire il y un objet qui a la valeur True, alors il a changé et on l'envoie aux clients
+            //Là attention, il y a un Dictionnaire qui contient des dictionnaires. Les sous dictionnaire contiennent
+            //la paire objet/nom de l'objet, et ce mini-dictionnaire est associé à un boolean pour savoir si ça a changé
+            Message message;
+            Dictionary < String, object> underdic;
+            foreach (var dic in Changes.Where(pair => pair.Value == true))
+            {
+                underdic = dic.Key;
+                //Une fois qu'on a trouvé les changement, on extrait les paires objet/nom et on se les auto-envoi
+                // C'est à dire on les place dans la list orders
+                foreach (var minidic in underdic.Where(pair => pair.Value !=null))
+                {
+                    message = new Message(minidic.Key, minidic.Value);
+                    lock (orders)
+                    {
+                        orders.Add(message);
+                    }
                 }
 
             }

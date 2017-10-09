@@ -100,7 +100,7 @@ namespace DowerTefense.Game.Screens
             // Affichage de l'interface
             uiManager.Draw(_spriteBatch);
 
-            _spriteBatch.DrawString(CustomContentManager.Fonts["font"], "LOLILOL", new Vector2(lol++, lol++), Color.White);
+            //_spriteBatch.DrawString(CustomContentManager.Fonts["font"], "LOLILOL", new Vector2(lol++, lol++), Color.White);
 
             base.Draw(_spriteBatch);
         }
@@ -119,9 +119,17 @@ namespace DowerTefense.Game.Screens
 
             // Mise à jour du gestionnaire d'interface
             uiManager.Update(_gameTime);
+            if (vsAI == false)
+            {
+                // Envoi des modifications au serveur
+                ClientTranslator.SendGameUpdate(game.Changes);
+            }
+            else
+            {
+                //Envoie des info a sois-même avec un méthode Translator spéciale
+                ClientTranslator.AutoGameUpdate(game.Changes, ref orders);
+            }
 
-            // Envoi des modifications
-            ClientTranslator.SendGameUpdate(game.Changes);
 
             lol = lol > 100 ? 0 : lol;
         }

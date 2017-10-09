@@ -98,6 +98,12 @@ namespace DowerTefense.Commons
             #region===Map===
             map = new Map();
             #endregion
+            #region ===Initialisation des bâtiments===
+            LockedBuildingsList = new List<SpawnerBuilding>();
+            FreeBuildingsList = new List<SpawnerBuilding>();
+            DefenseBuildingsList = new List<Building>();
+            WaitingForConstruction = new List<Building>();
+            #endregion
             #region===Initialise le dictionnaire des changements===
             //Ces mini-dicionnaire contiennent l'objet qui à changé et son nom
             //De cette façon les Translators sont standardisés
@@ -139,18 +145,13 @@ namespace DowerTefense.Commons
             #region===Initialisation des listes Dummies===
             //SetSpawnerDictionnary();
             #endregion
-            #region ===Initialisation des bâtiments===
-            LockedBuildingsList = new List<SpawnerBuilding>();
-            FreeBuildingsList = new List<SpawnerBuilding>();
-            DefenseBuildingsList = new List<Building>();
-            WaitingForConstruction = new List<Building>();
-            #endregion
             #region===Initialisation des unités, projectiles et vagues===
             mobs = new List<Unit>();
             projectiles = new List<Projectile>();
             lastWaveTick = 0;
             waveCount = 0;
             tileSize = 8;
+            waveLength = 30 * 1000;
             #endregion
             #region===Initialisation des Joueurs===
             defensePlayer = new DefensePlayer();
@@ -169,7 +170,6 @@ namespace DowerTefense.Commons
             //TODO : Boucle assez lourde... Peut être multitread si ça ralentit
             Changes = new Dictionary<Dictionary<string, object>, bool>(Initial);
             #endregion
-
             #region === Calcul des vagues ===
 
             // Calcul du cycle de 30 secondes

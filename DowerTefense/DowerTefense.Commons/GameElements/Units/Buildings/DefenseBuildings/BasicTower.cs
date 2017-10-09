@@ -2,16 +2,19 @@
 using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.Managers;
 using System;
+using System.Runtime.Serialization;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using DowerTefense.Commons.GameElements.Projectiles;
+using LibrairieTropBien.SerializableObjects;
 
 namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 {
+    [Serializable()]
     /// <summary>
     /// Tour de base
     /// </summary>
-    public class BasicTower : Tower
+    public class BasicTower : Tower, ISerializable
     {
         /// <summary>
         /// Constructeur

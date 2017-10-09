@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.Serialization;
+using LibrairieTropBien.SerializableObjects;
 
 namespace DowerTefense.Commons.GameElements.Units
 {
@@ -23,7 +24,7 @@ namespace DowerTefense.Commons.GameElements.Units
         public string name{ get; set; }
         /// Position de l'unité
         /// </summary>
-        public Vector2 Position { get; protected set; }
+        public SVector2 Position { get; protected set; }
         /// <summary>
         /// Type de l'unité (défaut : None)
         /// </summary>

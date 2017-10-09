@@ -7,6 +7,7 @@ using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.GameElements.Projectiles;
 using System.Linq;
 using LibrairieTropBien.Network;
+using LibrairieTropBien.SerializableObjects;
 
 namespace DowerTefense.Commons.Managers
 {
