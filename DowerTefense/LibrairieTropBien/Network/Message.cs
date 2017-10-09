@@ -16,6 +16,9 @@ namespace LibrairieTropBien.Network
         public byte[] Data { get; set; }
         // objet reçu
         [System.NonSerialized] public object received;
+        // objet envoyé
+        [System.NonSerialized] public object send;
+
 
         /// <summary>
         /// Génère un message à partir d'un objet
@@ -25,6 +28,9 @@ namespace LibrairieTropBien.Network
         {
             // Enregistrement du sujet du message
             this.Subject = _subject;
+
+            // Enregistrement de l'objet envoyé
+            this.send = _object;
 
             // Transformation de l'objet en array
             using (var memoryStream = new MemoryStream())
