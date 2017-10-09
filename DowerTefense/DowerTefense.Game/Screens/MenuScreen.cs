@@ -9,14 +9,14 @@ using LibrairieTropBien.Network;
 
 namespace DowerTefense.Game.Screens
 {
-    class EntranceScreen : Screen
+    class MenuScreen : Screen
     {
         // Bouton de connexion au service
         private Button connectionButton;
         /// <summary>
         /// Constructeur de l'écran d'acceuil
         /// </summary>
-        public EntranceScreen()
+        public MenuScreen()
         {
 
         }

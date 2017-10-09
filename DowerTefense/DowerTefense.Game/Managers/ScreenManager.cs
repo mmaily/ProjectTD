@@ -31,7 +31,7 @@ namespace DowerTefense.Game.Screens
             // Instance du gestionnaire d'écran
         //Dictionnaire des Screen
             Screens = new Dictionary<String, Screen>();
-            Screens.Add("EntranceScreen", new EntranceScreen());
+            Screens.Add("MenuScreen", new MenuScreen());
             Screens.Add("GameScreen", new GameScreen());
             Screens.Add("Editor", new Editor());
             Screens.Add("Lobby", new LobbyScreen());
