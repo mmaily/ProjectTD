@@ -54,7 +54,7 @@ namespace LibrairieTropBien.SerializableObjects
         /// <returns></returns>
         public static implicit operator Vector2(SVector2 rValue)
         {
-            return new SVector2(rValue.X, rValue.X);
+            return new Vector2(rValue.X, rValue.Y);
         }
 
         /// <summary>
