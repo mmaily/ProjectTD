@@ -1,5 +1,6 @@
 ﻿using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.Units;
+using LibrairieTropBien.SerializableObjects;
 using Microsoft.Xna.Framework;
 using System;
 using System.Runtime.Serialization;

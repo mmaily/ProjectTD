@@ -32,7 +32,7 @@ namespace DowerTefense.Server.Elements
         //Méthode qui transforme le message en action sur le jeu
     public static void Translate(ref GameEngine game, Message message)
         {
-            //TODO : faire tous les cas qui intéressent le serveur
+            //TODO : faire tous les cas qui intéressent le serveur INGAME
             switch (message.Subject)
             {
                 case "DdefenseList":

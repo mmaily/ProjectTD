@@ -20,7 +20,9 @@ namespace DowerTefense.Commons
     public class GameEngine
     {
         #region Dictionaire dummies
+
         public Dictionary<string, string> UnitSpawned { get; private set; }
+        public List<Building> Dummies { get;  set; }
         #endregion
         #region === Buildings ===
 
@@ -77,7 +79,7 @@ namespace DowerTefense.Commons
 
         public Dictionary<String, object> DFreeBuildingsList;
 
-        public Dictionary<String, object> DWaitingForConstruction;
+        public Dictionary<String, object> DBuildingWaiting;
 
         public Dictionary<String, object> Dmobs;
         #endregion
@@ -125,8 +127,8 @@ namespace DowerTefense.Commons
             DFreeBuildingsList = new Dictionary<String, object>();
             DFreeBuildingsList.Add("FreeBuildingsList", FreeBuildingsList);
 
-            DWaitingForConstruction = new Dictionary<String, object>();
-            DWaitingForConstruction.Add("WaitingForConstruction", WaitingForConstruction);
+            DBuildingWaiting = new Dictionary<String, object>();
+            DBuildingWaiting.Add("newTower", null);
 
             Dmobs = new Dictionary<String, object>();
             Dmobs.Add("mobs", Dmobs);
@@ -138,7 +140,7 @@ namespace DowerTefense.Commons
             Changes.Add(DDefenseBuildingsList, false);
             Changes.Add(Dprojectiles, false);
             Changes.Add(DFreeBuildingsList, false);
-            Changes.Add(DWaitingForConstruction, false);
+            Changes.Add(DBuildingWaiting, false);
             Changes.Add(Dmobs, false);
             Initial = new Dictionary<Dictionary<string, object>, bool>(Changes);
             #endregion

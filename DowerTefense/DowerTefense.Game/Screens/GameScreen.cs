@@ -9,6 +9,10 @@ using LibrairieTropBien.Network;
 using DowerTefense.Commons;
 using DowerTefense.Commons.GameElements;
 using DowerTefense.Game.Translator;
+using DowerTefense.Commons.Units;
+using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
+using System.Reflection;
+using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 
 namespace DowerTefense.Game.Screens
 {
@@ -32,9 +36,12 @@ namespace DowerTefense.Game.Screens
         public PlayerRole role = PlayerRole.Debug;
 
         //Faire jouer l'AI
-        private Boolean vsAI = false;
-        public bool VsAI { get => vsAI; set => vsAI = value; }
+        private Boolean vsAI = true;
+        private bool loaded=false;
 
+        public bool VsAI { get => vsAI; set => vsAI = value; }
+        public List<Building> Dummies { get; private set; }
+        
         /// <summary>
         /// Constructeur principal
         /// </summary>
@@ -57,12 +64,10 @@ namespace DowerTefense.Game.Screens
 
             //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
-
             // Création de l'interface utilisateur
             uiManager = new UIManager(game);
             uiManager.SetRole(role);
             uiManager.Initialize(_graphics);
-
             // Init de l'UI
             Graphics.PreferredBackBufferHeight = (map.mapHeight) * map.tileSize+topMargin*2;
             Graphics.PreferredBackBufferWidth = (map.mapWidth ) * map.tileSize + uiManager.zoneUi.Width+leftMargin*2;
@@ -70,6 +75,7 @@ namespace DowerTefense.Game.Screens
 
             // Abonnement aux mises à jour du jeu
             MultiplayerManager.GameUpdate += this.GameUpdate;
+
         }
 
         /// <summary>
@@ -78,10 +84,22 @@ namespace DowerTefense.Game.Screens
         /// <param name="message"></param>
         private void GameUpdate(Message message)
         {
-            lock (orders)
+            switch (message.Subject)
             {
-                orders.Add(message);
+                case "DummiesList":
+                    game.Dummies = (List<Building>)message.received;
+                    break;
+                default:
+
+                    //Evenements Ingame
+                    lock (orders)
+                    {
+                        orders.Add(message);
+                    }
+                    break;
+
             }
+
         }
 
 
@@ -91,19 +109,33 @@ namespace DowerTefense.Game.Screens
         /// </summary>
         public override void LoadContent()
         {
+            if (vsAI == true)
+            {
+                #region === Remplir le catalogue des unités de base OFFLINE==
+                Dummies = new List<Building>();
+                Building newBuilding;
+
+                foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
+                {
+                    newBuilding = (Building)Activator.CreateInstance(Assembly.Load("DowerTefense.Commons").GetType("DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
+                    //newBuilding.DeleteOnEventListener();
+                    Dummies.Add(newBuilding);
+                }
+                foreach (SpawnerBuilding.NameEnum spawn in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
+                {
+                    newBuilding = (Building)Activator.CreateInstance(Assembly.Load("DowerTefense.Commons").GetType("DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
+                    //newBuilding.DeleteOnEventListener(); // On le "désactive" en le rendant désabonnant de son event listener d'action
+                    Dummies.Add(newBuilding);
+                }
+                #endregion
+            }
+            else
+            {
+                MultiplayerManager.Send("DummiesRequest", "");
+            }
         }
 
-        int lol = 0;
 
-        public override void Draw(SpriteBatch _spriteBatch)
-        {         
-            // Affichage de l'interface
-            uiManager.Draw(_spriteBatch);
-
-            //_spriteBatch.DrawString(CustomContentManager.Fonts["font"], "LOLILOL", new Vector2(lol++, lol++), Color.White);
-
-            base.Draw(_spriteBatch);
-        }
 
         /// <summary>
         /// Mise à jour du jeu
@@ -111,29 +143,52 @@ namespace DowerTefense.Game.Screens
         /// <param name="_gameTime"></param>
         public override void Update(GameTime _gameTime)
         {
-            //Update en fonction des ordres du serveur, et clear automatique de la liste d'ordres
-            ClientTranslator.UpdateGame(ref game, ref orders);
             
-            //Update du jeu en interne
-            game.Update(_gameTime);
-
-            // Mise à jour du gestionnaire d'interface
-            uiManager.Update(_gameTime);
-            if (vsAI == false)
+            if (Dummies != null && !loaded)
             {
-                // Envoi des modifications au serveur
-                ClientTranslator.SendGameUpdate(game.Changes);
+                if (Dummies.Count != 0)
+                {
+                    //
+                    uiManager.LoadContent(Dummies);
+                    loaded = true;
+                }
             }
-            else
+            if (loaded)
             {
-                //Envoie des info a sois-même avec un méthode Translator spéciale
-                ClientTranslator.AutoGameUpdate(game.Changes, ref orders);
+                //Update en fonction des ordres du serveur, et clear automatique de la liste d'ordres
+                ClientTranslator.UpdateGame(ref game, ref orders, VsAI);
+
+                //Update du jeu en interne
+                game.Update(_gameTime);
+
+                // Mise à jour du gestionnaire d'interface
+                uiManager.Update(_gameTime);
+                if (vsAI == false)
+                {
+                    // Envoi des modifications au serveur
+                    ClientTranslator.SendGameUpdate(game.Changes);
+                }
+                else
+                {
+                    //Envoie des info a sois-même avec un méthode Translator spéciale
+                    ClientTranslator.AutoGameUpdate(game.Changes, ref orders);
+                }
             }
-
-
-            lol = lol > 100 ? 0 : lol;
+           
         }
+        public override void Draw(SpriteBatch _spriteBatch)
+        {
+            if (loaded)
+            {
+                // Affichage de l'interface
+                uiManager.Draw(_spriteBatch);
+            }
 
+
+            //_spriteBatch.DrawString(CustomContentManager.Fonts["font"], "LOLILOL", new Vector2(lol++, lol++), Color.White);
+
+            base.Draw(_spriteBatch);
+        }
     }
         
 

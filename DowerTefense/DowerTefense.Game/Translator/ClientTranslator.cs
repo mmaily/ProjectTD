@@ -17,31 +17,49 @@ namespace DowerTefense.Game.Translator
         //On envoie la liste des requêtes et on les traites une par une. 
         //Au final on fait une première update du Jeu en fonction des requêtes avant l'Update de la mécanique interne
         //On clear la liste des request à la fin
-        public static void UpdateGame(ref GameEngine game, ref List<Message> orders)
+        public static void UpdateGame(ref GameEngine game, ref List<Message> orders, Boolean vsAi)
         {
             lock (orders)
             {
                 foreach (Message message in orders)
                 {
-                    Translate(ref game, message);
+                    Translate(ref game, message, vsAi);
                 }
                 orders.Clear();
             }
         }
 
         //Méthode qui transforme le message en action sur le jeu
-        public static void Translate(ref GameEngine game, Message message)
+        public static void Translate(ref GameEngine game, Message message,Boolean vsAi)
         {
-            //TODO : faire tous les cas qui intéressent les Clients
-            switch (message.Subject)
+            if (!vsAi)
             {
-                case "DdefenseList":
-                    game.DefenseBuildingsList= (List<Building>)message.received;
-                    break;
-                case "WaitingForConstruction":
-                    game.DefenseBuildingsList = (List<Building>)message.received;
-                    break;
+                //TODO : faire tous les cas qui intéressent les Clients ONLINE
+                switch (message.Subject)
+                {
+                    case "DdefenseList":
+                        game.DefenseBuildingsList = (List<Building>)message.received;
+           
+                        break;
+                    case "WaitingForConstruction":
+                        game.DefenseBuildingsList = (List<Building>)message.received;
+                        break;
+                }
             }
+            else
+            {
+                //TODO : faire tous les cas qui intéressent les Clients OFFLINE
+                switch (message.Subject)
+                {
+                    case "newTower":
+                        Building bd = (Building)message.send;
+                        game.DefenseBuildingsList.Add(bd);
+                        bd.GetTile().building = bd;
+                        break;
+                }
+            }
+
+
         }
 
         public static void SendGameUpdate(Dictionary<Dictionary<String, object>, bool> Changes)

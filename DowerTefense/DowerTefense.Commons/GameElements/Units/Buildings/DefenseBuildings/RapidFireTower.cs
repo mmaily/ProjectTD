@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using DowerTefense.Commons.GameElements.Projectiles;
 using DowerTefense.Commons.Units;
+using System.Runtime.Serialization;
 
 namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 {
-    class RapidFireTower :Tower
+    [Serializable()]
+    class RapidFireTower :Tower,ISerializable
     {
         /// <summary>
         /// Constructeur

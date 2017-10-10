@@ -7,14 +7,12 @@ using System;
 using DowerTefense.Game.Players;
 using System.Collections.Generic;
 using DowerTefense.Game.Screens;
-using System.Threading.Tasks;
 using LibrairieTropBien.Network.Game;
 using DowerTefense.Game.Multiplayer;
 using DowerTefense.Commons.GameElements;
 using DowerTefense.Commons.Units;
 using DowerTefense.Commons;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
-using DowerTefense.Commons.GameElements.Units.Buildings;
 using DowerTefense.Commons.Managers;
 using System.Reflection;
 using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
@@ -114,29 +112,18 @@ namespace DowerTefense.Game.Managers
             UIElementsList = new List<GuiElement>();
             PopUp = new Dictionary<Button, InfoPopUp>();
 
-            #region === Remplir le catalogue des unités de base==
-            Dummies = new List<Building>();
-            Building newBuilding;
-
-            foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
-            {
-                newBuilding = (Building)Activator.CreateInstance(Assembly.Load("DowerTefense.Commons").GetType("DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings." + tower.ToString()));
-                //newBuilding.DeleteOnEventListener();
-                Dummies.Add(newBuilding);
-            }
-            foreach (SpawnerBuilding.NameEnum spawn in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
-            {
-                newBuilding = (Building)Activator.CreateInstance(Assembly.Load("DowerTefense.Commons").GetType("DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings." + spawn.ToString()));
-                //newBuilding.DeleteOnEventListener(); // On le "désactive" en le rendant désabonnant de son event listener d'action
-                Dummies.Add(newBuilding);
-            }
-            #endregion
 
         }
 
         public void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
+           
+        }
+        public void LoadContent(List<Building> _Dummies)
+        {
+
+            this.Dummies = _Dummies;
             Button btnBuild;
             GuiElement panel;
             //Chargement des éléments selon le role adopté
@@ -243,6 +230,7 @@ namespace DowerTefense.Game.Managers
             };
 
             UIElementsList.Add(progressBarWaves);
+
         }
 
         private void Btn_OnClick(object sender, System.EventArgs e)
@@ -266,8 +254,9 @@ namespace DowerTefense.Game.Managers
                         building = (Tower)building.DeepCopy();
                         // Installation sur la tuile
                         building.SetTile(SelectedTile, game.map);
-                        game.WaitingForConstruction.Add(building);
-                        game.Changes[game.DWaitingForConstruction] = true;
+                        
+                        game.Changes[game.DBuildingWaiting] = true;
+                        game.DBuildingWaiting["newTower"] = building;
                         // Ajout à la liste des bâtiments
                         // Envoi au serveur
                         //MultiplayerManager.Send("newBuilding", building);
@@ -463,7 +452,12 @@ namespace DowerTefense.Game.Managers
             }
 
             #endregion
+            #region===Affichage tour ===
+            foreach(Building bd in game.DefenseBuildingsList)
+            {
 
+            }
+            #endregion
             // Rectangle droite contenant l'ui
             _spriteBatch.Draw(CustomContentManager.Colors["pixel"], zoneUi, Color.Purple);
 
