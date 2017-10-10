@@ -9,6 +9,7 @@ using DowerTefense.Game;
 using DowerTefense.Game.Multiplayer;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Commons.Units;
+using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 
 namespace DowerTefense.Game.Translator
 {
@@ -32,6 +33,7 @@ namespace DowerTefense.Game.Translator
         //Méthode qui transforme le message en action sur le jeu
         public static void Translate(ref GameEngine game, Message message,Boolean vsAi)
         {
+            
             if (!vsAi)
             {
                 //TODO : faire tous les cas qui intéressent les Clients ONLINE
@@ -48,13 +50,29 @@ namespace DowerTefense.Game.Translator
             }
             else
             {
+                
                 //TODO : faire tous les cas qui intéressent les Clients OFFLINE
                 switch (message.Subject)
                 {
+                    
                     case "newTower":
-                        Building bd = (Building)message.send;
-                        game.DefenseBuildingsList.Add(bd);
-                        bd.GetTile().building = bd;
+                        Building t = (Building)message.send;
+                        game.DefenseBuildingsList.Add(t);
+                        t.GetTile().building = t;
+                        break;
+                    case "newSpawner":
+                        SpawnerBuilding sp = (SpawnerBuilding)message.send;
+                        if (sp.Cost <= game.attackPlayer.totalGold)
+                        {
+                            game.FreeBuildingsList.Add(sp);
+                            game.attackPlayer.totalGold -= sp.Cost;
+                        }
+                        if(sp.PowerNeeded<game.attackPlayer.totalEnergy- game.attackPlayer.usedEnergy)
+                        {
+                            sp.powered = true;
+                            game.attackPlayer.usedEnergy += sp.PowerNeeded;
+                        }
+
                         break;
                 }
             }

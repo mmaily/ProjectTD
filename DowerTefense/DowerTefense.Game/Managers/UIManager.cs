@@ -255,8 +255,8 @@ namespace DowerTefense.Game.Managers
                         // Installation sur la tuile
                         building.SetTile(SelectedTile, game.map);
                         
-                        game.Changes[game.DBuildingWaiting] = true;
-                        game.DBuildingWaiting["newTower"] = building;
+                        game.Changes[game.DTowerWaiting] = true;
+                        game.DTowerWaiting["newTower"] = building;
                         // Ajout à la liste des bâtiments
                         // Envoi au serveur
                         //MultiplayerManager.Send("newBuilding", building);
@@ -270,7 +270,8 @@ namespace DowerTefense.Game.Managers
                     if (building.Cost <= attackPlayer.totalGold)
                     {
                         SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.DeepCopy();
-                        MultiplayerManager.Send("newBuilding", building);
+                        game.Changes[game.DSpawnerWaiting] = true;
+                        game.DSpawnerWaiting["newSpawner"] = building;
                     }
                 }
                 #region ===Gestion de l'appui sur les boutons de l'attaquant sur sa liste active===
@@ -358,9 +359,10 @@ namespace DowerTefense.Game.Managers
                 PopUp[(Button)element].Enabled = element.Enabled;
                 PopUp[(Button)element].Update();
             }
-
+            //Liste des Spawner libres
+            UpdateBtnLists();
             //Lock de la liste si newWave et attaquant
-            if (role == PlayerRole.Attacker && game.newWave == true)
+            if ((role == PlayerRole.Attacker||role == PlayerRole.Debug) && game.newWave == true)
             {
                 CreateLockedList();
             }
@@ -453,9 +455,12 @@ namespace DowerTefense.Game.Managers
 
             #endregion
             #region===Affichage tour ===
-            foreach(Building bd in game.DefenseBuildingsList)
+            foreach (Building building in game.DefenseBuildingsList)
             {
-
+                _spriteBatch.Draw(CustomContentManager.Textures[building.name],
+                                new Vector2(building.GetTile().line * game.map.tileSize, building.GetTile().column * game.map.tileSize) + marginOffset,
+                                null, null, null, 0f, Vector2.One * imageRatio,
+                                Color.White);
             }
             #endregion
             // Rectangle droite contenant l'ui
@@ -594,37 +599,45 @@ namespace DowerTefense.Game.Managers
 
         }
 
-        public void UpdateBtnLists(Building _building)
+        public void UpdateBtnLists()
         {
-            Button btnBuild = new Button(leftUIOffset + 30 + ActiveList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 2, btnSize, btnSize)
+            if (game.FreeBuildingsList.Count != ActiveList.Count)
             {
-                Name = _building.name,
-                Tag = "ActiveList",
-                PopUpAttached = true
-            };
-            btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
-            btnBuild.OnRelease += Btn_OnClick;
-            UIElementsList.Add(btnBuild);
-            //Add la popUp qui va bien
-            InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
-            {
-                Name = "ActiveSpawnInfo",
-                Tag = "InfoPopUp",
-                font = CustomContentManager.Fonts["font"],
-                texture = CustomContentManager.Colors["pixel"]
-            };
-            PopUp.Add(btnBuild, info);
-            _building.SetInfoPopUp(info);
+                ActiveList.Clear();
+                foreach(SpawnerBuilding _sp in game.FreeBuildingsList)
+                {
+                    //SpawnerBuilding sp = game.FreeBuildingsList[game.FreeBuildingsList.Count - 1];
+                    Button btnBuild = new Button(leftUIOffset + 30 + ActiveList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 2, btnSize, btnSize)
+                    {
+                        Name = _sp.name,
+                        Tag = "ActiveList",
+                        PopUpAttached = true
+                    };
+                    btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                    btnBuild.OnRelease += Btn_OnClick;
+                    UIElementsList.Add(btnBuild);
+                    //Add la popUp qui va bien
+                    InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
+                    {
+                        Name = "ActiveSpawnInfo",
+                        Tag = "InfoPopUp",
+                        font = CustomContentManager.Fonts["font"],
+                        texture = CustomContentManager.Colors["pixel"]
+                    };
+                    PopUp.Add(btnBuild, info);
+                    _sp.SetInfoPopUp(info);
 
-            ActiveList.Add(btnBuild, (SpawnerBuilding)_building);
+                    ActiveList.Add(btnBuild, _sp);
+                }
+            }
+
 
         }
-        //Appelée depuis GameScreen pour créer la ligne de bâtiments bloqués
         public void CreateLockedList()
         {
             lockedButton.Clear();
             LockedList.Clear();
-            foreach (SpawnerBuilding sp in game.LockedBuildingsList)
+            foreach (SpawnerBuilding sp in game.FreeBuildingsList.FindAll(sp => sp.powered))
             {
                 Button btnBuild = new Button(leftUIOffset + 30 + LockedList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 4, btnSize, btnSize)
                 {

@@ -1,6 +1,10 @@
-﻿namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
 {
-    class BasicSpawner : SpawnerBuilding
+    [Serializable()]
+    class BasicSpawner : SpawnerBuilding, ISerializable
     {
         public BasicSpawner()
         {

@@ -148,7 +148,6 @@ namespace DowerTefense.Game.Screens
             {
                 if (Dummies.Count != 0)
                 {
-                    //
                     uiManager.LoadContent(Dummies);
                     loaded = true;
                 }

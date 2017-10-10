@@ -79,7 +79,9 @@ namespace DowerTefense.Commons
 
         public Dictionary<String, object> DFreeBuildingsList;
 
-        public Dictionary<String, object> DBuildingWaiting;
+        public Dictionary<String, object> DTowerWaiting;
+
+        public Dictionary<String, object> DSpawnerWaiting;
 
         public Dictionary<String, object> Dmobs;
         #endregion
@@ -134,8 +136,11 @@ namespace DowerTefense.Commons
             DFreeBuildingsList = new Dictionary<String, object>();
             DFreeBuildingsList.Add("FreeBuildingsList", FreeBuildingsList);
 
-            DBuildingWaiting = new Dictionary<String, object>();
-            DBuildingWaiting.Add("newTower", null);
+            DTowerWaiting = new Dictionary<String, object>();
+            DTowerWaiting.Add("newTower", null);
+
+            DSpawnerWaiting = new Dictionary<String, object>();
+            DSpawnerWaiting.Add("newSpawner", null);
 
             Dmobs = new Dictionary<String, object>();
             Dmobs.Add("mobs", Dmobs);
@@ -147,7 +152,8 @@ namespace DowerTefense.Commons
             Changes.Add(DDefenseBuildingsList, false);
             Changes.Add(Dprojectiles, false);
             Changes.Add(DFreeBuildingsList, false);
-            Changes.Add(DBuildingWaiting, false);
+            Changes.Add(DTowerWaiting, false);
+            Changes.Add(DSpawnerWaiting, false);
             Changes.Add(Dmobs, false);
             Initial = new Dictionary<Dictionary<string, object>, bool>(Changes);
             #endregion
@@ -160,7 +166,7 @@ namespace DowerTefense.Commons
             lastWaveTick = 0;
             waveCount = 0;
             tileSize = 8;
-            waveLength = 30 * 1000;
+            waveLength = 10 * 1000;
             #endregion
             #region===Initialisation des Joueurs===
             defensePlayer = new DefensePlayer();
@@ -209,24 +215,6 @@ namespace DowerTefense.Commons
                 }
                 //Une fois traitée, on vide les éléments de la waiting List
                 WaitingForConstruction.Clear();
-
-                // Calcul du cycle de 30 secondes
-                newWave = false;
-                // Durée depuis ancien tic
-                timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
-                // Si le tic est vieux de 30 secondes
-                if (timeSince > waveLength)
-                {
-                    // Vague suivante
-                    waveCount++;
-                    // Sauvegarde horodatage
-                    lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
-                    // Nouvelle vague
-                    newWave = true;
-
-                    // Verrouillage des spawners 
-                    LockSpawners();
-                }
             }
 
             #region ===Update des unités ===
@@ -248,7 +236,33 @@ namespace DowerTefense.Commons
                 projectiles.AddRange(t.projectileList);
             }
             #endregion
+            #region===Update des Spawner===
+            foreach(SpawnerBuilding sp in LockedBuildingsList)
+            {
+                sp.Update();
+            }
+            #endregion
+            #region===Update de wave===
 
+
+            // Calcul du cycle de 30 secondes
+            newWave = false;
+            // Durée depuis ancien tic
+            timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
+            // Si le tic est vieux de 30 secondes
+            if (timeSince > waveLength)
+            {
+                // Vague suivante
+                waveCount++;
+                // Sauvegarde horodatage
+                lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
+                // Nouvelle vague
+                newWave = true;
+
+                // Verrouillage des spawners 
+                LockSpawners();
+            }
+            #endregion
 
         }
 
@@ -280,13 +294,11 @@ namespace DowerTefense.Commons
         /// <returns>Liste des spawners actifs</returns>
         public void LockSpawners()
         {
-            // Init de la liste de retour
-            List<SpawnerBuilding> lockedSpawners = new List<SpawnerBuilding>();
-
+            LockedBuildingsList.Clear();
             // Pour tous les spawners de la liste en paramètre
             foreach (SpawnerBuilding sp in FreeBuildingsList.FindAll(sp => sp.powered))
             {
-                lockedSpawners.Add((SpawnerBuilding)sp.DeepCopy());
+                LockedBuildingsList.Add((SpawnerBuilding)sp.DeepCopy());
             }
 
         }
