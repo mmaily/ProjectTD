@@ -103,7 +103,9 @@ namespace DowerTefense.Commons
             this.serverMode = _serverMode;
         }
 
-
+        /// <summary>
+        /// Initialisation du Game Engine
+        /// </summary>
         public void Initialize()
         {
             #region===Map===
@@ -118,43 +120,57 @@ namespace DowerTefense.Commons
             #region===Initialise le dictionnaire des changements===
             //Ces mini-dicionnaire contiennent l'objet qui à changé et son nom
             //De cette façon les Translators sont standardisés
-            DdefensePlayer = new Dictionary<String, object>();
-            DdefensePlayer.Add("defensePlayer", defensePlayer);
+            DdefensePlayer = new Dictionary<String, object>
+            {
+                { "defensePlayer", defensePlayer }
+            };
+            DattackPlayer = new Dictionary<String, object>
+            {
+                { "attackPlayer", attackPlayer }
+            };
+            DLockedBuildingsList = new Dictionary<String, object>
+            {
+                { "LockedBuildingsList", LockedBuildingsList }
+            };
+            DDefenseBuildingsList = new Dictionary<String, object>
+            {
+                { "DefenseBuildingsList", DefenseBuildingsList }
+            };
+            Dprojectiles = new Dictionary<String, object>
+            {
+                { "projectiles", projectiles }
+            };
+            DFreeBuildingsList = new Dictionary<String, object>
+            {
+                { "FreeBuildingsList", FreeBuildingsList }
+            };
+            DTowerWaiting = new Dictionary<String, object>
+            {
+                { "newTower", null }
+            };
+            DSpawnerWaiting = new Dictionary<String, object>
+            {
+                { "newSpawner", null }
+            };
+            Dmobs = new Dictionary<String, object>()
+            {
+                { "mobs", Dmobs }
+            };
 
-            DattackPlayer = new Dictionary<String, object>();
-            DattackPlayer.Add("attackPlayer", attackPlayer);
-
-            DLockedBuildingsList = new Dictionary<String, object>();
-            DLockedBuildingsList.Add("LockedBuildingsList", LockedBuildingsList);
-
-            DDefenseBuildingsList = new Dictionary<String, object>();
-            DDefenseBuildingsList.Add("DefenseBuildingsList", DefenseBuildingsList);
-
-            Dprojectiles = new Dictionary<String, object>();
-            Dprojectiles.Add("projectiles", projectiles);
-
-            DFreeBuildingsList = new Dictionary<String, object>();
-            DFreeBuildingsList.Add("FreeBuildingsList", FreeBuildingsList);
-
-            DTowerWaiting = new Dictionary<String, object>();
-            DTowerWaiting.Add("newTower", null);
-
-            DSpawnerWaiting = new Dictionary<String, object>();
-            DSpawnerWaiting.Add("newSpawner", null);
-
-            Dmobs = new Dictionary<String, object>();
-            Dmobs.Add("mobs", Dmobs);
             //Dictionnaire de suivi des changements
-            Changes = new Dictionary<Dictionary<String, object>, bool>();
-            Changes.Add(DdefensePlayer, false);
-            Changes.Add(DattackPlayer, false);
-            Changes.Add(DLockedBuildingsList, false);
-            Changes.Add(DDefenseBuildingsList, false);
-            Changes.Add(Dprojectiles, false);
-            Changes.Add(DFreeBuildingsList, false);
-            Changes.Add(DTowerWaiting, false);
-            Changes.Add(DSpawnerWaiting, false);
-            Changes.Add(Dmobs, false);
+            Changes = new Dictionary<Dictionary<String, object>, bool>
+            {
+                { DdefensePlayer, false },
+                { DattackPlayer, false },
+                { DLockedBuildingsList, false },
+                { DDefenseBuildingsList, false },
+                { Dprojectiles, false },
+                { DFreeBuildingsList, false },
+                { DTowerWaiting, false },
+                { DSpawnerWaiting, false },
+                { Dmobs, false }
+            };
+
             Initial = new Dictionary<Dictionary<string, object>, bool>(Changes);
             #endregion
             #region===Initialisation des listes Dummies===
@@ -215,9 +231,30 @@ namespace DowerTefense.Commons
                 }
                 //Une fois traitée, on vide les éléments de la waiting List
                 WaitingForConstruction.Clear();
+
+                // Vagues
+
+                // Calcul du cycle de 30 secondes
+                newWave = false;
+                // Durée depuis ancien tic
+                timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
+                // Si le tic est vieux de 30 secondes
+                if (timeSince > waveLength)
+                {
+                    // Vague suivante
+                    waveCount++;
+                    // Sauvegarde horodatage
+                    lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
+                    // Nouvelle vague
+                    newWave = true;
+
+
+                    // Verrouillage des spawners 
+                    LockSpawners();
+                }
             }
 
-            #region ===Update des unités ===
+            // Mise à jour des unités
             //Cette méthode renvoie les gold gagnés à cet update + fais bouger les unités
             int gold = UnitEngine.ProcessMobs(ref mobs, gameTime, map.tileSize);
             if (gold != 0)
@@ -225,9 +262,8 @@ namespace DowerTefense.Commons
                 defensePlayer.totalGold += gold;
                 Changes[DdefensePlayer] = true;
             }
-            #endregion
 
-            #region ===Update des tours et liste de projectile ===
+            // Mise à jour des tours et des projectiles
             projectiles.Clear();
             foreach (Building tower in DefenseBuildingsList)
             {
@@ -235,34 +271,13 @@ namespace DowerTefense.Commons
                 t.Update(gameTime, mobs);
                 projectiles.AddRange(t.projectileList);
             }
-            #endregion
-            #region===Update des Spawner===
-            foreach(SpawnerBuilding sp in LockedBuildingsList)
+
+            // Mise à jour des spawners
+            foreach (SpawnerBuilding sp in LockedBuildingsList)
             {
                 sp.Update();
             }
-            #endregion
-            #region===Update de wave===
 
-
-            // Calcul du cycle de 30 secondes
-            newWave = false;
-            // Durée depuis ancien tic
-            timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
-            // Si le tic est vieux de 30 secondes
-            if (timeSince > waveLength)
-            {
-                // Vague suivante
-                waveCount++;
-                // Sauvegarde horodatage
-                lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
-                // Nouvelle vague
-                newWave = true;
-
-                // Verrouillage des spawners 
-                LockSpawners();
-            }
-            #endregion
 
         }
 

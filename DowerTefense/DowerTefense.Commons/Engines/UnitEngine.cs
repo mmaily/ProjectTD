@@ -20,7 +20,7 @@ namespace DowerTefense.Commons.Managers
 
         /// <summary>
         /// Traitement des unités : avance, décès, victoire
-        /// TODO : gold si dead ?
+        /// TODO : point perdu si arrive base
         /// </summary>
         /// <param name="mobs"></param>
         public static int ProcessMobs(ref List<Unit> mobs, GameTime _gameTime, byte _tileSize)
@@ -34,7 +34,6 @@ namespace DowerTefense.Commons.Managers
                 {
                     mob.Dead = true;
                     goldToAdd += mob.GoldValue;
-                    //UIManager.GetInstance().defensePlayer.totalGold += mob.GoldValue;
 
                     continue;
                 }
