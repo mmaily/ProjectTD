@@ -19,13 +19,13 @@ namespace DowerTefense.Commons
     /// </summary>
     public class GameEngine
     {
-        #region Dictionaire dummies
+        #region === Déclaration des variables ===
 
+        // Unitées de base
         public Dictionary<string, string> UnitSpawned { get; private set; }
-        public List<Building> Dummies { get;  set; }
-        #endregion
-        #region === Buildings ===
+        public List<Building> Dummies { get; set; }
 
+        // Bâtiments
         /// <summary>
         /// Liste de tous les bâtiments "locked"
         /// </summary>
@@ -44,24 +44,24 @@ namespace DowerTefense.Commons
         public List<Building> WaitingForConstruction { get; set; }
         public object CustomContentManager { get; private set; }
 
-        #endregion
-        // Projectiles===
+        // Projectiles
         public List<Projectile> projectiles;
-        #region ===Unités
+
+        // Unités
         public bool newWave;
         public int timeSince;
         public List<Unit> mobs;
-        #endregion
-        #region===Waves===
+
+        // Vagues
         public double lastWaveTick;
         public byte waveCount;
         public int waveLength;
-        #endregion
-        #region===Map====
+
+        // Carte
         public byte tileSize;
         public Map map;
-        #endregion
-        #region===Dictionnaire des changements===
+
+        #region # Dictionnaires des changements #
         //Le translator utilise ce dictionnaire pour transmettre les info entre Client et serveur
         public Dictionary<Dictionary<String, object>, bool> Changes;
         //Celui là sert à pouvoir réinitialiser le premier plus vite
@@ -83,15 +83,22 @@ namespace DowerTefense.Commons
 
         public Dictionary<String, object> Dmobs;
         #endregion
-        #region===Player===
+
+        // Joueurs
         public DefensePlayer defensePlayer;
         public AttackPlayer attackPlayer;
-        #endregion 
+
+        // Mode client / serveur
+        private bool serverMode;
+
+        #endregion
+
         /// <summary>
         /// Initialisation du jeu
         /// </summary>
-        public GameEngine()
+        public GameEngine(bool _serverMode = false)
         {
+            this.serverMode = _serverMode;
         }
 
 
@@ -161,45 +168,77 @@ namespace DowerTefense.Commons
             #endregion
 
         }
-        
+
         /// <summary>
         /// Mise à jour du jeu
         /// </summary>
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            #region===On repasse le dictionnaire de changements à son état initial===
+            // Remise du dictionnaire des changement en état
             //TODO : Boucle assez lourde... Peut être multitread si ça ralentit
             Changes = new Dictionary<Dictionary<string, object>, bool>(Initial);
-            #endregion
-            #region === Calcul des vagues ===
 
-            // Calcul du cycle de 30 secondes
-            newWave = false;
-            // Durée depuis ancien tic
-            timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
-            // Si le tic est vieux de 30 secondes
-            if (timeSince > waveLength)
+            // Partie uniquement pour le serveur : bâtiments construction + vagues
+            if (serverMode)
             {
-                // Vague suivante
-                waveCount++;
-                // Sauvegarde horodatage
-                lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
-                // Nouvelle vague
-                newWave = true;
+                // Construire la liste des tours en attente
+                foreach (Building bd in WaitingForConstruction)
+                {
+                    // Différence Tour (défense) / Spawner (attaque)
+                    if (bd.GetType() == typeof(Tower))
+                    {
+                        defensePlayer.totalGold -= bd.Cost;
+                        DefenseBuildingsList.Add(bd);
+                        Changes[DDefenseBuildingsList] = true;
+                    }
+                    if (bd.GetType() == typeof(SpawnerBuilding))
+                    {
+                        //On le cast en spawner pour appliquer les méthodes propres aux spawner
+                        SpawnerBuilding spawner = (SpawnerBuilding)bd;
+                        attackPlayer.totalGold -= bd.Cost;
+                        FreeBuildingsList.Add(spawner);
+                        if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawner.PowerNeeded))
+                        {
+                            spawner.powered = true;
+                            attackPlayer.usedEnergy += spawner.PowerNeeded;
+                        }
+                        Changes[DFreeBuildingsList] = true;
+                    }
 
+                }
+                //Une fois traitée, on vide les éléments de la waiting List
+                WaitingForConstruction.Clear();
+
+                // Calcul du cycle de 30 secondes
+                newWave = false;
+                // Durée depuis ancien tic
+                timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
+                // Si le tic est vieux de 30 secondes
+                if (timeSince > waveLength)
+                {
+                    // Vague suivante
+                    waveCount++;
+                    // Sauvegarde horodatage
+                    lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
+                    // Nouvelle vague
+                    newWave = true;
+
+                    // Verrouillage des spawners 
+                    LockSpawners();
+                }
             }
-            #endregion
+
             #region ===Update des unités ===
             //Cette méthode renvoie les gold gagnés à cet update + fais bouger les unités
             int gold = UnitEngine.ProcessMobs(ref mobs, gameTime, map.tileSize);
             if (gold != 0)
             {
                 defensePlayer.totalGold += gold;
-                Changes[DdefensePlayer] =true;
+                Changes[DdefensePlayer] = true;
             }
-            
             #endregion
+
             #region ===Update des tours et liste de projectile ===
             projectiles.Clear();
             foreach (Building tower in DefenseBuildingsList)
@@ -209,55 +248,7 @@ namespace DowerTefense.Commons
                 projectiles.AddRange(t.projectileList);
             }
             #endregion
-            #region===Lock des spawner===
-            if (newWave == true)
-            {
-                LockSpawners();
-                
-            }
-            #endregion 
-            #region ====Construction des bâtiments en attente====
-            //Construire la liste des tours en attente
-            foreach (Building bd in WaitingForConstruction)
-            {
-                // Retrait du coût du bâtiment
-                if (bd.GetType() == typeof(Tower))
-                {
-                    //InfoPopUp info = new InfoPopUp(new Rectangle((int)((bd.GetTile().getTilePosition().X - 0.5) * map.tileSize),
-                    //                                    (int)((bd.GetTile().getTilePosition().Y - 0.5) * map.tileSize),
-                    //                                    map.tileSize, map.tileSize))
-                    //{
-                    //    Name = bd.GetType().ToString() + "Info",
-                    //    Tag = "InfoPopUp",
-                    //    font = CustomContentManager.GetInstance().Fonts["font"],
-                    //    texture = CustomContentManager.GetInstance.Colors["pixel"],
-                    //    Enabled = true
-                    //};
-                    //UIManager.UIElementsList.Add(info);
-                    //bd.SetInfoPopUp(info);
-                    defensePlayer.totalGold -= bd.Cost;
-                    DefenseBuildingsList.Add(bd);
-                    Changes[DDefenseBuildingsList] = true;
-                }
-                if (bd.GetType() == typeof(SpawnerBuilding))
-                {
-                    //On le cast en spawner pour appliquer les méthodes propres aux spawner
-                    SpawnerBuilding spawner = (SpawnerBuilding)bd;
-                    attackPlayer.totalGold -= bd.Cost;
-                    FreeBuildingsList.Add(spawner);
-                    if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawner.PowerNeeded))
-                    {
-                        spawner.powered = true;
-                        attackPlayer.usedEnergy += spawner.PowerNeeded;
-                    }
-                    Changes[DFreeBuildingsList] = true;
-                }
 
-            }
-            //Une fois traitée, on vide les éléments de la waiting List
-            WaitingForConstruction.Clear();
-            #endregion 
-            //TODO : Apelle les bâtiments à faire leur actions respectives (si il y a des buildings)
 
         }
 
