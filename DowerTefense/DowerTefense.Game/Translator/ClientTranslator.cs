@@ -46,6 +46,11 @@ namespace DowerTefense.Game.Translator
                     case "WaitingForConstruction":
                         game.DefenseBuildingsList = (List<Building>)message.received;
                         break;
+                    case "newWave":
+                        game.lastWaveTick = (double)message.received;
+                        break;
+                    default:
+                        break;
                 }
             }
             else
@@ -72,7 +77,8 @@ namespace DowerTefense.Game.Translator
                             sp.powered = true;
                             game.attackPlayer.usedEnergy += sp.PowerNeeded;
                         }
-
+                        break;
+                    default:
                         break;
                 }
             }

@@ -55,7 +55,7 @@ namespace DowerTefense.Game.Screens
             orders = new List<Message>();
            
             // Initialisation du jeu et des variables associée
-            game = new GameEngine();
+            game = new GameEngine(vsAI);
             game.Initialize();
             map = game.map;
 

@@ -66,24 +66,17 @@ namespace DowerTefense.Commons
         public Dictionary<Dictionary<String, object>, bool> Changes;
         //Celui là sert à pouvoir réinitialiser le premier plus vite
         public Dictionary<Dictionary<String, object>, bool> Initial;
-        //Mini-dictionnaire
+        //Mini-dictionnaires
         public Dictionary<String, object> DdefensePlayer;
-
         public Dictionary<String, object> DattackPlayer;
-
         public Dictionary<String, object> DLockedBuildingsList;
-
         public Dictionary<String, object> DDefenseBuildingsList;
-
         public Dictionary<String, object> Dprojectiles;
-
         public Dictionary<String, object> DFreeBuildingsList;
-
         public Dictionary<String, object> DTowerWaiting;
-
         public Dictionary<String, object> DSpawnerWaiting;
-
         public Dictionary<String, object> Dmobs;
+        public Dictionary<String, object> DnewWave;
         #endregion
 
         // Joueurs
@@ -156,6 +149,10 @@ namespace DowerTefense.Commons
             {
                 { "mobs", Dmobs }
             };
+            DnewWave = new Dictionary<string, object>()
+            {
+                { "newWave", lastWaveTick }
+            };
 
             //Dictionnaire de suivi des changements
             Changes = new Dictionary<Dictionary<String, object>, bool>
@@ -168,7 +165,8 @@ namespace DowerTefense.Commons
                 { DFreeBuildingsList, false },
                 { DTowerWaiting, false },
                 { DSpawnerWaiting, false },
-                { Dmobs, false }
+                { Dmobs, false },
+                { DnewWave, false },
             };
 
             Initial = new Dictionary<Dictionary<string, object>, bool>(Changes);
@@ -200,6 +198,9 @@ namespace DowerTefense.Commons
             // Remise du dictionnaire des changement en état
             //TODO : Boucle assez lourde... Peut être multitread si ça ralentit
             Changes = new Dictionary<Dictionary<string, object>, bool>(Initial);
+
+            // Durée depuis ancien tic de vague
+            timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
 
             // Partie uniquement pour le serveur : bâtiments construction + vagues
             if (serverMode)
@@ -236,8 +237,6 @@ namespace DowerTefense.Commons
 
                 // Calcul du cycle de 30 secondes
                 newWave = false;
-                // Durée depuis ancien tic
-                timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
                 // Si le tic est vieux de 30 secondes
                 if (timeSince > waveLength)
                 {
@@ -248,6 +247,8 @@ namespace DowerTefense.Commons
                     // Nouvelle vague
                     newWave = true;
 
+                    // Info changement
+                    Changes[DnewWave] = true;
 
                     // Verrouillage des spawners 
                     LockSpawners();
