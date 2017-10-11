@@ -210,14 +210,14 @@ namespace DowerTefense.Commons
                 foreach (Building bd in WaitingForConstruction)
                 {
                     // Différence Tour (défense) / Spawner (attaque)
-                    if (bd.GetType().BaseType == typeof(Tower))
+                    if (bd is Tower)
                     {
                         defensePlayer.totalGold -= bd.Cost;
                         DefenseBuildingsList.Add(bd);
                         bd.GetTile().building = bd;
                         Changes[DDefenseBuildingsList] = true;
                     }
-                    if (bd.GetType().BaseType == typeof(SpawnerBuilding))
+                    if (bd is SpawnerBuilding)
                     {
                         //On le cast en spawner pour appliquer les méthodes propres aux spawner
                         SpawnerBuilding spawner = (SpawnerBuilding)bd;
