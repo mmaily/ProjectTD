@@ -212,23 +212,43 @@ namespace DowerTefense.Commons
                     // Différence Tour (défense) / Spawner (attaque)
                     if (bd is Tower)
                     {
-                        defensePlayer.totalGold -= bd.Cost;
-                        DefenseBuildingsList.Add(bd);
-                        bd.GetTile().building = bd;
-                        Changes[DDefenseBuildingsList] = true;
+                        // Si le joueur possède assez d'argent
+                        if(defensePlayer.totalGold >= bd.Cost)
+                        {
+                            // Retrait du coût du bâtiment
+                            defensePlayer.totalGold -= bd.Cost;
+                            // Ajout à la liste
+                            DefenseBuildingsList.Add(bd);
+                            // Ajout sur la tuile
+                            bd.GetTile().building = bd;
+                            // Notification de changement
+                            Changes[DDefenseBuildingsList] = true;
+                        }
+                        // On peut passer directement au bâtiment suivant
+                        continue;
                     }
                     if (bd is SpawnerBuilding)
                     {
-                        //On le cast en spawner pour appliquer les méthodes propres aux spawner
-                        SpawnerBuilding spawner = (SpawnerBuilding)bd;
-                        attackPlayer.totalGold -= bd.Cost;
-                        FreeBuildingsList.Add(spawner);
-                        if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawner.PowerNeeded))
+                        // Si le joueur possède assez d'argent
+                        if(attackPlayer.totalGold >= bd.Cost)
                         {
-                            spawner.powered = true;
-                            attackPlayer.usedEnergy += spawner.PowerNeeded;
+                            //On le cast en spawner pour appliquer les méthodes propres aux spawner
+                            SpawnerBuilding spawner = (SpawnerBuilding)bd;
+                            // Retrait du coût
+                            attackPlayer.totalGold -= bd.Cost;
+                            // Ajout à la liste
+                            FreeBuildingsList.Add(spawner);
+                            // Activation automatique si assez d'énergie
+                            if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawner.PowerNeeded))
+                            {
+                                spawner.powered = true;
+                                attackPlayer.usedEnergy += spawner.PowerNeeded;
+                            }
+                            // Notification de changement
+                            Changes[DFreeBuildingsList] = true;
                         }
-                        Changes[DFreeBuildingsList] = true;
+                        // On peut passer directement au bâtiment suivant
+                        continue;
                     }
 
                 }

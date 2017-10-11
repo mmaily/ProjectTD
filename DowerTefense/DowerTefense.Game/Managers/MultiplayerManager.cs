@@ -73,7 +73,7 @@ namespace DowerTefense.Game.Multiplayer
                 ProtocolType.Tcp);
 
             // Définition de l'addresse du serveur
-            IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPlocal), authServerPort);
+            IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPDistant), authServerPort);
 
             // Connexion au serveur avec cellback
             authSocket.Blocking = false;
