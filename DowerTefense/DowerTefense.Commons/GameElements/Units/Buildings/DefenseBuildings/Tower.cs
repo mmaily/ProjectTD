@@ -86,14 +86,16 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             //Update la liste des projectiles
             UpdateProjectileList();
             //Update ses projectile pour checker les collisions
+
             foreach (Projectile projectile in projectileList)
             {
                 projectile.Update(gameTime);
+                
             }
         }
         private void CreateHitListener(Projectile projectile)
         {
-            projectile.OnHit += new Projectile.HitHandler(RemoveBulletOnImpact);
+            //projectile.OnHit += new Projectile.HitHandler(RemoveBulletOnImpact);
         }
         private void RemoveBulletOnImpact(object sender, Projectile.OnHitEventArgs args)
         {
@@ -151,12 +153,9 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         {
             for (int i = projectileList.Count - 1; i >= 0; i--)
             {
-                //Si aucune cible n'es sortie de la range, on enlève juste les cible morte pour cet update
-
-                if (i == idBulletRemoval)
+                if (!projectileList[i].Exists)
                 {
                     projectileList.RemoveAt(i);
-                    idBulletRemoval = -1;
                 }
             }
         }

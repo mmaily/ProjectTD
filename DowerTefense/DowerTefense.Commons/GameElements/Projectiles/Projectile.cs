@@ -16,6 +16,7 @@ namespace DowerTefense.Commons.GameElements.Projectiles
         public Vector2 position;
         public Vector2 direction;//Direction normalisée
         public double tol = 5; //Tolérence pour le detection de collision
+        public Boolean Exists = true;
         //Use to load all the texture
         public enum NameEnum
         {
@@ -61,8 +62,9 @@ namespace DowerTefense.Commons.GameElements.Projectiles
             if (Vector2.Distance(this.position, target.Position) < tol)
             {
                 ApplyEffectOnImpact();
-                OnHitEventArgs arg = new OnHitEventArgs(this);
-                OnHit?.Invoke(this, arg);
+                //OnHitEventArgs arg = new OnHitEventArgs(this);
+                //OnHit?.Invoke(this, arg);
+                Exists = false;
 
 
             }

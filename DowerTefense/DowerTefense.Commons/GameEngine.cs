@@ -103,6 +103,7 @@ namespace DowerTefense.Commons
         {
             #region===Map===
             map = new Map();
+            MapEngine.ComputePath(ref map);
             #endregion
             #region ===Initialisation des bâtiments===
             LockedBuildingsList = new List<SpawnerBuilding>();
@@ -209,13 +210,14 @@ namespace DowerTefense.Commons
                 foreach (Building bd in WaitingForConstruction)
                 {
                     // Différence Tour (défense) / Spawner (attaque)
-                    if (bd.GetType() == typeof(Tower))
+                    if (bd.GetType().BaseType == typeof(Tower))
                     {
                         defensePlayer.totalGold -= bd.Cost;
                         DefenseBuildingsList.Add(bd);
+                        bd.GetTile().building = bd;
                         Changes[DDefenseBuildingsList] = true;
                     }
-                    if (bd.GetType() == typeof(SpawnerBuilding))
+                    if (bd.GetType().BaseType == typeof(SpawnerBuilding))
                     {
                         //On le cast en spawner pour appliquer les méthodes propres aux spawner
                         SpawnerBuilding spawner = (SpawnerBuilding)bd;
@@ -276,7 +278,7 @@ namespace DowerTefense.Commons
             // Mise à jour des spawners
             foreach (SpawnerBuilding sp in LockedBuildingsList)
             {
-                sp.Update();
+                sp.Update(gameTime,map, ref mobs);
             }
 
 
@@ -312,9 +314,11 @@ namespace DowerTefense.Commons
         {
             LockedBuildingsList.Clear();
             // Pour tous les spawners de la liste en paramètre
-            foreach (SpawnerBuilding sp in FreeBuildingsList.FindAll(sp => sp.powered))
+            foreach (SpawnerBuilding _sp in FreeBuildingsList.FindAll(sp => sp.powered))
             {
-                LockedBuildingsList.Add((SpawnerBuilding)sp.DeepCopy());
+                SpawnerBuilding sp = (SpawnerBuilding)_sp.DeepCopy();
+                sp.Lock();
+                LockedBuildingsList.Add(sp);
             }
 
         }

@@ -41,10 +41,10 @@ namespace DowerTefense.Game.Translator
                 {
                     case "DdefenseList":
                         game.DefenseBuildingsList = (List<Building>)message.received;
-           
                         break;
-                    case "WaitingForConstruction":
-                        game.DefenseBuildingsList = (List<Building>)message.received;
+                    case "newSpawner":
+                        SpawnerBuilding sp = (SpawnerBuilding)((SpawnerBuilding)message.received).DeepCopy();
+                        game.WaitingForConstruction.Add(sp);
                         break;
                     case "newWave":
                         game.lastWaveTick = (double)message.received;
@@ -62,21 +62,12 @@ namespace DowerTefense.Game.Translator
                     
                     case "newTower":
                         Building t = (Building)message.send;
-                        game.DefenseBuildingsList.Add(t);
-                        t.GetTile().building = t;
+                        game.WaitingForConstruction.Add(t);
+                        
                         break;
                     case "newSpawner":
-                        SpawnerBuilding sp = (SpawnerBuilding)message.send;
-                        if (sp.Cost <= game.attackPlayer.totalGold)
-                        {
-                            game.FreeBuildingsList.Add(sp);
-                            game.attackPlayer.totalGold -= sp.Cost;
-                        }
-                        if(sp.PowerNeeded<game.attackPlayer.totalEnergy- game.attackPlayer.usedEnergy)
-                        {
-                            sp.powered = true;
-                            game.attackPlayer.usedEnergy += sp.PowerNeeded;
-                        }
+                        SpawnerBuilding sp = (SpawnerBuilding)((SpawnerBuilding)message.send).DeepCopy();
+                        game.WaitingForConstruction.Add(sp);
                         break;
                     default:
                         break;

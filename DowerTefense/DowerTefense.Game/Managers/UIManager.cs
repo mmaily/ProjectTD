@@ -16,6 +16,8 @@ using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Commons.Managers;
 using System.Reflection;
 using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
+using DowerTefense.Commons.GameElements.Units;
+using DowerTefense.Commons.GameElements.Projectiles;
 
 namespace DowerTefense.Game.Managers
 {
@@ -460,12 +462,21 @@ namespace DowerTefense.Game.Managers
                 _spriteBatch.Draw(CustomContentManager.Textures[building.name],
                                 new Vector2(building.GetTile().line * game.map.tileSize, building.GetTile().column * game.map.tileSize) + marginOffset,
                                 null, null, null, 0f, Vector2.One * imageRatio,
-                                Color.White);
+                                Color.White);              
+            }
+            foreach(Projectile proj in game.projectiles)
+            {
+                _spriteBatch.Draw(CustomContentManager.Textures[proj.name], proj.position, Color.White);
+            }
+            #endregion
+            #region===Affichage des Unités===
+            foreach(Unit mob in game.mobs)
+            {
+                _spriteBatch.Draw(CustomContentManager.Textures[mob.name], mob.Position, Color.White);
             }
             #endregion
             // Rectangle droite contenant l'ui
             _spriteBatch.Draw(CustomContentManager.Colors["pixel"], zoneUi, Color.Purple);
-
             #region == Frames/seconde ==
             int offset = 340;
             if (millisecPerFrame != 0)
@@ -603,10 +614,8 @@ namespace DowerTefense.Game.Managers
         {
             if (game.FreeBuildingsList.Count != ActiveList.Count)
             {
-                ActiveList.Clear();
-                foreach(SpawnerBuilding _sp in game.FreeBuildingsList)
-                {
-                    //SpawnerBuilding sp = game.FreeBuildingsList[game.FreeBuildingsList.Count - 1];
+
+              SpawnerBuilding _sp = game.FreeBuildingsList[game.FreeBuildingsList.Count - 1];
                     Button btnBuild = new Button(leftUIOffset + 30 + ActiveList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 2, btnSize, btnSize)
                     {
                         Name = _sp.name,
@@ -628,7 +637,8 @@ namespace DowerTefense.Game.Managers
                     _sp.SetInfoPopUp(info);
 
                     ActiveList.Add(btnBuild, _sp);
-                }
+                
+
             }
 
 
@@ -637,7 +647,7 @@ namespace DowerTefense.Game.Managers
         {
             lockedButton.Clear();
             LockedList.Clear();
-            foreach (SpawnerBuilding sp in game.FreeBuildingsList.FindAll(sp => sp.powered))
+            foreach (SpawnerBuilding sp in game.LockedBuildingsList)
             {
                 Button btnBuild = new Button(leftUIOffset + 30 + LockedList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 4, btnSize, btnSize)
                 {

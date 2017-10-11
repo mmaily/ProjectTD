@@ -65,15 +65,15 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         {
             for(int i = 0; i < NbreOfInstantSpawn; i++)
             {
-                this.Unit = Unit.DeepCopy();
+                Unit unit= this.Unit.DeepCopy();
                 // On définit sa position comme étant celle du spawn
-                Unit.UpdatePosition(map.Spawns[0].getTilePosition() * map.tileSize);
+                unit.UpdatePosition(map.Spawns[0].getTilePosition() * map.tileSize);
                 // On définit sa destination comme étant la tuile suivante
-                Unit.DestinationTile = map.Spawns[0].NextTile;
+                unit.DestinationTile = map.Spawns[0].NextTile;
                 // On l'ajoute à la liste des mobs
                 lock (mobs)
                 {
-                    mobs.Add(Unit);
+                    mobs.Add(unit);
                 }
                 lastSpawn = (int)Math.Floor(gameTime.TotalGameTime.TotalMilliseconds);
             }
