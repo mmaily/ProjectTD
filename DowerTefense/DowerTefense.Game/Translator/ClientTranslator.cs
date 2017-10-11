@@ -39,15 +39,22 @@ namespace DowerTefense.Game.Translator
                 //TODO : faire tous les cas qui intéressent les Clients ONLINE
                 switch (message.Subject)
                 {
-                    case "DdefenseList":
-                        game.DefenseBuildingsList = (List<Building>)message.received;
+                    case "newTower":
+                        Building t = ((Tower)message.received).DeepCopy();
+                        game.WaitingForConstruction.Add(t);
                         break;
                     case "newSpawner":
-                        SpawnerBuilding sp = (SpawnerBuilding)((SpawnerBuilding)message.received).DeepCopy();
+                        Building sp = ((SpawnerBuilding)message.received).DeepCopy();
                         game.WaitingForConstruction.Add(sp);
                         break;
                     case "newWave":
                         game.lastWaveTick = (double)message.received;
+                        break;
+                    case "DefenseBuildingsList":
+                        game.DefenseBuildingsList = (List<Building>)message.received;
+                        break;
+                    case "FreeBuildingsList":
+                        game.FreeBuildingsList = (List<SpawnerBuilding>)message.received;
                         break;
                     default:
                         break;
@@ -61,12 +68,12 @@ namespace DowerTefense.Game.Translator
                 {
                     
                     case "newTower":
-                        Building t = (Building)message.send;
+                        Building t = ((Tower)message.send).DeepCopy();
                         game.WaitingForConstruction.Add(t);
                         
                         break;
                     case "newSpawner":
-                        SpawnerBuilding sp = (SpawnerBuilding)((SpawnerBuilding)message.send).DeepCopy();
+                        Building sp = (SpawnerBuilding)((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForConstruction.Add(sp);
                         break;
                     default:

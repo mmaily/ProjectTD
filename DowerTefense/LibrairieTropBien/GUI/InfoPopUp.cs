@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace LibrairieTropBien.GUI
 {
+    //TODO : Retravailler les pop Up pour qu'il n'y en ai qu'une qui s'actualise
     public class InfoPopUp : GuiElement
     {
         private Boolean hovered = false;
