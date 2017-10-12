@@ -4,6 +4,7 @@ using LibrairieTropBien.GUI;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using DowerTefense.Commons.Units;
+using DowerTefense.Commons.GameElements.Units.Unités;
 
 namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
 {
@@ -22,6 +23,9 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         public enum NameEnum
         {
             BasicSpawner, // Spawner d'unité de base
+            ToughSpawner,//Spawner d'unité tanky
+            FastSpawner //Spawner d'unité rapide
+
         }
 
 

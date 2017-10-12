@@ -45,6 +45,8 @@ namespace DowerTefense.Game.Managers
 
             // Ajout de la texture d'unité
             AddTexture("Pawn", "unit");
+            AddTexture("ToughUnit","ToughUnit");
+            AddTexture("FastUnit","FastUnit");
 
             // Pour tous les types de tuile
             foreach (Tile.TileTypeEnum tileType in Enum.GetValues(typeof(Tile.TileTypeEnum)))

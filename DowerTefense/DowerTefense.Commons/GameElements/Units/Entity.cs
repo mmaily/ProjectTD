@@ -201,7 +201,6 @@ namespace DowerTefense.Commons.GameElements.Units
             info.AddValue("Range", Range);
             info.AddValue("BulletSpeed", BulletSpeed);
             info.AddValue("TargetNumber", TargetNumber);
-
         }
 
 

@@ -26,8 +26,7 @@ namespace DowerTefense.Game.Screens
             // Init liste éléments GUI
             UIElementsList = new List<GuiElement>();
 
-            // Init boutons
-            players = new Dictionary<PlayerRole, GuiElement>();
+
 
             // Abonnement aux mises à jour du lobby
             MultiplayerManager.LobbyUpdate += this.LobbyUpdate;
@@ -59,6 +58,8 @@ namespace DowerTefense.Game.Screens
                 GreyedOut = false,
             };
 
+            // Init boutons
+            players = new Dictionary<PlayerRole, GuiElement>();
             players.Add(PlayerRole.Attacker, attacker);
             players.Add(PlayerRole.Defender, defender);
             UIElementsList.Add(attacker);
