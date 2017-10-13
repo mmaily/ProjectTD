@@ -5,17 +5,17 @@ using System.Runtime.Serialization;
 namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
 {
     [Serializable()]
-    class BasicSpawner : SpawnerBuilding, ISerializable
+    class ToughSpawner : SpawnerBuilding, ISerializable
     {
-        public BasicSpawner()
+        public ToughSpawner()
         {
 
         }
         public override void setName()
         {
-            this.name = "BasicSpawner";
-            this.UnitName = "BasicUnit";
-            this.Unit = new BasicUnit();
+            this.name = "ToughSpawner";
+            this.UnitName = "ToughUnit";
+            this.Unit = new ToughUnit();
         }
     }
 }

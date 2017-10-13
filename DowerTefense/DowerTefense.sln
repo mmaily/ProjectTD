@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowerTefense.Game", "DowerTefense.Game\DowerTefense.Game.csproj", "{57F57672-F64C-47BA-93DB-9259832AB5E2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibrairieTropBien", "LibrairieTropBien\LibrairieTropBien.csproj", "{A2A33BCD-10C9-45CA-920B-43869C71A68D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowerTefense.Server", "DowerTefense.Server\DowerTefense.Server.csproj", "{21BB7573-6ABE-4C3B-838D-68EAD92E292B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowerTefense.Commons", "DowerTefense.Commons\DowerTefense.Commons.csproj", "{6751A0F8-F676-4DF7-87F9-F06528F8C6B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowerTefense.Game", "DowerTefense.Game\DowerTefense.Game.csproj", "{57F57672-F64C-47BA-93DB-9259832AB5E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +21,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x64.ActiveCfg = Debug|x64
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x64.Build.0 = Debug|x64
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x86.ActiveCfg = Debug|x86
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x86.Build.0 = Debug|x86
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x64.ActiveCfg = Release|x64
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x64.Build.0 = Release|x64
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x86.ActiveCfg = Release|x86
-		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x86.Build.0 = Release|x86
 		{A2A33BCD-10C9-45CA-920B-43869C71A68D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2A33BCD-10C9-45CA-920B-43869C71A68D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2A33BCD-10C9-45CA-920B-43869C71A68D}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -69,6 +57,18 @@ Global
 		{6751A0F8-F676-4DF7-87F9-F06528F8C6B9}.Release|x64.Build.0 = Release|Any CPU
 		{6751A0F8-F676-4DF7-87F9-F06528F8C6B9}.Release|x86.ActiveCfg = Release|Any CPU
 		{6751A0F8-F676-4DF7-87F9-F06528F8C6B9}.Release|x86.Build.0 = Release|Any CPU
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x64.ActiveCfg = Debug|x64
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x64.Build.0 = Debug|x64
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x86.ActiveCfg = Debug|x86
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Debug|x86.Build.0 = Debug|x86
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x64.ActiveCfg = Release|x64
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x64.Build.0 = Release|x64
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x86.ActiveCfg = Release|x86
+		{57F57672-F64C-47BA-93DB-9259832AB5E2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

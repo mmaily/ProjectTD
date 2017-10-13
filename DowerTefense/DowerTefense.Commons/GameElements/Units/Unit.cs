@@ -1,34 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
-using System.Xml.Serialization;
-
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DowerTefense.Commons.GameElements.Units
 {
     [Serializable()]
-    /// <summary>
-    /// Unité de démonstration
-    /// </summary>
-    public class Unit : Entity , ISerializable
+     public class Unit : Entity, ISerializable
     {
-
-        /// <summary>
-        /// Constructeur de l'unité démo
-        /// </summary>
-        public Unit() : base()
+        public Unit()
         {
-            // Définition des propriétés différentes de la classe de base
-            this.name = "unit";
-            this.Speed = 1f;
-            this.UnitType = UnitTypeEnum.Ground;
-            this.GoldValue = 10;
-            this.AttackPower = 1;
-            this.HealthPoints = 10;
+
         }
-        public Unit DeepCopy()
+        public virtual Unit DeepCopy()
         {
             Unit other = (Unit)this.MemberwiseClone();
             return other;
         }
     }
+
 }
