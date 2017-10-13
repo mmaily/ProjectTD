@@ -108,7 +108,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         public SpawnerBuilding(SerializationInfo info, StreamingContext ctxt)
         {
             //Get the values from info and assign them to the appropriate properties
-            name = (String)info.GetValue("name", typeof(String));
+            Name = (String)info.GetValue("name", typeof(String));
             Position = (Vector2)info.GetValue("Position", typeof(Vector2));
             UnitType = (UnitTypeEnum)info.GetValue("UnitType", typeof(UnitTypeEnum));
             HealthPoints = (int)info.GetValue("HealthPoints", typeof(int));
@@ -132,7 +132,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             //You can use any custom name for your name-value pair. But make sure you
             // read the values with the same name. For ex:- If you write EmpId as "EmployeeId"
             // then you should read the same with "EmployeeId"
-            info.AddValue("name", name);
+            info.AddValue("name", Name);
             info.AddValue("Position", Position);
             info.AddValue("UnitType", UnitType);
             info.AddValue("HealthPoints", HealthPoints);

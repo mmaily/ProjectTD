@@ -13,7 +13,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         }
         public override void setName()
         {
-            this.name = "ToughSpawner";
+            this.Name = "ToughSpawner";
             this.UnitName = "ToughUnit";
             this.Unit = new ToughUnit();
         }

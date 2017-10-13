@@ -18,7 +18,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         /// </summary>
         public RapidFireTower() : base()
         {
-            this.name = "RapidFireTower";
+            this.Name = "RapidFireTower";
             this.AttackPower = 3;
             this.Range = 100;
             this.RateOfFire = 0.0016; //En tir/milliseconde

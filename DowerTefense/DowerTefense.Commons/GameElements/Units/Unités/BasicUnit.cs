@@ -18,12 +18,12 @@ namespace DowerTefense.Commons.GameElements.Units.Unités
         public BasicUnit() : base()
         {
             // Définition des propriétés différentes de la classe de base
-            this.name = "unit";
+            this.Name = "unit";
             this.Speed = 1f;
             this.UnitType = UnitTypeEnum.Ground;
             this.GoldValue = 10;
             this.AttackPower = 1;
-            this.HealthPoints = 10;
+            this.HealthPoints = this.MaxHealthPoints = 10;
         }
         public override Unit DeepCopy()
         {

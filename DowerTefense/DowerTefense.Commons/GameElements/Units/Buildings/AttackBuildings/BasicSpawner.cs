@@ -13,7 +13,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         }
         public override void setName()
         {
-            this.name = "BasicSpawner";
+            this.Name = "BasicSpawner";
             this.UnitName = "BasicUnit";
             this.Unit = new BasicUnit();
         }

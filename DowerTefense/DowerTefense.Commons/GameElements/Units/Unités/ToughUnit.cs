@@ -13,12 +13,12 @@ namespace DowerTefense.Commons.GameElements.Units.Unités
         public ToughUnit() : base()
         {
             // Définition des propriétés différentes de la classe de base
-            this.name = "ToughUnit";
+            this.Name = "ToughUnit";
             this.Speed = 0.3f;
             this.UnitType = UnitTypeEnum.Ground;
             this.GoldValue = 10;
             this.AttackPower = 1;
-            this.HealthPoints = 50;
+            this.HealthPoints = this.MaxHealthPoints = 50;
         }
         public override Unit DeepCopy()
         {

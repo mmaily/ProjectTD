@@ -155,7 +155,7 @@ namespace DowerTefense.Game.Managers
                         texture = CustomContentManager.Colors["pixel"]
                     };
                     PopUp.Add(btnBuild, info);
-                    Dummies.Find(b => b.name.Equals(btnBuild.Name)).SetInfoPopUp(info);
+                    Dummies.Find(b => b.Name.Equals(btnBuild.Name)).SetInfoPopUp(info);
                     j++;
                 }
                 #endregion
@@ -186,7 +186,7 @@ namespace DowerTefense.Game.Managers
                         texture = CustomContentManager.Colors["pixel"]
                     };
                     PopUp.Add(btnBuild, info);
-                    Dummies.Find(b => b.name.Equals(btnBuild.Name)).SetInfoPopUp(info);
+                    Dummies.Find(b => b.Name.Equals(btnBuild.Name)).SetInfoPopUp(info);
                     n++;
                 }
                 #endregion
@@ -245,7 +245,7 @@ namespace DowerTefense.Game.Managers
                 if (btn.Tag.Equals("defenseBuild") && SelectedTile != null)
                 {
                     // On récupère le bâtiment à construire
-                    Building building = Dummies.Find(b => b.name.Equals(btn.Name));
+                    Building building = Dummies.Find(b => b.Name.Equals(btn.Name));
                     // Si la tuile est libre, n'a pas de bâtiment dessus et le joueur a assez d'argent
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free
                         && SelectedTile.building == null
@@ -268,7 +268,7 @@ namespace DowerTefense.Game.Managers
                 if (btn.Tag.Equals("attackBuild"))
                 {
                     // On récupère le bâtiment à construire
-                    Building building = Dummies.Find(b => b.name.Equals(btn.Name));
+                    Building building = Dummies.Find(b => b.Name.Equals(btn.Name));
                     if (building.Cost <= attackPlayer.totalGold)
                     {
                         SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.DeepCopy();
@@ -334,7 +334,7 @@ namespace DowerTefense.Game.Managers
                 if (element.GetType().Equals(typeof(Button)) && element.Tag == role + "Build")
                 {
                     // On récupère le bâtiment associé
-                    Building building = Dummies.Find(b => b.name.Equals(element.Name));
+                    Building building = Dummies.Find(b => b.Name.Equals(element.Name));
                     // On regarde le role adopté, et grise les boutons soit
                     if (role.Equals("defense") || role.Equals("both"))
                     {
@@ -459,7 +459,7 @@ namespace DowerTefense.Game.Managers
             #region===Affichage tour ===
             foreach (Building building in game.DefenseBuildingsList)
             {
-                _spriteBatch.Draw(CustomContentManager.Textures[building.name],
+                _spriteBatch.Draw(CustomContentManager.Textures[building.Name],
                                 new Vector2(building.GetTile().line * game.map.tileSize, building.GetTile().column * game.map.tileSize) + marginOffset,
                                 null, null, null, 0f, Vector2.One * imageRatio,
                                 Color.White);              
@@ -472,7 +472,15 @@ namespace DowerTefense.Game.Managers
             #region===Affichage des Unités===
             foreach(Unit mob in game.mobs)
             {
-                _spriteBatch.Draw(CustomContentManager.Textures[mob.name], mob.Position, Color.White);
+                _spriteBatch.Draw(CustomContentManager.Textures[mob.Name], mob.Position, Color.White);
+                // Si le monstre n'est pas au maximum de sa vie
+                float percentage = (float)mob.HealthPoints / (float)mob.MaxHealthPoints;
+                if(percentage != 1)
+                {
+                    // On affiche une petite barre de progression en dessous
+                    Rectangle healthBar = new Rectangle((int)mob.Position.X - 2, (int)mob.Position.Y + 12, (int)(12 * percentage), 2);
+                    _spriteBatch.FillRectangle(healthBar, new Color(2.0f * (1 - percentage), 2.0f * percentage, 0));
+                }
             }
             #endregion
             // Rectangle droite contenant l'ui
@@ -593,7 +601,7 @@ namespace DowerTefense.Game.Managers
         private void DisplayBuildingInfo(SpriteBatch _spriteBatch)
         {
             int offset = 100;
-            _spriteBatch.DrawString(deFaultFont, "Batiment : " + SelectedTile.building.name, new Vector2(leftUIOffset, offset), Color.White);
+            _spriteBatch.DrawString(deFaultFont, "Batiment : " + SelectedTile.building.Name, new Vector2(leftUIOffset, offset), Color.White);
 
         }
 
@@ -618,7 +626,7 @@ namespace DowerTefense.Game.Managers
               SpawnerBuilding _sp = game.FreeBuildingsList[game.FreeBuildingsList.Count - 1];
                     Button btnBuild = new Button(leftUIOffset + 30 + ActiveList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 2, btnSize, btnSize)
                     {
-                        Name = _sp.name,
+                        Name = _sp.Name,
                         Tag = "ActiveList",
                         PopUpAttached = true
                     };
@@ -651,7 +659,7 @@ namespace DowerTefense.Game.Managers
             {
                 Button btnBuild = new Button(leftUIOffset + 30 + LockedList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 4, btnSize, btnSize)
                 {
-                    Name = sp.name,
+                    Name = sp.Name,
                     Tag = "LockedList",
                     PopUpAttached = true
                 };

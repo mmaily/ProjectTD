@@ -21,7 +21,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         /// </summary>
         public BasicTower() : base()
         {
-            this.name = "BasicTower";
+            this.Name = "BasicTower";
             this.AttackPower = 5;
             this.Range = 200;
             this.RateOfFire = 0.0008; //En tir/milliseconde

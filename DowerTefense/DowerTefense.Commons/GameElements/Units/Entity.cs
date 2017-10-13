@@ -21,7 +21,7 @@ namespace DowerTefense.Commons.GameElements.Units
 
         /// <summary>
         /// Nom de l'unité
-        public string name{ get; set; }
+        public string Name { get; set; }
         /// Position de l'unité
         /// </summary>
         public SVector2 Position { get; protected set; }
@@ -29,6 +29,10 @@ namespace DowerTefense.Commons.GameElements.Units
         /// Type de l'unité (défaut : None)
         /// </summary>
         public UnitTypeEnum UnitType { get; protected set; }
+        /// <summary>
+        /// Points de vie de base de l'unité
+        /// </summary>
+        public int MaxHealthPoints { get; protected set; }
         /// <summary>
         /// Nombre de points de vie de l'unité (défaut : 1)
         /// </summary>
@@ -90,6 +94,17 @@ namespace DowerTefense.Commons.GameElements.Units
         /// Nombre de cibles visées en un seul tir (défaut : 0)
         /// </summary>
         public float TargetNumber { get; protected set; }
+        /// <summary>
+        /// Type de cibles visées par cette unité  (défaut : None)
+        /// </summary>
+        public UnitTypeEnum TargetType { get; protected set; }
+
+        /// <summary>
+        /// Drapeau permettant de marquer l'unité comme détruite
+        /// </summary>
+        public bool Dead { get; set; }
+
+
 
 
         /// <summary>
@@ -122,17 +137,6 @@ namespace DowerTefense.Commons.GameElements.Units
             return alive;
         }
 
-        /// <summary>
-        /// Type de cibles visées par cette unité  (défaut : None)
-        /// </summary>
-        public UnitTypeEnum TargetType { get; protected set; }
-
-        /// <summary>
-        /// Drapeau permettant de marquer l'unité comme détruite
-        /// </summary>
-        public bool Dead { get; set; }
-
-
         // TODO
         //Taille, Effet spécial;
 
@@ -143,6 +147,7 @@ namespace DowerTefense.Commons.GameElements.Units
         {
             Position = new Vector2();
             UnitType = UnitTypeEnum.None;
+            MaxHealthPoints = 1;
             HealthPoints = 1;
             Cost = 0;
             Level = 1;
@@ -168,7 +173,7 @@ namespace DowerTefense.Commons.GameElements.Units
         public Entity(SerializationInfo info, StreamingContext ctxt)
         {
             //Get the values from info and assign them to the appropriate properties
-            name = (String)info.GetValue("name", typeof(String));
+            Name = (String)info.GetValue("name", typeof(String));
             Position =(Vector2)info.GetValue("Position", typeof(Vector2));
             UnitType = (UnitTypeEnum)info.GetValue("UnitType", typeof(UnitTypeEnum));
             HealthPoints = (int)info.GetValue("HealthPoints", typeof(int));
@@ -188,7 +193,7 @@ namespace DowerTefense.Commons.GameElements.Units
             //You can use any custom name for your name-value pair. But make sure you
             // read the values with the same name. For ex:- If you write EmpId as "EmployeeId"
             // then you should read the same with "EmployeeId"
-            info.AddValue("name", name);
+            info.AddValue("name", Name);
             info.AddValue("Position", Position);
             info.AddValue("UnitType", UnitType);
             info.AddValue("HealthPoints", HealthPoints);
