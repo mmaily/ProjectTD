@@ -13,9 +13,8 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
     public class Tower : Building, ISerializable
     {
 
-        public List<Projectile> projectileList;//  Liste de ses munitions en vol
+        public List<Projectile> ProjectileList { get; protected set; }//  Liste de ses munitions en vol
         protected Entity target;//Cible actuelle
-        private int idBulletRemoval; // Quand un proj touche, on récupère son index pour actualiser la BulletList
         protected String projectileName;
         public enum NameEnum
         {
@@ -38,10 +37,8 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 
 
             //Initialisation de la liste des projectile
-            projectileList = new List<Projectile>();
+            ProjectileList = new List<Projectile>();
 
-            //On initialise l'index pour remove les unité en dehors de la range à -1 (désactivé au début)
-            this.idBulletRemoval = -1;
         }
         
 
@@ -63,51 +60,27 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         {
             base.SetTile(_tile, map);
         }
-        #region ===Ancienne méthode OnDuty();===
-        //public override void OnDuty()
-        //{
-        //    base.OnDuty();
-        //    //Update sa liste de target, choisi sa cible principale et tire
-        //    Fire();
-        //    //Update la liste des projectiles
-        //    UpdateProjectileList();
-        //    //Update ses projectile pour checker les collisions
-        //    foreach (Projectile projectile in projectileList)
-        //    {
-        //        projectile.Update();
-        //    }
-        //}
-        #endregion
+
+        /// <summary>
+        /// Mise à jour de la tour et de tous ses projectiles
+        /// </summary>
+        /// <param name="_gameTime"></param>
+        /// <param name="mobs"></param>
         public void Update(GameTime _gameTime, List<Unit> mobs)
         {
             this.gameTime = _gameTime;
             //Update sa liste de target, choisi sa cible principale et tire
             Fire(mobs);
             //Update la liste des projectiles
-            UpdateProjectileList();
-            //Update ses projectile pour checker les collisions
+            // Mise à jour de chaque projectile
+            this.ProjectileList.ForEach(proj => proj.Update(gameTime));
+            // Suppression de tous les projectiles disparus
+            this.ProjectileList.RemoveAll(deadProj => !deadProj.Exists);
+        }
 
-            //foreach (Projectile projectile in projectileList)
-            //{
-            //    projectile.Update(gameTime);
-                
-            //}
-        }
-        private void CreateHitListener(Projectile projectile)
-        {
-            //projectile.OnHit += new Projectile.HitHandler(RemoveBulletOnImpact);
-        }
-        private void RemoveBulletOnImpact(object sender, Projectile.OnHitEventArgs args)
-        {
-            //TODO : Prévenir les clients quand un projectile disparait (à voir)
-            idBulletRemoval = projectileList.IndexOf(args.proj);
-            args.proj.OnHit -= new Projectile.HitHandler(RemoveBulletOnImpact);
-            args.proj = null;
-        }
         //Méthode qui appelle les tours à tier SI la liste est non-vide et SI le cooldown est ok
         public Entity ChooseTarget(List<Unit> mobs)
         {
-
             if (this.target == null || this.target.Dead || Vector2.Distance(this.Position, this.target.Position) > this.Range)
             {
                 target = null;
@@ -122,52 +95,46 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 
             return target;
         }
+
+        /// <summary>
+        /// Vérification du cooldown de la tour
+        /// </summary>
+        /// <returns></returns>
         public Boolean CanFire()
         {
             return gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1 / this.RateOfFire;
         }
+
+        /// <summary>
+        /// Lancement d'un projectile
+        /// </summary>
+        /// <param name="mobs"></param>
         public void Fire(List<Unit> mobs)
         {
+            // Si le cooldown est bon, elle s'active, sinon c'est déjà fini pour elle
             if (CanFire())
             {
-                //Si le cooldown est bon, elle s'active, sinon c'est déjà fini pour elle
-
+                // Récupération d'une cible
                 target = ChooseTarget(mobs);
 
                 if (target != null)
                 {
-
-
-                    //Enregistre le temps du dernier tir en ms
+                    // Enregistrement le temps du dernier tir en ms
                     LastShot = gameTime.TotalGameTime.TotalMilliseconds;
-                    //Elle tire sur sa cible
 
+                    // Elle tire sur sa cible
                     Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, this.projectileName);
-                    this.projectileList.Add(_proj);
-                    CreateHitListener(_proj);
+                    // Ajout à la liste des projectiles actuels
+                    this.ProjectileList.Add(_proj);
                 }
+            }
+        }
 
-            }
-        }
-        public void UpdateProjectileList()
-        {
-            for (int i = projectileList.Count - 1; i >= 0; i--)
-            {
-                projectileList[i].Update(gameTime);
-                if (!projectileList[i].Exists)
-                {
-                    projectileList.RemoveAt(i);
-                }
-            }
-        }
-        public List<Projectile> GetProjectileList()
-        {
-            return this.projectileList;
-        }
         public override void SetInfoPopUp(InfoPopUp info)
         {
             info.setText("Damage : " + AttackPower+ Environment.NewLine+"Range : " + this.Range);
         }
+
         public override Building DeepCopy()
         {
             Building other = (Tower)this.MemberwiseClone();

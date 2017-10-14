@@ -18,6 +18,7 @@ using System.Reflection;
 using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.GameElements.Projectiles;
+using LibrairieTropBien.ObjectExtension;
 
 namespace DowerTefense.Game.Managers
 {
@@ -253,7 +254,7 @@ namespace DowerTefense.Game.Managers
                     {
                         // C'est bon !
                         // Copie du bâtiment à construire
-                        building = (Tower)building.DeepCopy();
+                        building = (Tower)building.CloneObject();
                         // Installation sur la tuile
                         building.SetTile(SelectedTile, game.map);
                         
@@ -271,7 +272,7 @@ namespace DowerTefense.Game.Managers
                     Building building = Dummies.Find(b => b.Name.Equals(btn.Name));
                     if (building.Cost <= attackPlayer.totalGold)
                     {
-                        SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.DeepCopy();
+                        SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.CloneObject();
                         game.Changes[game.DSpawnerWaiting] = true;
                         game.DSpawnerWaiting["newSpawner"] = building;
                     }

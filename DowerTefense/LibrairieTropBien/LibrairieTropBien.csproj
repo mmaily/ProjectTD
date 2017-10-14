@@ -53,6 +53,7 @@
     <Compile Include="Network\Game\Player.cs" />
     <Compile Include="Network\Message.cs" />
     <Compile Include="Network\MultiplayerState.cs" />
+    <Compile Include="ObjectExtension\ObjectExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializableObjects\SVector2.cs" />
   </ItemGroup>

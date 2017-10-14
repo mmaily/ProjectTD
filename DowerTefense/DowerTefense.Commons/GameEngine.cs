@@ -215,7 +215,8 @@ namespace DowerTefense.Commons
                         // Si le joueur possède assez d'argent
                         if(defensePlayer.totalGold >= bd.Cost)
                         {
-                            Tower t = (Tower)bd.DeepCopy();
+                            //Why ? Osef ! Tower t = (Tower)bd.DeepCopy();
+                            Tower t = (Tower)bd;
                             // Retrait du coût du bâtiment
                             defensePlayer.totalGold -= t.Cost;
                             // Ajout à la liste
@@ -293,7 +294,7 @@ namespace DowerTefense.Commons
             {
                 Tower t = (Tower)tower;
                 t.Update(gameTime, mobs);
-                projectiles.AddRange(t.projectileList);
+                projectiles.AddRange(t.ProjectileList);
             }
 
             // Mise à jour des spawners

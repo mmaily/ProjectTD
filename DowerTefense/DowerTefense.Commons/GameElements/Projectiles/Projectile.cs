@@ -21,39 +21,49 @@ namespace DowerTefense.Commons.GameElements.Projectiles
         public enum NameEnum
         {
             BasicShot, // ShotFrom BasicTower
-        }
-        #region ===Event quand un projectile touche sa cible ===
-        public event HitHandler OnHit;
-        public delegate void HitHandler(Projectile proj, OnHitEventArgs arg);
-        //Argument commun pour enter/leave range qui donne une unité en param
-        public class OnHitEventArgs : EventArgs
-        {
-            public OnHitEventArgs(Projectile iProj)
-            { proj = iProj; }
-            public Projectile proj { get; set; }
-        }
-        #endregion
+        };
 
         public Projectile()
         {
 
         }
+        /// <summary>
+        /// Mise à jour du projectile
+        /// </summary>
+        /// <param name="_gameTime"></param>
         public void Update(GameTime _gameTime)
         {
+            // Mise à jour de la direction
             UpdateDirection();
+            // Mise à jour de la position
             UpdatePosition(_gameTime);
+            // Vérification de la collision
             CheckCollision();
         }
 
+        /// <summary>
+        /// Mise à jour de la direction
+        /// </summary>
         public void UpdateDirection()
         {
+            // Récupération du vecteur direction
             direction = -(position - target.Position);
+            // Normalisation
             direction.Normalize();
         }
+       
+        /// <summary>
+        /// Mise à jour de la position
+        /// </summary>
+        /// <param name="_gameTime"></param>
         public void UpdatePosition(GameTime _gameTime)
         {
-            position += direction * speed*_gameTime.ElapsedGameTime.Milliseconds/1000;
+            position += direction * speed * _gameTime.ElapsedGameTime.Milliseconds/1000;
         }
+
+        /// <summary>
+        /// Vérification de la position
+        /// </summary>
         public void CheckCollision()
         {
             //Si la distance entre le projectile est inférieur à la tolérence après le mouvement
@@ -62,13 +72,14 @@ namespace DowerTefense.Commons.GameElements.Projectiles
             if (Vector2.Distance(this.position, target.Position) < tol)
             {
                 ApplyEffectOnImpact();
-                //OnHitEventArgs arg = new OnHitEventArgs(this);
-                //OnHit?.Invoke(this, arg);
+                // Le projectile n'existe plus
                 Exists = false;
-
-
             }
         }
+
+        /// <summary>
+        /// Application des effets à l'impact
+        /// </summary>
         public virtual void ApplyEffectOnImpact() { }
     }
 }
