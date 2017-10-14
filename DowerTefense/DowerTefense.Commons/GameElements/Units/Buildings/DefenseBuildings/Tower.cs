@@ -143,7 +143,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
                     //Elle tire sur sa cible
 
                     Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, this.projectileName);
-                    projectileList.Add(_proj);
+                    this.projectileList.Add(_proj);
                     CreateHitListener(_proj);
                 }
 

@@ -215,12 +215,13 @@ namespace DowerTefense.Commons
                         // Si le joueur possède assez d'argent
                         if(defensePlayer.totalGold >= bd.Cost)
                         {
+                            Tower t = (Tower)bd.DeepCopy();
                             // Retrait du coût du bâtiment
-                            defensePlayer.totalGold -= bd.Cost;
+                            defensePlayer.totalGold -= t.Cost;
                             // Ajout à la liste
-                            DefenseBuildingsList.Add(bd);
+                            DefenseBuildingsList.Add(t);
                             // Ajout sur la tuile
-                            bd.GetTile().building = bd;
+                            bd.GetTile().building = t;
                             // Notification de changement
                             Changes[DDefenseBuildingsList] = true;
                         }
