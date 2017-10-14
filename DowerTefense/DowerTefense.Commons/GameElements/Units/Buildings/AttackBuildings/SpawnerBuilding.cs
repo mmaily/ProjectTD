@@ -20,6 +20,8 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         protected Unit Unit;// Type d'unité qu'il spawn
         protected String UnitName;
         private Map map;
+        private bool blankShot;
+
         public enum NameEnum
         {
             BasicSpawner, // Spawner d'unité de base
@@ -59,7 +61,14 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         public Boolean CanSpawn()
         {
             Boolean canSpawn = false;
-            if(this.locked && this.powered && gameTime.TotalGameTime.TotalMilliseconds>lastSpawn+(1/SpawnRate)*1000)
+            //Premier tir à blanc pour éviter le chevauchement des unités
+            if (this.locked && this.powered && gameTime.TotalGameTime.TotalMilliseconds > lastSpawn + (1 / SpawnRate) * 1000 && !blankShot)
+            {
+                
+                blankShot = true;
+                lastSpawn = (int)Math.Floor(gameTime.TotalGameTime.TotalMilliseconds);
+            }
+            if (this.locked && this.powered && gameTime.TotalGameTime.TotalMilliseconds>lastSpawn+(1/SpawnRate)*1000&&blankShot)
             {
                 canSpawn = true;
             }

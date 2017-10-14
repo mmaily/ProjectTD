@@ -87,11 +87,11 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             UpdateProjectileList();
             //Update ses projectile pour checker les collisions
 
-            foreach (Projectile projectile in projectileList)
-            {
-                projectile.Update(gameTime);
+            //foreach (Projectile projectile in projectileList)
+            //{
+            //    projectile.Update(gameTime);
                 
-            }
+            //}
         }
         private void CreateHitListener(Projectile projectile)
         {
@@ -153,6 +153,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         {
             for (int i = projectileList.Count - 1; i >= 0; i--)
             {
+                projectileList[i].Update(gameTime);
                 if (!projectileList[i].Exists)
                 {
                     projectileList.RemoveAt(i);

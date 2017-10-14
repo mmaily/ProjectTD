@@ -16,6 +16,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             this.Name = "BasicSpawner";
             this.UnitName = "BasicUnit";
             this.Unit = new BasicUnit();
+            this.SpawnRate = 0.4;
         }
     }
 }
