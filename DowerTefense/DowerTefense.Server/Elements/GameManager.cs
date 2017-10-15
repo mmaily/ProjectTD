@@ -22,7 +22,7 @@ namespace DowerTefense.Server.Elements
         public GameManager(Dictionary<Client, Player> _clients, ref List<Message> _Requests)
         {
             Content.RootDirectory = "Content";
-            game = new GameEngine();
+            game = new GameEngine(true);
             this.clients = _clients;
             this.Requests = _Requests;
 

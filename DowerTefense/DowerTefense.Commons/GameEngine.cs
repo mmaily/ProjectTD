@@ -272,6 +272,7 @@ namespace DowerTefense.Commons
                     newWave = true;
 
                     // Info changement
+                    DnewWave["newWave"] = lastWaveTick;
                     Changes[DnewWave] = true;
 
                     // Verrouillage des spawners 
