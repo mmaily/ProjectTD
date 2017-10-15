@@ -103,11 +103,11 @@ namespace DowerTefense.Server.Servers
             // Changement d'état pour ce client
             client.state = MultiplayerState.Connected;
 
-            // Modification du destinataire du callback
-            client.ReceiveDataCallback = this.OnReiceivedData;
-
             // Création du callback de réception
             client.SetupReceiveCallback(this);
+
+            // Abonnement à ce client
+            client.MessageReceived += ProcessMessage;
         }
 
         #endregion
@@ -117,8 +117,9 @@ namespace DowerTefense.Server.Servers
         /// <summary>
         /// Traitement du message reçu
         /// </summary>
+        /// <param name="_client"></param>
         /// <param name="_messageReceived"></param>
-        protected override void ProcessMessage(Message _messageReceived, Client _client)
+        protected override void ProcessMessage(Client _client, Message _messageReceived)
         {
             // Traitement des différents cas
             switch (_messageReceived.Subject)
@@ -146,6 +147,8 @@ namespace DowerTefense.Server.Servers
                     _client.Send("matchmaking", "searching");
                     // Lancement d'une recherche de match
                     this.ProcessMatchmaking(_client, (string)_messageReceived.received);
+                    // Désabonnement au client (putain, 6€ par mois quoi !)
+                    _client.MessageReceived -= ProcessMessage;
                     break;
                 default:
                     break;

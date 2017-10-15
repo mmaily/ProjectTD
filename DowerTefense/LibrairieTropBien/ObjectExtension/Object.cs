@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 /// </summary>
 namespace LibrairieTropBien.ObjectExtension
 {
-    public static class ObjectExtension
+    public static class Object
     {
         public static object CloneObject(this object objSource)
 

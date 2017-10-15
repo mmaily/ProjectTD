@@ -1,4 +1,5 @@
 ﻿using LibrairieTropBien.Network;
+using LibrairieTropBien.ObjectExtension;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -252,10 +253,7 @@ namespace DowerTefense.Game.Multiplayer
                 byte[] byData = new byte[nToBeRead];
                 authSocket.Receive(byData);
                 // Ajout des octets au tableau de retour
-                byte[] byReturnFull = new byte[nBytesReceived + nToBeRead];
-                Buffer.BlockCopy(byReturn, 0, byReturnFull, 0, nBytesReceived);
-                Buffer.BlockCopy(byData, 0, byReturnFull, nBytesReceived, nToBeRead);
-                byReturn = byReturnFull;
+                byReturn = byReturn.Append(byData);
             }
 
             return byReturn;

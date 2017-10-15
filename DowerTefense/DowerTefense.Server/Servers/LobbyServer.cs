@@ -52,10 +52,8 @@ namespace DowerTefense.Server.Servers
             // Changement de l'état du client
             _client.state = MultiplayerState.InLobby;
 
-            // Modification du destinataire du callback
-            _client.ReceiveDataCallback = this.OnReiceivedData;
-            // Création du callback de réception
-            _client.SetupReceiveCallback(this);
+            // Abonnement au client
+            _client.MessageReceived += ProcessMessage;
 
             // Création du nouveau joueur
             Player newPlayer = new Player()
@@ -99,9 +97,9 @@ namespace DowerTefense.Server.Servers
         /// <summary>
         /// Traitement du message reçu
         /// </summary>
-        /// <param name="messageReceived"></param>
         /// <param name="client"></param>
-        protected override void ProcessMessage(Message messageReceived, Client client)
+        /// <param name="messageReceived"></param>
+        protected override void ProcessMessage(Client client, Message messageReceived)
         {
             // Selon le sujet du message
             switch (messageReceived.Subject)
@@ -141,6 +139,8 @@ namespace DowerTefense.Server.Servers
                 {
                     // Lancement du jeu
                     c.Send("game", "starting");
+                    // Désabonnement du client
+                    c.MessageReceived -= ProcessMessage;
                 }
 
                 GameServer gameServer = new GameServer(clients);

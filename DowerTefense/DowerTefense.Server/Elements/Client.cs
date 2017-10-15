@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using LibrairieTropBien.Network;
 using LibrairieTropBien.Network.Game;
+using LibrairieTropBien.ObjectExtension;
 
 namespace DowerTefense.Server.Elements
 {
@@ -16,19 +17,36 @@ namespace DowerTefense.Server.Elements
         /// </summary>
         public Socket AuthSocket { get; private set; }
 
-        public AsyncCallback ReceiveDataCallback { get; set; }
+        /// <summary>
+        /// Callback de réception
+        /// </summary>
+        AsyncCallback receiveDataCallback;
+
 
         /// <summary>
         /// Nom du client
         /// </summary>
         public string Name { get; set; }
 
+        // Buffer de réception du callback
         private byte[] receivedBuffer = new byte[255];     // Receive data buffer
 
+        // Buffer de réception pour fusion des paquets
+        private byte[] messageBuffer;
+
+        /// <summary>
+        /// Durée de connexion
+        /// </summary>
         public DateTime ConnectedSince { get; set; }
 
         // Etat de la connexion
         public MultiplayerState state = MultiplayerState.Disconnected;
+
+        /// <summary>
+        /// Évènement de réception de message
+        /// </summary>
+        public event MessageReceivedEventHanlder MessageReceived;
+        public delegate void MessageReceivedEventHanlder(Client sender, Message message);
 
         /// <summary>
         /// Constructor
@@ -38,6 +56,9 @@ namespace DowerTefense.Server.Elements
         {
             AuthSocket = _sock;
             this.Name = "";
+
+            // Mise en place du callback
+            receiveDataCallback = new AsyncCallback(OnReceivedData);
         }
 
         /// <summary>
@@ -48,11 +69,66 @@ namespace DowerTefense.Server.Elements
         {
             try
             {
-                AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, ReceiveDataCallback, this);
+                AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, receiveDataCallback, this);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Mise en place du callback pour réception - Échec : {0}", ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Callback de réception de données
+        /// </summary>
+        /// <param name="ar"></param>
+        public void OnReceivedData(IAsyncResult ar)
+        {
+            // Vérification de la présence de données
+            byte[] receivedData = GetRecievedData(ar);
+            // Ajout au tampon de message
+            messageBuffer = messageBuffer.Append(receivedData);
+            // Si le nombre d'octets reçus est supérieur à 0
+            if (messageBuffer.Length > 0)
+            {
+                // Tentative de formation du message
+                Message messageReceived = null;
+                bool fullMessage = false;
+                try
+                {
+                    // Récupération du message reçu
+                    messageReceived = new Message(messageBuffer);
+                    // Si c'est bon, le message est complet
+                    fullMessage = true;
+                } catch (Exception e)
+                {
+                    // Le paquet n'est pas complet
+                    fullMessage = false;
+                }
+
+                // Si le message reçu était complet
+                if (fullMessage && messageReceived!=null)
+                {
+                    // On invoque l'évènement de réception de message
+                    MessageReceived?.Invoke(this, messageReceived);
+                    // On vide le tampon de message
+                    messageBuffer = null;
+                }
+                else
+                {
+                    // Le message n'est pas encore totalement reçu
+                }
+
+                // Remise en était du callback de réception
+                AsyncCallback recieveDataCallBack = new AsyncCallback(OnReceivedData);
+                AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveDataCallBack, AuthSocket);
+
+            }
+            else
+            {
+                // La connextion est probablement fermée
+                //socket.Shutdown(SocketShutdown.Both);
+                AuthSocket.Close();
             }
         }
 
@@ -95,10 +171,7 @@ namespace DowerTefense.Server.Elements
                 byte[] byData = new byte[nToBeRead];
                 AuthSocket.Receive(byData);
                 // Ajout des octets au tableau de retour
-                byte[] byReturnFull = new byte[nBytesReceived + nToBeRead];
-                Buffer.BlockCopy(byReturn, 0, byReturnFull, 0, nBytesReceived);
-                Buffer.BlockCopy(byData, 0, byReturnFull, nBytesReceived, nToBeRead);
-                byReturn = byReturnFull;
+                byReturn = byReturn.Append(byData);
             }
 
             return byReturn;

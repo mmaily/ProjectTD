@@ -34,9 +34,8 @@ namespace DowerTefense.Server.Servers
             this.clients = _clients;
             foreach (Client c in clients.Keys)
             {
-                // Changement du callback
-                c.ReceiveDataCallback = this.OnReiceivedData;
-                c.SetupReceiveCallback(this);
+                // Abonnement au client
+                c.MessageReceived += ProcessMessage;
             }
             Requests = new List<Message>();
             // Création du jeu, on lui file client et liste des requêtes
@@ -54,7 +53,7 @@ namespace DowerTefense.Server.Servers
         /// Traitement du message reçu
         /// </summary>
         /// <param name="_messageReceived"></param>
-        protected override void ProcessMessage(Message _messageReceived, Client _client)
+        protected override void ProcessMessage(Client _client, Message _messageReceived)
         {
             switch (_messageReceived.Subject)
             {

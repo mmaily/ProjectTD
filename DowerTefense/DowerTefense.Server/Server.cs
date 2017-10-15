@@ -33,7 +33,7 @@ namespace DowerTefense.Server
 
                 // Récupération du message
                 Message messageReceived = new Message(receivedData);
-                ProcessMessage(messageReceived, client);
+                ProcessMessage(client, messageReceived);
 
                 //Console.WriteLine("Après réception du message " + messageReceived.Subject +", on remet le callback pour " + this.ToString());
             }
@@ -47,7 +47,7 @@ namespace DowerTefense.Server
             }
         }
 
-        protected abstract void ProcessMessage(Message messageReceived, Client client);
+        protected abstract void ProcessMessage(Client client, Message messageReceived);
     }
 
 }
