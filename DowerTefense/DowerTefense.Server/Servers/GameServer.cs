@@ -42,6 +42,12 @@ namespace DowerTefense.Server.Servers
             // Création du jeu, on lui file client et liste des requêtes
             GameManager game = new GameManager(clients, ref Requests);
             game.Run();
+
+            foreach (Client c in clients.Keys)
+            {
+                // Changement du callback
+                c.Send("game", "starting");
+            }
         }
 
         /// <summary>

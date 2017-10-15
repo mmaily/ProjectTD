@@ -109,7 +109,7 @@ namespace DowerTefense.Game.Screens
         /// </summary>
         public override void LoadContent()
         {
-            if (vsAI == true)
+            if (vsAI == true || true)
             {
                 #region === Remplir le catalogue des unités de base OFFLINE==
                 Dummies = new List<Building>();
