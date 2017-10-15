@@ -102,6 +102,7 @@ namespace DowerTefense.Server.Elements
                     fullMessage = true;
                 } catch (Exception e)
                 {
+                    throw;
                     // Le paquet n'est pas complet
                     fullMessage = false;
                 }

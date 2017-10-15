@@ -9,7 +9,7 @@ using DowerTefense.Commons.GameElements.Units.Unités;
 namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
 {
     [Serializable()]
-    public class SpawnerBuilding : Building, ISerializable
+    public class SpawnerBuilding : Building
     {
         protected double SpawnRate; //Number of mobs/second
         protected double lastSpawn; // Time of the last spawned mob
@@ -19,6 +19,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
         protected Unit Unit;// Type d'unité qu'il spawn
         protected String UnitName;
+        [NonSerialized]
         private Map map;
         private bool blankShot;
 

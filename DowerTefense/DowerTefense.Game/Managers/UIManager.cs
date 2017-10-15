@@ -258,11 +258,9 @@ namespace DowerTefense.Game.Managers
                         // Installation sur la tuile
                         building.SetTile(SelectedTile, game.map);
                         
-                        game.Changes[game.DTowerWaiting] = true;
+                        // Notification de changement de tour à construire
                         game.DTowerWaiting["newTower"] = building;
-                        // Ajout à la liste des bâtiments
-                        // Envoi au serveur
-                        //MultiplayerManager.Send("newBuilding", building);
+                        game.Changes[game.DTowerWaiting] = true;
                     }
                 }
                 // Si le bouton est une construction attaque
@@ -273,8 +271,10 @@ namespace DowerTefense.Game.Managers
                     if (building.Cost <= attackPlayer.totalGold)
                     {
                         SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.CloneObject();
-                        game.Changes[game.DSpawnerWaiting] = true;
+
+                        // Notification de changement de spawner à construire
                         game.DSpawnerWaiting["newSpawner"] = building;
+                        game.Changes[game.DSpawnerWaiting] = true;
                     }
                 }
                 #region ===Gestion de l'appui sur les boutons de l'attaquant sur sa liste active===

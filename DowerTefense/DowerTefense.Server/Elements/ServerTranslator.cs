@@ -46,6 +46,9 @@ namespace DowerTefense.Server.Elements
                     // Réception d'un nouveau bâtiment
                     game.WaitingForConstruction.Add((Building)message.received);
                     break;
+                case "newSpawner":
+                    game.WaitingForConstruction.Add((Building)message.received);
+                    break;
                 default:
                     break;
             }

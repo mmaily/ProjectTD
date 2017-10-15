@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
 {
     [Serializable()]
-    class FastSpawner : SpawnerBuilding, ISerializable
+    class FastSpawner : SpawnerBuilding
     {
         public FastSpawner()
         {

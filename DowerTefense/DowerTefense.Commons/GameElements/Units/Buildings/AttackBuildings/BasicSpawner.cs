@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
 {
     [Serializable()]
-    class BasicSpawner : SpawnerBuilding, ISerializable
+    class BasicSpawner : SpawnerBuilding
     {
         public BasicSpawner()
         {
