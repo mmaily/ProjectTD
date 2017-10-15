@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DowerTefense.Commons.GameElements.Units
 {
     [Serializable()]
-     public class Unit : Entity, ISerializable
+     public class Unit : Entity
     {
         public Unit()
         {

@@ -10,6 +10,7 @@ namespace DowerTefense.Commons.Units
     /// <summary>
     /// Classe mère des bâtiments
     /// </summary>
+    [Serializable]
     public abstract class Building : Entity
     {
 

@@ -14,7 +14,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
     /// <summary>
     /// Tour de base
     /// </summary>
-    public class BasicTower : Tower, ISerializable
+    public class BasicTower : Tower
     {
         /// <summary>
         /// Constructeur
@@ -28,11 +28,11 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             this.UnitType = UnitTypeEnum.Ground;
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
-            this.BulletSpeed = 5*64;
+            this.BulletSpeed = 5 * 64;
             this.projectileName = "BasicShot";
             this.Cost = 10;
         }
 
-       
+      
     }
 }

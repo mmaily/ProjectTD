@@ -10,7 +10,7 @@ using DowerTefense.Commons.Managers;
 namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 {
     [Serializable()]
-    public class Tower : Building, ISerializable
+    public class Tower : Building
     {
 
         public List<Projectile> ProjectileList { get; protected set; }//  Liste de ses munitions en vol
@@ -40,7 +40,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             ProjectileList = new List<Projectile>();
 
         }
-        
+
 
         /// <summary>
         /// Constructeur avec tuile de position
@@ -65,15 +65,17 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         /// Mise à jour de la tour et de tous ses projectiles
         /// </summary>
         /// <param name="_gameTime"></param>
-        /// <param name="mobs"></param>
-        public void Update(GameTime _gameTime, List<Unit> mobs)
+        /// <param name="_mobs"></param>
+        public void Update(GameTime _gameTime, ref List<Unit> _mobs)
         {
-            this.gameTime = _gameTime;
-            //Update sa liste de target, choisi sa cible principale et tire
-            Fire(mobs);
+            if (CanFire(_gameTime))
+            {
+                //Mise à jour de la liste de target, choisi la cible principale et tire
+                Fire(ref _mobs, _gameTime);
+            }
             //Update la liste des projectiles
             // Mise à jour de chaque projectile
-            this.ProjectileList.ForEach(proj => proj.Update(gameTime));
+            this.ProjectileList.ForEach(proj => proj.Update(_gameTime));
             // Suppression de tous les projectiles disparus
             this.ProjectileList.RemoveAll(deadProj => !deadProj.Exists);
         }
@@ -97,42 +99,40 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         }
 
         /// <summary>
-        /// Vérification du cooldown de la tour
-        /// </summary>
-        /// <returns></returns>
-        public Boolean CanFire()
-        {
-            return gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1 / this.RateOfFire;
-        }
-
-        /// <summary>
         /// Lancement d'un projectile
         /// </summary>
-        /// <param name="mobs"></param>
-        public void Fire(List<Unit> mobs)
+        /// <param name="_mobs"></param>
+        public void Fire(ref List<Unit> _mobs, GameTime _gameTime)
         {
             // Si le cooldown est bon, elle s'active, sinon c'est déjà fini pour elle
-            if (CanFire())
+            // Récupération d'une cible
+            target = ChooseTarget(_mobs);
+
+            if (target != null)
             {
-                // Récupération d'une cible
-                target = ChooseTarget(mobs);
+                // Enregistrement le temps du dernier tir en ms
+                LastShot = _gameTime.TotalGameTime.TotalMilliseconds;
 
-                if (target != null)
-                {
-                    // Enregistrement le temps du dernier tir en ms
-                    LastShot = gameTime.TotalGameTime.TotalMilliseconds;
-
-                    // Elle tire sur sa cible
-                    Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, this.projectileName);
-                    // Ajout à la liste des projectiles actuels
-                    this.ProjectileList.Add(_proj);
-                }
+                // Elle tire sur sa cible
+                Projectile _proj = new SingleTargetProjectile(target, this.AttackPower, BulletSpeed, this.Position, this.projectileName);
+                // Ajout à la liste des projectiles actuels
+                this.ProjectileList.Add(_proj);
             }
         }
 
+        /// <summary>
+        /// Vérification du cooldown de la tour
+        /// </summary>
+        /// <returns></returns>
+        public Boolean CanFire(GameTime _gameTime)
+        {
+            return _gameTime.TotalGameTime.TotalMilliseconds > this.LastShot + 1 / this.RateOfFire;
+        }
+
+
         public override void SetInfoPopUp(InfoPopUp info)
         {
-            info.setText("Damage : " + AttackPower+ Environment.NewLine+"Range : " + this.Range);
+            info.setText("Damage : " + AttackPower + Environment.NewLine + "Range : " + this.Range);
         }
 
         public override Building DeepCopy()

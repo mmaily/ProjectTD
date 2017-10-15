@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 {
     [Serializable()]
-    class RapidFireTower :Tower,ISerializable
+    class RapidFireTower :Tower
     {
         /// <summary>
         /// Constructeur

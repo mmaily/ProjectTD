@@ -9,7 +9,7 @@ namespace DowerTefense.Commons.GameElements.Units.Unités
     /// <summary>
     /// Unité de démonstration
     /// </summary>
-    public class BasicUnit : Unit , ISerializable
+    public class BasicUnit : Unit
     {
 
         /// <summary>

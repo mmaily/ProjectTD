@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace DowerTefense.Commons.GameElements.Projectiles
 {
+    [Serializable]
     class SingleTargetProjectile : Projectile
     {
 

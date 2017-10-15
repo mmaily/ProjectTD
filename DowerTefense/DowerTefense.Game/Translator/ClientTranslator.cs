@@ -48,7 +48,7 @@ namespace DowerTefense.Game.Translator
                         game.WaitingForConstruction.Add(sp);
                         break;
                     case "newWave":
-                        game.lastWaveTick = (double)message.received;
+                        game.newWave = true;
                         break;
                     case "DefenseBuildingsList":
                         game.DefenseBuildingsList = (List<Building>)message.received;

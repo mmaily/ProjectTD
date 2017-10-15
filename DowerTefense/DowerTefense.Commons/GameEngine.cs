@@ -260,24 +260,29 @@ namespace DowerTefense.Commons
                 // Vagues
 
                 // Calcul du cycle de 30 secondes
-                newWave = false;
                 // Si le tic est vieux de 30 secondes
                 if (timeSince > waveLength)
                 {
                     // Vague suivante
                     waveCount++;
-                    // Sauvegarde horodatage
-                    lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
+                    
                     // Nouvelle vague
                     newWave = true;
 
                     // Info changement
-                    DnewWave["newWave"] = lastWaveTick;
                     Changes[DnewWave] = true;
 
                     // Verrouillage des spawners 
                     LockSpawners();
                 }
+            }
+
+            // Si nouvelle vague :
+            if (newWave)
+            {
+                // Sauvegarde horodatage
+                lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
+                newWave = false;
             }
 
             // Mise à jour des unités
@@ -294,7 +299,7 @@ namespace DowerTefense.Commons
             foreach (Building tower in DefenseBuildingsList)
             {
                 Tower t = (Tower)tower;
-                t.Update(gameTime, mobs);
+                t.Update(gameTime, ref mobs);
                 projectiles.AddRange(t.ProjectileList);
             }
 

@@ -51,30 +51,34 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         #endregion
         public void Update(GameTime _gameTime, Map _map,ref List<Unit> mobs)
         {
-            this.gameTime = _gameTime;
             this.map = _map;
-            if (CanSpawn())
+            if (CanSpawn(_gameTime))
             {
-                SpawnUnit(ref mobs);
+                SpawnUnit(ref mobs, _gameTime);
             }
         }
-        public Boolean CanSpawn()
+        
+        /// <summary>
+        /// Retourne si le spawner peut faire apparaître ou non
+        /// </summary>
+        /// <returns></returns>
+        public Boolean CanSpawn(GameTime _gameTime)
         {
             Boolean canSpawn = false;
             //Premier tir à blanc pour éviter le chevauchement des unités
-            if (this.locked && this.powered && gameTime.TotalGameTime.TotalMilliseconds > lastSpawn + (1 / SpawnRate) * 1000 && !blankShot)
+            if (this.locked && this.powered && _gameTime.TotalGameTime.TotalMilliseconds > lastSpawn + (1 / SpawnRate) * 1000 && !blankShot)
             {
                 
                 blankShot = true;
-                lastSpawn = (int)Math.Floor(gameTime.TotalGameTime.TotalMilliseconds);
+                lastSpawn = (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
             }
-            if (this.locked && this.powered && gameTime.TotalGameTime.TotalMilliseconds>lastSpawn+(1/SpawnRate)*1000&&blankShot)
+            if (this.locked && this.powered && _gameTime.TotalGameTime.TotalMilliseconds>lastSpawn+(1/SpawnRate)*1000&&blankShot)
             {
                 canSpawn = true;
             }
             return canSpawn;
         }
-        public void SpawnUnit(ref List<Unit> mobs)
+        public void SpawnUnit(ref List<Unit> mobs, GameTime _gameTime)
         {
             for(int i = 0; i < NbreOfInstantSpawn; i++)
             {
@@ -88,7 +92,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
                 {
                     mobs.Add(unit);
                 }
-                lastSpawn = (int)Math.Floor(gameTime.TotalGameTime.TotalMilliseconds);
+                lastSpawn = (int)Math.Floor(_gameTime.TotalGameTime.TotalMilliseconds);
             }
 
         }
