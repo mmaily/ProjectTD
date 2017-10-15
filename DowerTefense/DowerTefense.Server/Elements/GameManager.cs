@@ -2,11 +2,8 @@
 using LibrairieTropBien.Network;
 using LibrairieTropBien.Network.Game;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime;
 
 namespace DowerTefense.Server.Elements
 {
@@ -17,6 +14,8 @@ namespace DowerTefense.Server.Elements
         private List<Message> Requests;
         #endregion  
         private GameEngine game;
+        // Gestionnaire des graphiques
+        GraphicsDeviceManager graphics;
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -26,6 +25,9 @@ namespace DowerTefense.Server.Elements
             game = new GameEngine();
             this.clients = _clients;
             this.Requests = _Requests;
+
+            graphics = new GraphicsDeviceManager(this);
+
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Runtime;
 
 namespace DowerTefense.Server.Servers
 {
@@ -39,8 +40,8 @@ namespace DowerTefense.Server.Servers
             }
             Requests = new List<Message>();
             // Création du jeu, on lui file client et liste des requêtes
-            using (var game = new GameManager(clients, ref Requests))
-                game.Run();
+            GameManager game = new GameManager(clients, ref Requests);
+            game.Run();
         }
 
         /// <summary>

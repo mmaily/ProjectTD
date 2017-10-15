@@ -129,6 +129,7 @@ namespace DowerTefense.Game.Screens
                     connectionButton.Text = "Connexion";
                     connectionButton.BackgroundColor = Color.DarkRed;
                     UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = true;
+                    ScreenManager.SelectScreen("MenuScreen");
                     break;
                 case MultiplayerState.Connected:
                     // Modification du bouton de connexion
