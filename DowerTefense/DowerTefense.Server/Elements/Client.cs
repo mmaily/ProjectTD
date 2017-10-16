@@ -110,7 +110,7 @@ namespace DowerTefense.Server.Elements
                 if (fullMessage && messageReceived!=null)
                 {
                     // Affichage console
-                    Console.WriteLine("<<< Message reçu <<< émetteur : " + this.Name + ", sujet : " + messageReceived.Subject + ", corps : " + messageReceived.received.ToString());
+                    //Console.WriteLine("<<< Message reçu <<< émetteur : " + this.Name + ", sujet : " + messageReceived.Subject + ", corps : " + messageReceived.received.ToString());
 
                     // On invoque l'évènement de réception de message
                     MessageReceived?.Invoke(this, messageReceived);
@@ -189,7 +189,7 @@ namespace DowerTefense.Server.Elements
         public void Send(string _subject, object _data)
         {
             // Info console
-            Console.WriteLine(">>> Message envoyé >>> destinataire : " + this.Name + ", sujet : " + _subject +", corps : " + _data.ToString());
+            //Console.WriteLine(">>> Message envoyé >>> destinataire : " + this.Name + ", sujet : " + _subject +", corps : " + _data.ToString());
 
             // Si pas connecté
             if (AuthSocket == null || !AuthSocket.Connected)

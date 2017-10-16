@@ -28,7 +28,7 @@ namespace DowerTefense.Server.Servers
         /// <summary>
         /// Constructeur de base du serveur de jeu
         /// </summary>
-        public GameServer(Dictionary<Client, Player> _clients)
+        public GameServer(ref Dictionary<Client, Player> _clients)
         {
             // Récupération de la liste des clients
             this.clients = _clients;
@@ -45,21 +45,10 @@ namespace DowerTefense.Server.Servers
                 c.Send("game", "starting");
             }
 
-            // Thread du jeu
-            System.Threading.Thread gameThread;
+            GameManager game = new GameManager(_clients, ref Requests);
 
-            // Création du jeu, on lui file client et liste des requêtes
-            gameThread = new System.Threading.Thread(this.StartGame(ref clients, ref Requests));
-
-            gameThread.Start();
-
+            game.Run();
         }
-
-        private void StartGame(ref Dictionary<Client, Player> _clients, ref List<Message> _requests)
-        {
-            GameManager game = new GameManager(ref _clients, ref _requests);
-        }
-
         /// <summary>
         /// Traitement du message reçu
         /// </summary>

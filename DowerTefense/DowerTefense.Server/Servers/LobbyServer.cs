@@ -147,15 +147,11 @@ namespace DowerTefense.Server.Servers
                     c.MessageReceived -= ProcessMessage;
                 }
 
-                GameServer gameServer = new GameServer(clients);
 
-                // Thread du jeu
-                System.Threading.Thread gameThread;
-
-                // Création du jeu, on lui file client et liste des requêtes
-                gameThread = new System.Threading.Thread();
-
-                gameThread.Start();
+                Task t = Task.Run(() =>
+                {
+                    GameServer gameServer = new GameServer(ref clients);
+                });
 
             }
         }
