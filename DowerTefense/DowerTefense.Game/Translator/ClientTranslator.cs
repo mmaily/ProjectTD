@@ -10,6 +10,7 @@ using DowerTefense.Game.Multiplayer;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Commons.Units;
 using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
+using DowerTefense.Game.Players;
 
 namespace DowerTefense.Game.Translator
 {
@@ -58,6 +59,12 @@ namespace DowerTefense.Game.Translator
                         break;
                     case "LockedBuildingsList":
                         game.LockedBuildingsList = (List<SpawnerBuilding>)message.received;
+                        break;
+                    case "defensePlayer":
+                        game.defensePlayer = (DefensePlayer)message.received;
+                        break;
+                    case "attackPlayer":
+                        game.attackPlayer = (AttackPlayer)message.received;
                         break;
                     default:
                         break;
