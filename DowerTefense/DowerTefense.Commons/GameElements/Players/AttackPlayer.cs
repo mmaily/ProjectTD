@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DowerTefense.Game.Players
 {
+    [Serializable]
     public class AttackPlayer
     {
         public int totalEnergy;
