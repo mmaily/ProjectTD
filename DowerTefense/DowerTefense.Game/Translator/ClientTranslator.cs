@@ -56,6 +56,9 @@ namespace DowerTefense.Game.Translator
                     case "FreeBuildingsList":
                         game.FreeBuildingsList = (List<SpawnerBuilding>)message.received;
                         break;
+                    case "LockedBuildingsList":
+                        game.LockedBuildingsList = (List<SpawnerBuilding>)message.received;
+                        break;
                     default:
                         break;
                 }

@@ -122,41 +122,44 @@ namespace DowerTefense.Game.Screens
         /// <param name="_state"></param>
         private void StateChanged(MultiplayerState _state)
         {
-            switch (_state)
+            lock (UIElementsList)
             {
-                case MultiplayerState.Disconnected:
-                    // Modification du bouton de connexion
-                    connectionButton.Text = "Connexion";
-                    connectionButton.BackgroundColor = Color.DarkRed;
-                    UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = true;
-                    ScreenManager.SelectScreen("MenuScreen");
-                    break;
-                case MultiplayerState.Connected:
-                    // Modification du bouton de connexion
-                    connectionButton.Text = "Connexion...";
-                    connectionButton.BackgroundColor = Color.DarkOrange;
-                    break;
-                case MultiplayerState.Authentified:
-                    // Modification du bouton de connexion
-                    connectionButton.Text = MultiplayerManager.name;
-                    connectionButton.BackgroundColor = Color.Green;
-                    // Modification du bouton de matchmaking
-                    UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = false;
-                    break;
-                case MultiplayerState.SearchingGame:
-                    // Modifiication bouton Matchmaking
-                    ((Button)UIElementsList.Find(elem => elem.Name.Equals("Matchmaking"))).Text = "Searching...";
-                    // TODO : remettre bouton en état
-                    break;
-                case MultiplayerState.InLobby:
-                    ScreenManager.SelectScreen("Lobby");
-                    break;
-                case MultiplayerState.InGame:
-                    break;
-                case MultiplayerState.InEndGameLobby:
-                    break;
-                default:
-                    break;
+                switch (_state)
+                {
+                    case MultiplayerState.Disconnected:
+                        // Modification du bouton de connexion
+                        connectionButton.Text = "Connexion";
+                        connectionButton.BackgroundColor = Color.DarkRed;
+                        UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = true;
+                        ScreenManager.SelectScreen("MenuScreen");
+                        break;
+                    case MultiplayerState.Connected:
+                        // Modification du bouton de connexion
+                        connectionButton.Text = "Connexion...";
+                        connectionButton.BackgroundColor = Color.DarkOrange;
+                        break;
+                    case MultiplayerState.Authentified:
+                        // Modification du bouton de connexion
+                        connectionButton.Text = MultiplayerManager.name;
+                        connectionButton.BackgroundColor = Color.Green;
+                        // Modification du bouton de matchmaking
+                        UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = false;
+                        break;
+                    case MultiplayerState.SearchingGame:
+                        // Modifiication bouton Matchmaking
+                        ((Button)UIElementsList.Find(elem => elem.Name.Equals("Matchmaking"))).Text = "Searching...";
+                        // TODO : remettre bouton en état
+                        break;
+                    case MultiplayerState.InLobby:
+                        ScreenManager.SelectScreen("Lobby");
+                        break;
+                    case MultiplayerState.InGame:
+                        break;
+                    case MultiplayerState.InEndGameLobby:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -214,9 +217,12 @@ namespace DowerTefense.Game.Screens
         /// <param name="_gameTime"></param>
         public override void Update(GameTime _gameTime)
         {
-            foreach (GuiElement element in UIElementsList)
+            lock (UIElementsList)
             {
-                element.Update();
+                foreach (GuiElement element in UIElementsList)
+                {
+                    element.Update();
+                }
             }
         }
 
@@ -226,9 +232,12 @@ namespace DowerTefense.Game.Screens
         /// <param name="_spriteBatch"></param>
         public override void Draw(SpriteBatch _spriteBatch)
         {
-            foreach (GuiElement element in UIElementsList)
+            lock (UIElementsList)
             {
-                element.Draw(_spriteBatch);
+                foreach (GuiElement element in UIElementsList)
+                {
+                    element.Draw(_spriteBatch);
+                }
             }
             base.Draw(_spriteBatch);
         }

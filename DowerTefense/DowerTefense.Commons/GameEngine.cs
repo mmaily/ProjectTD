@@ -274,6 +274,8 @@ namespace DowerTefense.Commons
 
                     // Verrouillage des spawners 
                     LockSpawners();
+                    // Notification de changement
+                    Changes[DLockedBuildingsList] = true;
                 }
             }
 

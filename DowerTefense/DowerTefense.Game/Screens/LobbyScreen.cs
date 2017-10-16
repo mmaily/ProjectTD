@@ -77,8 +77,6 @@ namespace DowerTefense.Game.Screens
             readyButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(readyButton);
 
-            MultiplayerManager.Send("lol", "casseToiOMG");
-
         }
 
         /// <summary>
