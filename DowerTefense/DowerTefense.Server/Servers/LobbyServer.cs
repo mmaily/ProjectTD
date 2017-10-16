@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DowerTefense.Server.Elements;
 using LibrairieTropBien.Network;
 using LibrairieTropBien.Network.Game;
+using System.Threading;
 
 namespace DowerTefense.Server.Servers
 {
@@ -51,6 +52,9 @@ namespace DowerTefense.Server.Servers
             _client.Send("newLobby", "");
             // Changement de l'état du client
             _client.state = MultiplayerState.InLobby;
+
+            // TODO : ici tempo dégeu pour que le lobby ai le temps de s'abonner au message suivant
+            Thread.Sleep(100);
 
             // Abonnement au client
             _client.MessageReceived += ProcessMessage;
@@ -99,7 +103,7 @@ namespace DowerTefense.Server.Servers
         /// </summary>
         /// <param name="client"></param>
         /// <param name="messageReceived"></param>
-        protected override void ProcessMessage(Client client, Message messageReceived)
+        protected void ProcessMessage(Client client, Message messageReceived)
         {
             // Selon le sujet du message
             switch (messageReceived.Subject)
@@ -144,6 +148,15 @@ namespace DowerTefense.Server.Servers
                 }
 
                 GameServer gameServer = new GameServer(clients);
+
+                // Thread du jeu
+                System.Threading.Thread gameThread;
+
+                // Création du jeu, on lui file client et liste des requêtes
+                gameThread = new System.Threading.Thread();
+
+                gameThread.Start();
+
             }
         }
     }

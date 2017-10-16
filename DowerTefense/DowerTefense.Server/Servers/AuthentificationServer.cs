@@ -104,7 +104,7 @@ namespace DowerTefense.Server.Servers
             client.state = MultiplayerState.Connected;
 
             // Création du callback de réception
-            client.SetupReceiveCallback(this);
+            client.SetupReceiveCallback();
 
             // Abonnement à ce client
             client.MessageReceived += ProcessMessage;
@@ -119,7 +119,7 @@ namespace DowerTefense.Server.Servers
         /// </summary>
         /// <param name="_client"></param>
         /// <param name="_messageReceived"></param>
-        protected override void ProcessMessage(Client _client, Message _messageReceived)
+        protected void ProcessMessage(Client _client, Message _messageReceived)
         {
             // Traitement des différents cas
             switch (_messageReceived.Subject)

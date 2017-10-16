@@ -37,6 +37,8 @@ namespace DowerTefense.Game.Screens
 
         //Faire jouer l'AI
         private Boolean vsAI = true;
+
+        // Chargement de l'interface
         private bool loaded=false;
 
         public bool VsAI { get => vsAI; set => vsAI = value; }
@@ -144,7 +146,7 @@ namespace DowerTefense.Game.Screens
         public override void Update(GameTime _gameTime)
         {
             
-            if (Dummies != null && !loaded)
+            if (!loaded)
             {
                 if (Dummies.Count != 0)
                 {

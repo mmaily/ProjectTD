@@ -99,7 +99,6 @@
   <ItemGroup>
     <Compile Include="DowerTefense.cs" />
     <Compile Include="Managers\CustomContentManager.cs" />
-    <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\UIManager.cs" />
     <Compile Include="Managers\MultiplayerManager.cs" />
     <Compile Include="Program.cs" />

@@ -29,12 +29,14 @@ namespace DowerTefense.Game.Screens
         {
             //Initialisation des Screens
             // Instance du gestionnaire d'écran
-        //Dictionnaire des Screen
-            Screens = new Dictionary<String, Screen>();
-            Screens.Add("MenuScreen", new MenuScreen());
-            Screens.Add("GameScreen", new GameScreen());
-            Screens.Add("Editor", new Editor());
-            Screens.Add("Lobby", new LobbyScreen());
+            //Dictionnaire des Screen
+            Screens = new Dictionary<String, Screen>
+            {
+                { "MenuScreen", new MenuScreen() },
+                { "GameScreen", new GameScreen() },
+                { "Editor", new Editor() },
+                { "Lobby", new LobbyScreen() }
+            };
             currentScreen = (Screen)Screens["GameScreen"];
         }
         /// <summary>

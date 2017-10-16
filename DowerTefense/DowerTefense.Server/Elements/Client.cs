@@ -65,11 +65,11 @@ namespace DowerTefense.Server.Elements
         /// Mise en place du callback pour réception de données
         /// </summary>
         /// <param name="app"></param>
-        public void SetupReceiveCallback(Server _server)
+        public void SetupReceiveCallback()
         {
             try
             {
-                AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, receiveDataCallback, this);
+                AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, this.receiveDataCallback, this);
             }
             catch (Exception ex)
             {
@@ -102,7 +102,6 @@ namespace DowerTefense.Server.Elements
                     fullMessage = true;
                 } catch (Exception e)
                 {
-                    throw;
                     // Le paquet n'est pas complet
                     fullMessage = false;
                 }
@@ -110,10 +109,14 @@ namespace DowerTefense.Server.Elements
                 // Si le message reçu était complet
                 if (fullMessage && messageReceived!=null)
                 {
+                    // Affichage console
+                    Console.WriteLine("<<< Message reçu <<< émetteur : " + this.Name + ", sujet : " + messageReceived.Subject + ", corps : " + messageReceived.received.ToString());
+
                     // On invoque l'évènement de réception de message
                     MessageReceived?.Invoke(this, messageReceived);
                     // On vide le tampon de message
                     messageBuffer = null;
+
                 }
                 else
                 {
@@ -185,6 +188,9 @@ namespace DowerTefense.Server.Elements
         /// <param name="_data">Données du message</param>
         public void Send(string _subject, object _data)
         {
+            // Info console
+            Console.WriteLine(">>> Message envoyé >>> destinataire : " + this.Name + ", sujet : " + _subject +", corps : " + _data.ToString());
+
             // Si pas connecté
             if (AuthSocket == null || !AuthSocket.Connected)
             {

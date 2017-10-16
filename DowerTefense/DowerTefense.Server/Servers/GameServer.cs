@@ -38,22 +38,33 @@ namespace DowerTefense.Server.Servers
                 c.MessageReceived += ProcessMessage;
             }
             Requests = new List<Message>();
-            // Création du jeu, on lui file client et liste des requêtes
-            GameManager game = new GameManager(clients, ref Requests);
-            game.Run();
 
             foreach (Client c in clients.Keys)
             {
                 // Changement du callback
                 c.Send("game", "starting");
             }
+
+            // Thread du jeu
+            System.Threading.Thread gameThread;
+
+            // Création du jeu, on lui file client et liste des requêtes
+            gameThread = new System.Threading.Thread(this.StartGame(ref clients, ref Requests));
+
+            gameThread.Start();
+
+        }
+
+        private void StartGame(ref Dictionary<Client, Player> _clients, ref List<Message> _requests)
+        {
+            GameManager game = new GameManager(ref _clients, ref _requests);
         }
 
         /// <summary>
         /// Traitement du message reçu
         /// </summary>
         /// <param name="_messageReceived"></param>
-        protected override void ProcessMessage(Client _client, Message _messageReceived)
+        public void ProcessMessage(Client _client, Message _messageReceived)
         {
             switch (_messageReceived.Subject)
             {
