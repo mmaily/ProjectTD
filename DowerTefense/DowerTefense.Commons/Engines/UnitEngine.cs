@@ -21,12 +21,13 @@ namespace DowerTefense.Commons.Managers
 
         /// <summary>
         /// Traitement des unités : avance, décès, victoire
-        /// TODO : point perdu si arrive base
         /// </summary>
         /// <param name="mobs"></param>
-        public static int ProcessMobs(ref List<Unit> mobs, GameTime _gameTime, byte _tileSize)
+        public static bool ProcessMobs(ref List<Unit> mobs, GameTime _gameTime, byte _tileSize, ref int goldWon, ref int livesLost)
         {
-            int goldToAdd = 0;
+            // Est-ce qu'un mob est mort ?
+            bool mobDied = false; 
+
             // Pour chaque mob de la liste
             foreach (Unit mob in mobs)
             {
@@ -34,8 +35,9 @@ namespace DowerTefense.Commons.Managers
                 if (mob.HealthPoints <= 0)
                 {
                     mob.Dead = true;
-                    goldToAdd += mob.GoldValue;
+                    goldWon += mob.GoldValue;
 
+                    mobDied = true;
                     continue;
                 }
 
@@ -79,7 +81,9 @@ namespace DowerTefense.Commons.Managers
                         {
                             // Si la tuile destination était une base, on détruit le mob et on recommence
                             mob.Dead = true;
-                            //UIManager.GetInstance().defensePlayer.lives -= mob.AttackPower;
+                            mobDied = true;
+                            // Suppression d'une vie
+                            livesLost++;
                         }
                         else
                         {
@@ -98,7 +102,9 @@ namespace DowerTefense.Commons.Managers
 
             // Suppression de toutes les unités mortes
             mobs.RemoveAll(deadMob => deadMob.Dead);
-            return goldToAdd;
+
+            // Il y a un changement si : un mob est mort OU argent gagné OU vie perdue
+            return mobDied || goldWon > 0 || livesLost > 0 ;
         }
        
         /// <summary>

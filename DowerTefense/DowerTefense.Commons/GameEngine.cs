@@ -288,12 +288,26 @@ namespace DowerTefense.Commons
             }
 
             // Mise à jour des unités
-            //Cette méthode renvoie les gold gagnés à cet update + fais bouger les unités
-            int gold = UnitEngine.ProcessMobs(ref mobs, gameTime, map.tileSize);
-            if (gold != 0)
+            int goldWon = 0;
+            int livesLost = 0;
+            bool mobsChanged = UnitEngine.ProcessMobs(ref mobs, gameTime, map.tileSize, ref goldWon, ref livesLost);
+            if (mobsChanged && serverMode)
             {
-                defensePlayer.totalGold += gold;
-                Changes[DdefensePlayer] = true;
+                // Mise à jour de la liste des mobs
+                Changes[Dmobs] = true;
+
+                // Si changement état player, envoi
+                if(goldWon > 0)
+                {
+                    defensePlayer.totalGold += goldWon;
+                    Changes[DdefensePlayer] = true;
+                }
+
+                if(livesLost > 0)
+                {
+                    defensePlayer.lives -= livesLost;
+                    Changes[DdefensePlayer] = true;
+                }
             }
 
             // Mise à jour des tours et des projectiles
