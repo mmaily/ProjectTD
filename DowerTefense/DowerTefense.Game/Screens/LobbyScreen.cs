@@ -17,7 +17,7 @@ namespace DowerTefense.Game.Screens
         //TODO : infos joueur et opposant
         private Dictionary<PlayerRole, GuiElement> players;
         private Button readyButton;
-
+        private String MyName;
         /// <summary>
         /// Constructeur de base
         /// </summary>
@@ -127,15 +127,22 @@ namespace DowerTefense.Game.Screens
         }
         public override void TreatMessages()
         {
-            foreach(Message _message in Messages)
+            Player newPlayer;
+            foreach (Message _message in Messages)
             {
+                
                 switch (_message.Subject)
                 {
+                    
                     case "playerUpdate":
                         // Récupération de l'objet joueur
-                        Player newPlayer = (Player)_message.received;
+                        newPlayer = (Player)_message.received;
                         // TODO SALE
                         UpdatePlayer(newPlayer);
+                        break;
+                    case "YourName":
+                        // Récupération de l'objet joueur
+                        MyName = ((Player)_message.received).Name;
                         break;
                     case "game":
                         if (_message.received.Equals("starting"))

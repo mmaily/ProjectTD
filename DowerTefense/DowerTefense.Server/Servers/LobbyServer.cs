@@ -67,7 +67,7 @@ namespace DowerTefense.Server.Servers
             };
 
             // Envoi de lui même
-            _client.Send("playerUpdate", newPlayer);
+            _client.Send("YourName", newPlayer);
 
             // Pour tous les joueurs déjà présents
             foreach (KeyValuePair<Client, Player> other in clients)
