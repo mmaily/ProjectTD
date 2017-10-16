@@ -111,12 +111,19 @@ namespace DowerTefense.Game.Screens
             {
                 element.Update();
             }
-            TreatMessages();
+
+            lock (Messages)
+            {
+                TreatMessages();
+            }
         }
 
         private void LobbyUpdate(Message _message)
         {
-            Messages.Add(_message);
+            lock (Messages)
+            {
+                Messages.Add(_message);
+            }
         }
         public override void TreatMessages()
         {
