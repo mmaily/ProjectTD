@@ -142,13 +142,27 @@ namespace DowerTefense.Game.Screens
                         break;
                     case "YourName":
                         // Récupération de l'objet joueur
-                        MyName = ((Player)_message.received).Name;
+                        newPlayer = ((Player)_message.received);
+                        MyName = newPlayer.Name;
+                        UpdatePlayer(newPlayer);
                         break;
                     case "game":
                         if (_message.received.Equals("starting"))
                         {
                             // Réglage du mode de l'écran de jeu
-                            ScreenManager.UpdateGameScreenMode(false);
+                            if (players[PlayerRole.Attacker].Text.Equals(MyName))
+                            {
+                                ScreenManager.UpdateGameScreenMode(false, PlayerRole.Attacker);
+                            }
+                            else if (players[PlayerRole.Defender].Text.Equals(MyName))
+                            {
+                                ScreenManager.UpdateGameScreenMode(false, PlayerRole.Defender);
+                            }
+                            else
+                            {
+                                ScreenManager.UpdateGameScreenMode(false, PlayerRole.Debug);
+
+                            }
                             // Le jeu commence, on change d'écran
                             ScreenManager.SelectScreen("GameScreen");
                             // Passage en mode jeu

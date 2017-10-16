@@ -33,7 +33,7 @@ namespace DowerTefense.Game.Screens
         private UIManager uiManager;
 
         //Role adopté par ce GameScreen
-        public PlayerRole role = PlayerRole.Debug;
+        public PlayerRole role;
 
         //Faire jouer l'AI
         private Boolean vsAI = true;

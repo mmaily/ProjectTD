@@ -84,11 +84,13 @@ namespace DowerTefense.Game.Screens
         }
 
 
-        public static void UpdateGameScreenMode(bool _vsAI)
+        public static void UpdateGameScreenMode(bool _vsAI, PlayerRole _role)
         {
             ((GameScreen)Screens["GameScreen"]).VsAI = _vsAI;
             //TODO : Enelver ce mode de débug et mettre défenseur
-            ((GameScreen)Screens["GameScreen"]).role = PlayerRole.Debug;
+
+            ((GameScreen)Screens["GameScreen"]).role = _role;
+
         }
     }   
 
