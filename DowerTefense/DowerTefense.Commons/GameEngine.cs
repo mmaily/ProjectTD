@@ -101,6 +101,10 @@ namespace DowerTefense.Commons
         /// </summary>
         public void Initialize()
         {
+            #region===Initialisation des Joueurs===
+            defensePlayer = new DefensePlayer();
+            attackPlayer = new AttackPlayer();
+            #endregion
             #region===Map===
             map = new Map();
             MapEngine.ComputePath(ref map);
@@ -182,10 +186,6 @@ namespace DowerTefense.Commons
             waveCount = 0;
             tileSize = 8;
             waveLength = 10 * 1000;
-            #endregion
-            #region===Initialisation des Joueurs===
-            defensePlayer = new DefensePlayer();
-            attackPlayer = new AttackPlayer();
             #endregion
 
         }
