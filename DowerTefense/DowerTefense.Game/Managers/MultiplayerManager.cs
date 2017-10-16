@@ -228,7 +228,7 @@ namespace DowerTefense.Game.Multiplayer
                         // Ajout au tampon de message
                         messageBuffer = messageBuffer.Append(receivedData);
                         // Récupération du message reçu
-                        messageReceived = new Message(receivedData);
+                        messageReceived = new Message(messageBuffer);
                         // Si c'est bon, le message est complet
                         fullMessage = true;
                     }

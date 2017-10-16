@@ -84,6 +84,7 @@ namespace DowerTefense.Game.Screens
             connectionButton.OnRelease += Btn_OnClick;
             UIElementsList.Add(connectionButton);
 
+
             #endregion
 
             #region Boutons choix rôle
@@ -177,7 +178,7 @@ namespace DowerTefense.Game.Screens
                 switch (btn.Tag.ToString())
                 {
                     case "horsLigne":
-                        ScreenManager.UpdateGameScreenMode(true);
+                        ScreenManager.UpdateGameScreenMode(true, LibrairieTropBien.Network.Game.PlayerRole.Debug);
                        ScreenManager.SelectScreen("GameScreen");
                         break;
                     case "matchmaking":
