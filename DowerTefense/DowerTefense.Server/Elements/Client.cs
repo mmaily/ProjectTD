@@ -86,28 +86,52 @@ namespace DowerTefense.Server.Elements
         {
             // Vérification de la présence de données
             byte[] receivedData = GetRecievedData(ar);
-            // Ajout au tampon de message
-            messageBuffer = messageBuffer.Append(receivedData);
+
             // Si le nombre d'octets reçus est supérieur à 0
-            if (messageBuffer.Length > 0)
+            if (receivedData.Length > 0)
             {
-                // Tentative de formation du message
+                // Tentative de formation du message tout seul
                 Message messageReceived = null;
                 bool fullMessage = false;
                 try
                 {
                     // Récupération du message reçu
-                    messageReceived = new Message(messageBuffer);
+                    messageReceived = new Message(receivedData);
                     // Si c'est bon, le message est complet
                     fullMessage = true;
-                } catch (Exception e)
+
+                    // On vide le tampon de message
+                    messageBuffer = null;
+                }
+                catch (Exception e)
                 {
                     // Le paquet n'est pas complet
                     fullMessage = false;
+
                 }
 
+                if (!fullMessage)
+                {
+                    // Tentative de formation du message avec le tampon en cours
+                    try
+                    {
+                        // Ajout au tampon de message
+                        messageBuffer = messageBuffer.Append(receivedData);
+                        // Récupération du message reçu
+                        messageReceived = new Message(receivedData);
+                        // Si c'est bon, le message est complet
+                        fullMessage = true;
+                    }
+                    catch (Exception)
+                    {
+                        // Le message n'est pas (encore ?) complet
+                        fullMessage = false;
+                    }
+                }
+
+
                 // Si le message reçu était complet
-                if (fullMessage && messageReceived!=null)
+                if (fullMessage && messageReceived != null)
                 {
                     // Affichage console
                     //Console.WriteLine("<<< Message reçu <<< émetteur : " + this.Name + ", sujet : " + messageReceived.Subject + ", corps : " + messageReceived.received.ToString());
