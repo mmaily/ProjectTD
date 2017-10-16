@@ -23,6 +23,8 @@ namespace DowerTefense.Game.Multiplayer
         private static Socket authSocket = null;
         // Received data buffer
         private static byte[] receivedBuffer = new byte[255];
+        // Tampon de réception de message
+        private static byte[] messageBuffer;
 
         // Etat du compte
         private static MultiplayerState state = MultiplayerState.Disconnected;
@@ -74,7 +76,7 @@ namespace DowerTefense.Game.Multiplayer
                 ProtocolType.Tcp);
 
             // Définition de l'addresse du serveur
-            IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPlocal), authServerPort);
+            IPEndPoint epAuthServer = new IPEndPoint(IPAddress.Parse(authServerIPDistant), authServerPort);
 
             // Connexion au serveur avec cellback
             authSocket.Blocking = false;
@@ -192,30 +194,56 @@ namespace DowerTefense.Game.Multiplayer
         /// <param name="ar"></param>
         public static void OnReceivedData(IAsyncResult ar)
         {
-            // Récupération du socket
-            Socket socket = (Socket)ar.AsyncState;
-
             // Vérification de la présence de données
             byte[] receivedData = GetRecievedData(ar);
+            // Ajout au tampon de message
+            messageBuffer = messageBuffer.Append(receivedData);
             // Si le nombre d'octets reçus est supérieur à 0
-            if (receivedData.Length > 0)
+            if (messageBuffer.Length > 0)
             {
-                // Récupération du message reçu
-                Message messageReceived = new Message(receivedData);
+                // Tentative de formation du message
+                Message messageReceived = null;
+                bool fullMessage = false;
+                try
+                {
+                    // Récupération du message reçu
+                    messageReceived = new Message(messageBuffer);
+                    // Si c'est bon, le message est complet
+                    fullMessage = true;
+                }
+                catch (Exception e)
+                {
+                    // Le paquet n'est pas complet
+                    fullMessage = false;
+                }
+
+                // Si le message reçu était complet
+                if (fullMessage && messageReceived != null)
+                {
+                    // Affichage console
+                    //Console.WriteLine("<<< Message reçu <<< émetteur : " + this.Name + ", sujet : " + messageReceived.Subject + ", corps : " + messageReceived.received.ToString());
+
+                    // On invoque l'évènement de réception de message
+                    ProcessMessageReceived(messageReceived);
+                    // On vide le tampon de message
+                    messageBuffer = null;
+
+                }
+                else
+                {
+                    // Le message n'est pas encore totalement reçu
+                }
 
                 // Remise en était du callback de réception
                 AsyncCallback recieveDataCallBack = new AsyncCallback(OnReceivedData);
-                socket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveDataCallBack, socket);
+                authSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveDataCallBack, authSocket);
 
-                // Traitement du message
-                ProcessMessageReceived(messageReceived);
             }
             else
             {
                 // La connextion est probablement fermée
                 //socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
-
+                authSocket.Close();
                 // Etat : déconnecté
                 State = MultiplayerState.Disconnected;
             }
