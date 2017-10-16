@@ -16,6 +16,11 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             this.Name = "ToughSpawner";
             this.UnitName = "ToughUnit";
             this.Unit = new ToughUnit();
+            this.NbreOfInstantSpawnPrice = 1000;
+            //leveling
+            this.SpawnRateCoeff = 0.12;
+            this.SpawnRatePrice = 250;
+            this.SpawnRatePriceCoeff = 0.1;
         }
     }
 }

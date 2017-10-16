@@ -16,10 +16,31 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         public List<Projectile> ProjectileList { get; protected set; }//  Liste de ses munitions en vol
         protected Entity target;//Cible actuelle
         protected String projectileName;
+        //Coefficient de leveling
+        protected double rangeCoeff;
+        protected double fireRateCoeff;
+        protected double dmgCoeff;
+        //Prix du leveling et coeff d'augmentation
+        protected int rangePrice;
+        protected double rangePriceCoeff;
+        protected int fireRatePrice;
+        protected double fireRatePriceCoeff;
+        protected int dmgPrice;
+        protected double dmgPriceCoeff;
+
+
         public enum NameEnum
         {
             BasicTower, // Tour de base
             RapidFireTower,// Tour d'essaie (tir rapide, courte portée)
+        }
+        public FocusEnum focus;
+        public enum FocusEnum
+        {
+            Far,
+            Close,
+            Strong,
+            Weak
         }
 
         /// <summary>
@@ -34,7 +55,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             this.TargetType = UnitTypeEnum.Ground;
             this.TargetNumber = 1;
             this.BulletSpeed = 5 * 64;
-
+            this.focus = FocusEnum.Far;
 
             //Initialisation de la liste des projectile
             ProjectileList = new List<Projectile>();
@@ -87,7 +108,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             {
                 target = null;
                 //TODO : Faire une liste intermédiaire selon le typede focus
-                foreach (Entity unit in UnitEngine.GetSortedUnitList(mobs))
+                foreach (Entity unit in UnitEngine.GetSortedUnitList(mobs,focus))
                 {
                     if (Vector2.Distance(this.Position, unit.Position) < this.Range)
                         target = unit;
@@ -140,6 +161,50 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             Building other = (Tower)this.MemberwiseClone();
             return other;
         }
+        public int FRLvlUp(int Gold)
+        {
+            int lostGold = 0;
+            if (fireRatePrice <= Gold)
+            {
+                this.RateOfFire += (int)Math.Ceiling(this.BaseRateOfFire * fireRateCoeff);
+                lostGold = fireRatePrice;
+                //Calcule le nouveau coût du lvl up
+                fireRatePrice *= (int)Math.Ceiling(1 + fireRatePriceCoeff);
+            }
+            //Si les gold retournés sont nuls, on sait que le joueur n'avait pas les sous pour construire
+            //TODO : Message d'avertissement si pas assez de sous ? valeur -1 si max de lvl up atteint ?
+            return lostGold;
+        }
+        public int DmgLvlUp(int Gold)
+        {
+            int lostGold = 0;
+            if (dmgPrice <= Gold)
+            {
+                this.AttackPower += (int)Math.Ceiling(this.BaseAttackPower * dmgCoeff);
+                lostGold = dmgPrice;
+                //Calcule le nouveau coût du lvl up
+                fireRatePrice *= (int)Math.Ceiling(1 + dmgPriceCoeff);
+            }
+            //Si les gold retournés sont nuls, on sait que le joueur n'avait pas les sous pour construire
+            //TODO : Message d'avertissement si pas assez de sous ? valeur -1 si max de lvl up atteint ?
+            return lostGold;
+        }
+        public int RangeLvlUp(int Gold)
+        {
+            int lostGold = 0;
+            if(rangePrice<= Gold)
+            {
+                this.Range += (int)Math.Ceiling(this.BaseRange * rangeCoeff);
+                lostGold = dmgPrice;
+                //Calcule le nouveau coût du lvl up
+                rangePrice *= (int)Math.Ceiling(1 + rangePriceCoeff);
+            }
+            //Si les gold retournés sont nuls, on sait que le joueur n'avait pas les sous pour construire
+            //TODO : Message d'avertissement si pas assez de sous ? valeur -1 si max de lvl up atteint ?
+            return lostGold;
+        }
+
+
 
     }
 }

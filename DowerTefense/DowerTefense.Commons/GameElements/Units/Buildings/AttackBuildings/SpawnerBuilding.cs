@@ -12,10 +12,16 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
     public class SpawnerBuilding : Building
     {
         protected double SpawnRate; //Number of mobs/second
+        protected double BaseSpawnRate;//Nombre de mobs/seconde lvl 1
+        protected double SpawnRateCoeff;//Coefficient d'évolution du SpawnRate pour lvlUp
+        protected int SpawnRatePrice;//Prix de base de l'évolution du SpawnRate
+        protected double SpawnRatePriceCoeff;//Evolution du prix du lvl de SpawnRate
         protected double lastSpawn; // Time of the last spawned mob
-        public Boolean locked=false; // Le batiment ne spawn qui s'il est lock
+        public Boolean locked=false; // Le batiment ne spawn que s'il est lock
         public Boolean powered; // Le bâtiment ne spawn que s'il est powered
         public int PowerNeeded { get; protected set; } // Energie requise par le bâtiment
+        public int NbreOfInstantSpawnPrice { get; set; }
+
         public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
         protected Unit Unit;// Type d'unité qu'il spawn
         protected String UnitName;
@@ -28,7 +34,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             BasicSpawner, // Spawner d'unité de base
             ToughSpawner,//Spawner d'unité tanky
             FastSpawner //Spawner d'unité rapide
-
         }
 
 
@@ -164,5 +169,30 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             info.AddValue("PowerNeeded", PowerNeeded);
 
         }
+        #region leveling
+        public Boolean NbreOfInstantSpawnLvlUp(int gold)
+        {
+            Boolean success = false;
+            if (NbreOfInstantSpawnPrice <= gold)
+            {
+                NbreOfInstantSpawn++;
+                NbreOfInstantSpawnPrice *= 2;
+                success = true;
+            }
+            return success;
+        }
+        public Boolean SpawnRateLvlUp(int gold)
+        {
+            Boolean success = false;
+
+            if (SpawnRatePrice <= gold)
+            {
+                this.SpawnRate += (int)Math.Ceiling(this.BaseSpawnRate * SpawnRateCoeff);
+                //Calcule le nouveau coût du lvl up
+                SpawnRatePrice *= (int)Math.Ceiling(1 + SpawnRatePriceCoeff);
+            }
+            return success;
+        }
+        #endregion
     }
 }

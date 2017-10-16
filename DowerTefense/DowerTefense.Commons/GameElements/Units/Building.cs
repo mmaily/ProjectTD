@@ -13,11 +13,11 @@ namespace DowerTefense.Commons.Units
     [Serializable]
     public abstract class Building : Entity
     {
-
-        /// <summary>
-        /// Tuile sur laquelle est positionné le bâtiment
-        /// </summary>
-        private Tile tile;
+        ///Type de focus adopté
+    /// <summary>
+    /// Tuile sur laquelle est positionné le bâtiment
+    /// </summary>
+    private Tile tile;
 
         public Building() : base()
         {
