@@ -19,6 +19,16 @@ namespace DowerTefense.Commons.GameElements.Units.Unités
             this.GoldValue = 10;
             this.AttackPower = 1;
             this.HealthPoints = this.MaxHealthPoints = 5;
+            //Leveling
+            this.BaseSpeed = this.Speed;
+            this.SpeedCoeff = 0.2;
+            this.SpeedPrice = 150;
+            this.SpeedPriceCoeff = 0.3;
+
+            this.BaseMaxHealthPoints = MaxHealthPoints;
+            this.MaxHealthPointsCoeff = 0.05;
+            this.MaxHealthPointsPrice = 150;
+            this.MaxHealthPointsPriceCoeff = 0.4;
         }
         public override Unit DeepCopy()
         {

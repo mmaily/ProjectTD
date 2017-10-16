@@ -73,10 +73,12 @@ namespace DowerTefense.Commons.GameElements.Units
         /// <summary>
         /// Dégâts infligés par l'unité (défaut : 0)
         /// </summary>
+        public int BaseAttackPower { get; protected set; }
         public int AttackPower { get; protected set; }
         /// <summary>
         /// Portée des attaques de l'unité (défaut : 0)
         /// </summary>
+        public float BaseRange { get; protected set; }
         public float Range { get; protected set; }
         /// <summary>
         /// vitesse de déplacement du projectile tiré
@@ -86,6 +88,7 @@ namespace DowerTefense.Commons.GameElements.Units
         /// Vitesse d'attaque de l'unité en tirs/MILLIseconde  (défaut : 1)
         /// </summary>
         public double RateOfFire { get; protected set; }
+        public double BaseRateOfFire { get; protected set; }
         /// <summary>
         /// Sauvegarde le temps de jeu du dernier tir
         /// </summary>

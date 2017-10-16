@@ -8,6 +8,7 @@ using DowerTefense.Commons.GameElements.Projectiles;
 using System.Linq;
 using LibrairieTropBien.Network;
 using LibrairieTropBien.SerializableObjects;
+using static DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings.Tower;
 
 namespace DowerTefense.Commons.Managers
 {
@@ -105,9 +106,25 @@ namespace DowerTefense.Commons.Managers
         /// </summary>
         /// <param name="_units">Liste des unités à trier</param>
         /// <returns>Liste des unités triées</returns>
-        public static List<Unit> GetSortedUnitList(List<Unit> _units)
+        public static List<Unit> GetSortedUnitList(List<Unit> _units, FocusEnum focus)
         {
-            List<Unit> sortedList = _units.OrderBy(m => m.DistanceTraveled).ToList<Unit>();
+            List<Unit> sortedList = null;
+            switch (focus)
+            {
+                case FocusEnum.Far:
+                    sortedList = _units.OrderBy(m => m.DistanceTraveled).ToList<Unit>();
+                    break;
+                case FocusEnum.Close:
+                    sortedList = _units.OrderByDescending(m => m.DistanceTraveled).ToList<Unit>();
+                    break;
+                case FocusEnum.Weak:
+                    sortedList = _units.OrderByDescending(m => m.HealthPoints).ToList<Unit>();
+                    break;
+                case FocusEnum.Strong:
+                    sortedList = _units.OrderBy(m => m.HealthPoints).ToList<Unit>();
+                    break;
+            }
+
             return sortedList;
         }
 
