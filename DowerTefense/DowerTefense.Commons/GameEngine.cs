@@ -202,7 +202,7 @@ namespace DowerTefense.Commons
 
             // Durée depuis ancien tic de vague
             timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
-
+            newWave = false;
             // Partie uniquement pour le serveur : bâtiments construction + vagues
             if (serverMode)
             {
@@ -284,7 +284,6 @@ namespace DowerTefense.Commons
             {
                 // Sauvegarde horodatage
                 lastWaveTick = gameTime.TotalGameTime.TotalMilliseconds;
-                newWave = false;
             }
 
             // Mise à jour des unités

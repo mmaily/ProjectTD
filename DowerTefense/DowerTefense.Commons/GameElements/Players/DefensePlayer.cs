@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DowerTefense.Game.Players
 {
+    [Serializable]
     public class DefensePlayer
     {
         public int startingGold=200;

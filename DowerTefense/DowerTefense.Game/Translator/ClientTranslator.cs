@@ -86,6 +86,9 @@ namespace DowerTefense.Game.Translator
                         Building sp = (SpawnerBuilding)((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForConstruction.Add(sp);
                         break;
+                    case "newWave":
+                        game.newWave = true;
+                        break;
                     default:
                         break;
                 }

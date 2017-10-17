@@ -161,9 +161,9 @@ namespace DowerTefense.Game.Screens
 
                 //Update du jeu en interne
                 game.Update(_gameTime);
-
                 // Mise à jour du gestionnaire d'interface
                 uiManager.Update(_gameTime);
+
                 if (vsAI == false)
                 {
                     // Envoi des modifications au serveur
