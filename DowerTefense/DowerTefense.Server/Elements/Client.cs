@@ -42,6 +42,9 @@ namespace DowerTefense.Server.Elements
         // Etat de la connexion
         public MultiplayerState state = MultiplayerState.Disconnected;
 
+        // Interface réseau
+        NetworkInterface networkInterface;
+
         /// <summary>
         /// Évènement de réception de message
         /// </summary>
@@ -56,6 +59,9 @@ namespace DowerTefense.Server.Elements
         {
             AuthSocket = _sock;
             this.Name = "";
+
+            // Interface réseau
+            networkInterface = new NetworkInterface();
 
             // Mise en place du callback
             receiveDataCallback = new AsyncCallback(OnReceivedData);
@@ -82,128 +88,32 @@ namespace DowerTefense.Server.Elements
         /// Callback de réception de données
         /// </summary>
         /// <param name="ar"></param>
-        public void OnReceivedData(IAsyncResult ar)
+        public void OnReceivedData(IAsyncResult _ar)
         {
-            // Vérification de la présence de données
-            byte[] receivedData = GetRecievedData(ar);
+            // Récupération des données reçues
+            byte[] receivedData = NetworkInterface.GetReceivedData(_ar, AuthSocket, receivedBuffer);
 
             // Si le nombre d'octets reçus est supérieur à 0
             if (receivedData.Length > 0)
             {
-                // Tentative de formation du message tout seul
-                Message messageReceived = null;
-                bool fullMessage = false;
-                try
-                {
-                    // Récupération du message reçu
-                    messageReceived = new Message(receivedData);
-                    // Si c'est bon, le message est complet
-                    fullMessage = true;
-
-                    // On vide le tampon de message
-                    messageBuffer = null;
-                }
-                catch (Exception e)
-                {
-                    // Le paquet n'est pas complet
-                    fullMessage = false;
-
-                }
-
-                if (!fullMessage)
-                {
-                    // Tentative de formation du message avec le tampon en cours
-                    try
-                    {
-                        // Ajout au tampon de message
-                        messageBuffer = messageBuffer.Append(receivedData);
-                        // Récupération du message reçu
-                        messageReceived = new Message(messageBuffer);
-                        // Si c'est bon, le message est complet
-                        fullMessage = true;
-                    }
-                    catch (Exception)
-                    {
-                        // Le message n'est pas (encore ?) complet
-                        fullMessage = false;
-                    }
-                }
-
-
-                // Si le message reçu était complet
-                if (fullMessage && messageReceived != null)
-                {
-                    // Affichage console
-                    //Console.WriteLine("<<< Message reçu <<< émetteur : " + this.Name + ", sujet : " + messageReceived.Subject + ", corps : " + messageReceived.received.ToString());
-
-                    // On invoque l'évènement de réception de message
-                    MessageReceived?.Invoke(this, messageReceived);
-                    // On vide le tampon de message
-                    messageBuffer = null;
-
-                }
-                else
-                {
-                    // Le message n'est pas encore totalement reçu
-                }
+                // Ajout des octets reçus au tampon de réception
+                networkInterface.AddReceivedData(receivedData);
 
                 // Remise en était du callback de réception
                 AsyncCallback recieveDataCallBack = new AsyncCallback(OnReceivedData);
                 AuthSocket.BeginReceive(receivedBuffer, 0, receivedBuffer.Length, SocketFlags.None, recieveDataCallBack, AuthSocket);
-
             }
             else
             {
                 // La connextion est probablement fermée
-                //socket.Shutdown(SocketShutdown.Both);
                 AuthSocket.Close();
+                // Etat : déconnecté
+                state = MultiplayerState.Disconnected;
             }
         }
 
         /// <summary>
-        /// Récupération des données recues
-        /// </summary>
-        /// <param name="ar"></param>
-        /// <returns>Tableau d'octets des données</returns>
-        public byte[] GetRecievedData(IAsyncResult ar)
-        {
-            // Nombre d'octets reçus
-            int nBytesReceived = 0;
-            try
-            {
-                nBytesReceived = AuthSocket.EndReceive(ar);
-            }
-            catch { }
-            byte[] byReturn = new byte[nBytesReceived];
 
-            // Copie des octets
-            Array.Copy(receivedBuffer, byReturn, nBytesReceived);
-
-            // Vérifie la présence de données restantes
-            // Augmente la performance des paquets
-            // "pas essentiel et chiant à lire"
-            int nToBeRead = 0;
-            try
-            {
-                nToBeRead = AuthSocket.Available;
-            }
-            catch (Exception)
-            {
-                // Le socket a été fermé, c'est pas grave... (Nan en vrai c'est qu'on switch de serveur)
-            }
-
-
-            if (nToBeRead > 0)
-            {
-                // Récupération des octets restants
-                byte[] byData = new byte[nToBeRead];
-                AuthSocket.Receive(byData);
-                // Ajout des octets au tableau de retour
-                byReturn = byReturn.Append(byData);
-            }
-
-            return byReturn;
-        }
 
         /// <summary>
         /// Méthode d'envoi de données
@@ -225,8 +135,9 @@ namespace DowerTefense.Server.Elements
             {
                 // Création d'un objet message et envoi
                 Message message = new Message(_subject, _data);
-                byte[] bMessage = message.GetArray();
-                AuthSocket.Send(bMessage, bMessage.Length, 0);
+
+                // Envoi des données
+                NetworkInterface.Send(message, AuthSocket);
             }
             catch (Exception e)
             {

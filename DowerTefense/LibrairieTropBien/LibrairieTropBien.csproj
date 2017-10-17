@@ -56,6 +56,7 @@
     <Compile Include="Network\Game\Player.cs" />
     <Compile Include="Network\Message.cs" />
     <Compile Include="Network\MultiplayerState.cs" />
+    <Compile Include="Network\NetworkInterface.cs" />
     <Compile Include="ObjectExtension\ByteArray.cs" />
     <Compile Include="ObjectExtension\Object.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,5 +35,23 @@ namespace LibrairieTropBien.ObjectExtension
             // Le retour de l'array
             return arrayFull;
         }
+
+        /// <summary>
+        /// Ajoute le tableau en paramètre à la fin du tableau concerné à partir d'un index donné
+        /// </summary>
+        /// <param name="_mainArray">Tableau destination</param>
+        /// <param name="_arrayToAdd">Tableau à ajouter</param>
+        /// <param name="_sourceOffset">Offset de copie de données</param>
+        public static byte[] Append(this byte[] _mainArray, byte[] _arrayToAdd, int _sourceOffset)
+        {
+            // Nouveau tableau source de longeur restante
+            byte[] shortSourceArray = new byte[_arrayToAdd.Length - _sourceOffset];
+            Buffer.BlockCopy(_arrayToAdd, _sourceOffset, shortSourceArray, 0, shortSourceArray.Length);
+
+            byte[] result = _mainArray.Append(shortSourceArray);
+
+            // Le retour de l'array
+            return result;
+        }
     }
 }
