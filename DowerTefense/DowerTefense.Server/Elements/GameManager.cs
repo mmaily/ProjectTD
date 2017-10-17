@@ -71,6 +71,10 @@ namespace DowerTefense.Server.Elements
             ServerTranslator.UpdateGame(ref game, ref Requests);
             //Mise a jour du jeu en interne
             game.Update(gameTime);
+
+            // TODO : meilleure place ?
+            game.newWave = false;
+
             //On regarde la liste des changements et on les envoie aux clients
             //TODO : Pas sur que la méthode d'envoie dans le ServerTranslator soit ouf ouf
             ServerTranslator.SendGameUpdate(game.Changes, ref clients);

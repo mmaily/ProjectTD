@@ -13,7 +13,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
     public class Tower : Building
     {
 
-        public List<Projectile> ProjectileList { get; protected set; }//  Liste de ses munitions en vol
+        [NonSerialized]
         protected Entity target;//Cible actuelle
         protected String projectileName;
         //Coefficient de leveling
@@ -28,6 +28,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         protected int dmgPrice;
         protected double dmgPriceCoeff;
 
+        public List<Projectile> ProjectileList { get; protected set; }//  Liste de ses munitions en vol
 
         public enum NameEnum
         {

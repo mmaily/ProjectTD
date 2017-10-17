@@ -149,7 +149,7 @@ namespace DowerTefense.Commons.GameElements.Units
         /// </summary>
         public Entity()
         {
-            Position = new Vector2();
+            Position = new SVector2();
             UnitType = UnitTypeEnum.None;
             MaxHealthPoints = 1;
             HealthPoints = 1;

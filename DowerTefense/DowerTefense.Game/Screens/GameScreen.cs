@@ -164,6 +164,9 @@ namespace DowerTefense.Game.Screens
                 // Mise à jour du gestionnaire d'interface
                 uiManager.Update(_gameTime);
 
+                // TODO : meilleure place ?
+                game.newWave = false;
+
                 if (vsAI == false)
                 {
                     // Envoi des modifications au serveur
