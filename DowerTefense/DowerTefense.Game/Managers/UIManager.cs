@@ -276,6 +276,8 @@ namespace DowerTefense.Game.Managers
                     ActiveList[btn].powered = true;
                     game.attackPlayer.usedEnergy += ActiveList[btn].PowerNeeded;
                     btn.GreyedOut = false;
+                    //TODO : Envoyer que a la fin d'une vague ?
+                    game.Changes[game.DFreeBuildingsList] = true;
                     return;
                 }
                 if (btn.Tag.Equals("ActiveList") && (ActiveList[btn].powered))
@@ -283,6 +285,7 @@ namespace DowerTefense.Game.Managers
                     ActiveList[btn].powered = false;
                     game.attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
                     btn.GreyedOut = true;
+                    game.Changes[game.DFreeBuildingsList] = true;
                     return;
                 }
                 #endregion
