@@ -57,7 +57,7 @@ namespace LibrairieTropBien.Network
         public void AddReceivedData(byte[] _data)
         {
             // Si nous n'avons pas de données en entrée : c'est le premier message
-            if(messageSize == 0 && buffer.Length == 0)
+            if(messageSize == 0 || buffer == null)
             {
                 // Récupération de la longeur
                 messageSize = BitConverter.ToInt32(new byte[] { _data[0], _data[1] }, 0);
