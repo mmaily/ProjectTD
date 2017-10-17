@@ -212,8 +212,8 @@ namespace DowerTefense.Commons
                     // Différence Tour (défense) / Spawner (attaque)
                     if (bd is Tower)
                     {
-                        // Si le joueur possède assez d'argent
-                        if(defensePlayer.totalGold >= bd.Cost)
+                        // Si le joueur possède assez d'argent ET l'emplacement est disponible
+                        if(defensePlayer.totalGold >= bd.Cost && bd.GetTile().TileType == Tile.TileTypeEnum.Free && bd.GetTile().building != null)
                         {
                             //Why ? Osef ! Tower t = (Tower)bd.DeepCopy();
                             Tower t = (Tower)bd;
