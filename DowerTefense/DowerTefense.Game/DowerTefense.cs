@@ -11,7 +11,6 @@ namespace DowerTefense.Game
     /// </summary>
     public class DowerTefense : Microsoft.Xna.Framework.Game
     {
-
         // Gestionnaire des graphiques
         GraphicsDeviceManager graphics;
         // Gestionnaire des sprites
@@ -26,7 +25,6 @@ namespace DowerTefense.Game
             graphics = new GraphicsDeviceManager(this);
             // Dossier racine du contenu
             Content.RootDirectory = "Content";
-
         }
 
         /// <summary>
