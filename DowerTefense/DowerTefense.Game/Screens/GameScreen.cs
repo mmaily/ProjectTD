@@ -67,7 +67,7 @@ namespace DowerTefense.Game.Screens
             //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
             // Création de l'interface utilisateur
-            uiManager = new UIManager(game);
+            uiManager = new UIManager(ref game);
             uiManager.SetRole(role);
             uiManager.Initialize(_graphics);
             // Init de l'UI

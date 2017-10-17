@@ -88,7 +88,7 @@ namespace DowerTefense.Game.Managers
         /// <summary>
         /// Constructeur du gestionnaire d'unité
         /// </summary>
-        public UIManager(GameEngine game)
+        public UIManager(ref GameEngine game)
         {
             this.game = game;
             currentMap = game.map;
@@ -507,7 +507,7 @@ namespace DowerTefense.Game.Managers
             if (mode.Equals("attack"))
             {
                 offset = 380;
-                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
             }
             offset = 400;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + game.FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);

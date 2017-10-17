@@ -225,6 +225,7 @@ namespace DowerTefense.Commons
                             bd.GetTile().building = t;
                             // Notification de changement
                             Changes[DDefenseBuildingsList] = true;
+                            Changes[DdefensePlayer] = true;
                         }
                         // On peut passer directement au bâtiment suivant
                         continue;
@@ -240,6 +241,7 @@ namespace DowerTefense.Commons
                             attackPlayer.totalGold -= bd.Cost;
                             // Ajout à la liste
                             FreeBuildingsList.Add(spawner);
+
                             // Activation automatique si assez d'énergie
                             if (attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (spawner.PowerNeeded))
                             {
@@ -248,6 +250,7 @@ namespace DowerTefense.Commons
                             }
                             // Notification de changement
                             Changes[DFreeBuildingsList] = true;
+                            Changes[DattackPlayer] = true;
                         }
                         // On peut passer directement au bâtiment suivant
                         continue;
