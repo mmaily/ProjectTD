@@ -63,6 +63,9 @@ namespace DowerTefense.Server.Elements
             // Interface réseau
             networkInterface = new NetworkInterface();
 
+            // Abonnement à l'évènement
+            networkInterface.MessageReceived += this.MessageReceivedHandler;
+
             // Mise en place du callback
             receiveDataCallback = new AsyncCallback(OnReceivedData);
         }
@@ -112,7 +115,10 @@ namespace DowerTefense.Server.Elements
             }
         }
 
-        /// <summary>
+        private void MessageReceivedHandler(Message _message)
+        {
+            MessageReceived?.Invoke(this, _message);
+        }
 
 
         /// <summary>
