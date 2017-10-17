@@ -70,10 +70,6 @@ namespace DowerTefense.Game.Managers
         #endregion
         //Role
         protected PlayerRole role;
-        //Joueur (défenseur pour l'instant)
-        public DefensePlayer defensePlayer;
-        //Joueur attaquand
-        public AttackPlayer attackPlayer;
         //Point de vue adoptée par l'interface
         #region Gestion du lock des spawn
         private Dictionary<Button, SpawnerBuilding> ActiveList;
@@ -107,9 +103,6 @@ namespace DowerTefense.Game.Managers
             // Récupération de la police par défaut
             deFaultFont = CustomContentManager.Fonts["font"];
 
-            //Instanciation des joueurs
-            defensePlayer = game.defensePlayer;
-            attackPlayer = game.attackPlayer;
 
             // Initialisation de la liste des éléments d'interface
             UIElementsList = new List<GuiElement>();
@@ -250,7 +243,7 @@ namespace DowerTefense.Game.Managers
                     // Si la tuile est libre, n'a pas de bâtiment dessus et le joueur a assez d'argent
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free
                         && SelectedTile.building == null
-                        && (building.Cost <= defensePlayer.totalGold))
+                        && (building.Cost <= game.defensePlayer.totalGold))
                     {
                         // C'est bon !
                         // Copie du bâtiment à construire
@@ -268,7 +261,7 @@ namespace DowerTefense.Game.Managers
                 {
                     // On récupère le bâtiment à construire
                     Building building = Dummies.Find(b => b.Name.Equals(btn.Name));
-                    if (building.Cost <= attackPlayer.totalGold)
+                    if (building.Cost <= game.attackPlayer.totalGold)
                     {
                         SpawnerBuilding spawnbuilding = (SpawnerBuilding)building.CloneObject();
 
@@ -278,17 +271,17 @@ namespace DowerTefense.Game.Managers
                     }
                 }
                 #region ===Gestion de l'appui sur les boutons de l'attaquant sur sa liste active===
-                if (btn.Tag.Equals("ActiveList") && attackPlayer.totalEnergy - attackPlayer.usedEnergy >= (ActiveList[btn].PowerNeeded) && !(ActiveList[btn].powered))
+                if (btn.Tag.Equals("ActiveList") && game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy >= (ActiveList[btn].PowerNeeded) && !(ActiveList[btn].powered))
                 {
                     ActiveList[btn].powered = true;
-                    attackPlayer.usedEnergy += ActiveList[btn].PowerNeeded;
+                    game.attackPlayer.usedEnergy += ActiveList[btn].PowerNeeded;
                     btn.GreyedOut = false;
                     return;
                 }
                 if (btn.Tag.Equals("ActiveList") && (ActiveList[btn].powered))
                 {
                     ActiveList[btn].powered = false;
-                    attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
+                    game.attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
                     btn.GreyedOut = true;
                     return;
                 }
@@ -339,11 +332,11 @@ namespace DowerTefense.Game.Managers
                     // On regarde le role adopté, et grise les boutons soit
                     if (role.Equals("defense") || role.Equals("both"))
                     {
-                        element.GreyedOut = (building.Cost <= defensePlayer.totalGold) ? false : true;
+                        element.GreyedOut = (building.Cost <= game.defensePlayer.totalGold) ? false : true;
                     }
                     if (role.Equals("attack") || role.Equals("both"))
                     {
-                        element.GreyedOut = (building.Cost <= attackPlayer.totalGold) ? false : true;
+                        element.GreyedOut = (building.Cost <= game.attackPlayer.totalGold) ? false : true;
                     }
                 }                // Si l'élément est de type bouton
                 //On update le bouton
@@ -498,11 +491,11 @@ namespace DowerTefense.Game.Managers
 
             //Display le nombre de Spawner
             offset = 360;
-            _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + defensePlayer.lives, new Vector2(leftUIOffset, offset), Color.White);
+            _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + game.defensePlayer.lives, new Vector2(leftUIOffset, offset), Color.White);
             if (mode.Equals("defense"))
             {
                 offset = 380;
-                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
             }
             if (mode.Equals("attack"))
             {
@@ -515,7 +508,7 @@ namespace DowerTefense.Game.Managers
             _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + game.DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
 
             // Affichage du nom de la carte
-            _spriteBatch.DrawString(deFaultFont, currentMap.Name + " -- Mode : " + mode, new Vector2(leftUIOffset, 5), Color.Wheat);
+            _spriteBatch.DrawString(deFaultFont, game.map.Name + " -- Mode : " + mode, new Vector2(leftUIOffset, 5), Color.Wheat);
 
             #endregion
             #region === Infos tuile et construction ===
@@ -525,7 +518,7 @@ namespace DowerTefense.Game.Managers
             if (mode.Equals("attack"))
             {
                 offset = 340;
-                _spriteBatch.DrawString(deFaultFont, "Energie du joueur : " + (attackPlayer.totalEnergy - attackPlayer.usedEnergy) + "/" + attackPlayer.totalEnergy, new Vector2(leftUIOffset, offset), Color.White);
+                _spriteBatch.DrawString(deFaultFont, "Energie du joueur : " + (game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy) + "/" + game.attackPlayer.totalEnergy, new Vector2(leftUIOffset, offset), Color.White);
             }
             // Si une tuile est sélectionnée
             if (SelectedTile != null)
