@@ -66,8 +66,6 @@ namespace LibrairieTropBien.Network
             {
                 // Récupération de la longeur
                 byte[] lol = new byte[] { _data[0], _data[1] };
-                if (BitConverter.IsLittleEndian)
-                    Array.Reverse(lol);
 
                 messageSize = BitConverter.ToInt16(lol, 0);
 
