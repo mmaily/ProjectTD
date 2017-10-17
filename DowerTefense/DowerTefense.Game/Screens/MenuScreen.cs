@@ -171,7 +171,10 @@ namespace DowerTefense.Game.Screens
         /// <param name="e"></param>
         private void Btn_OnClick(object sender, EventArgs e)
         {
-            if (sender.GetType() == typeof(Button))
+            if (sender.GetType() == typeof(Button)
+               && System.Windows.Forms.Form.ActiveForm != null
+               && System.Windows.Forms.Form.ActiveForm.Text.Equals("DowerTefense"))
+               //TODO : Pas hyper ergo si le nom du jeu change... ou si 2 instances
             {
                 Button btn = (Button)sender;
 

@@ -259,7 +259,9 @@ namespace DowerTefense.Game.Screens
             // Récupération de la position de la souris
             Point mousePosition = mouseState.Position;
             //On check si la souris est dans la zone map
-            if (mapZone.Contains(mousePosition))
+            if (mapZone.Contains(mousePosition)
+                 && System.Windows.Forms.Form.ActiveForm != null
+               && System.Windows.Forms.Form.ActiveForm.Text.Equals("DowerTefense"))
             {
                 // On récupère la tuile visée
                 Tile selectedTile = EditedMap[(mousePosition.X-leftMargin) / tileSize, (mousePosition.Y-topMargin) / tileSize];
@@ -291,7 +293,9 @@ namespace DowerTefense.Game.Screens
             // Récupération de la position de la souris
             Point mousePosition = mouseState.Position;
             //On check si la souris est dans la zone map
-            if (tileZone.Contains(mousePosition))
+            if (tileZone.Contains(mousePosition)
+               && System.Windows.Forms.Form.ActiveForm != null
+               && System.Windows.Forms.Form.ActiveForm.Text.Equals("DowerTefense"))
             {
                 // On récupère la tuile visée
                 Tile selectedTile = modelTiles.Find(tile => tile.line== (mousePosition.Y - tileZone.Top) / tileSize&& tile.column== (mousePosition.X - tileZone.Left) / tileSize);

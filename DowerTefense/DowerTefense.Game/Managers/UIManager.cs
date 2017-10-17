@@ -114,7 +114,6 @@ namespace DowerTefense.Game.Managers
         public void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
-           
         }
         public void LoadContent(List<Building> _Dummies)
         {
@@ -223,6 +222,7 @@ namespace DowerTefense.Game.Managers
                 Name = "ProgressBarWave",
                 Max = game.waveLength,
                 Tag = "UI",
+                
             };
 
             UIElementsList.Add(progressBarWaves);
@@ -232,7 +232,9 @@ namespace DowerTefense.Game.Managers
         private void Btn_OnClick(object sender, System.EventArgs e)
         {
 
-            if (sender.GetType() == typeof(Button))
+            if (sender.GetType() == typeof(Button)
+               && System.Windows.Forms.Form.ActiveForm != null
+               && System.Windows.Forms.Form.ActiveForm.Text.Equals("DowerTefense"))
             {
                 Button btn = (Button)sender;
                 // Si le bouton est une construction et qu'on l'on sélectionne une tuile
@@ -276,6 +278,8 @@ namespace DowerTefense.Game.Managers
                     ActiveList[btn].powered = true;
                     game.attackPlayer.usedEnergy += ActiveList[btn].PowerNeeded;
                     btn.GreyedOut = false;
+                    //TODO : Envoyer que a la fin d'une vague ?
+                    game.Changes[game.DFreeBuildingsList] = true;
                     return;
                 }
                 if (btn.Tag.Equals("ActiveList") && (ActiveList[btn].powered))
@@ -283,6 +287,7 @@ namespace DowerTefense.Game.Managers
                     ActiveList[btn].powered = false;
                     game.attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
                     btn.GreyedOut = true;
+                    game.Changes[game.DFreeBuildingsList] = true;
                     return;
                 }
                 #endregion

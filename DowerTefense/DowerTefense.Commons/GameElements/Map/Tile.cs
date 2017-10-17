@@ -104,6 +104,12 @@ namespace DowerTefense.Commons.GameElements
             info.AddValue("column", column);
             info.AddValue("TileType", TileType);
         }
+        public Tile GetCorrespondingTile( Map map)
+        {
+            Tile tile = null;
+            tile = map.Tiles[this.line, this.column];
+            return tile;
+        }
     }
 
 }

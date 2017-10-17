@@ -1,4 +1,5 @@
 ﻿using DowerTefense.Commons;
+using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Commons.Units;
 using LibrairieTropBien.Network;
@@ -41,6 +42,9 @@ namespace DowerTefense.Server.Elements
                 case "DWaitingForConstruction":
                     //TODO : Gérer la différenciation entre Tower et Spawning
                     game.DefenseBuildingsList.AddRange((List<Building>)message.received);
+                    break;
+                case "FreeBuildingList":
+                    game.FreeBuildingsList.AddRange((List<SpawnerBuilding>)message.received);
                     break;
                 case "newTower":
                     // Réception d'un nouveau bâtiment

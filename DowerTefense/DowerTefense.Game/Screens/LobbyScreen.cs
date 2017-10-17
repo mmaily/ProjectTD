@@ -86,7 +86,10 @@ namespace DowerTefense.Game.Screens
         /// <param name="e"></param>
         private void Btn_OnClick(object sender, EventArgs e)
         {
-            if (sender.GetType() == typeof(Button))
+            if (sender.GetType() == typeof(Button)
+              && System.Windows.Forms.Form.ActiveForm != null
+              && System.Windows.Forms.Form.ActiveForm.Text.Equals("DowerTefense"))
+                if (sender.GetType() == typeof(Button))
             {
                 Button btn = (Button)sender;
                 switch (btn.Tag.ToString())
