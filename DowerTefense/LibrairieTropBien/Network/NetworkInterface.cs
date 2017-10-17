@@ -43,8 +43,13 @@ namespace LibrairieTropBien.Network
             // Récupération du tableau d'octets du message
             byte[] bMessage = _message.GetArray();
 
+            byte[] encapsulated = new byte[bMessage.Length + 2];
+
+            Buffer.BlockCopy(BitConverter.GetBytes((short)bMessage.Length), 0, encapsulated, 0, 2);
+            Buffer.BlockCopy(bMessage, 0, encapsulated, 2, bMessage.Length);
+
             // Envoi du message avec récupération du nombre d'octets envoyés
-            int sent = _socket.Send(bMessage, bMessage.Length, 0);
+            int sent = _socket.Send(encapsulated, encapsulated.Length, 0);
 
             // Confirmation
             return sent > 0;
@@ -60,7 +65,11 @@ namespace LibrairieTropBien.Network
             if(messageSize == 0 || buffer == null)
             {
                 // Récupération de la longeur
-                messageSize = BitConverter.ToInt32(new byte[] { _data[0], _data[1] }, 0);
+                byte[] lol = new byte[] { _data[0], _data[1] };
+                if (BitConverter.IsLittleEndian)
+                    Array.Reverse(lol);
+
+                messageSize = BitConverter.ToInt16(lol, 0);
 
                 // Récupération des données réelles
                 byte[] realData = new byte[_data.Length - 2];
