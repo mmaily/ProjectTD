@@ -43,10 +43,10 @@ namespace LibrairieTropBien.Network
             // Récupération du tableau d'octets du message
             byte[] bMessage = _message.GetArray();
 
-            byte[] encapsulated = new byte[bMessage.Length + 2];
+            byte[] encapsulated = new byte[bMessage.Length + 4];
 
-            Buffer.BlockCopy(BitConverter.GetBytes((short)bMessage.Length), 0, encapsulated, 0, 2);
-            Buffer.BlockCopy(bMessage, 0, encapsulated, 2, bMessage.Length);
+            Buffer.BlockCopy(BitConverter.GetBytes(bMessage.Length), 0, encapsulated, 0, 4);
+            Buffer.BlockCopy(bMessage, 0, encapsulated, 4, bMessage.Length);
 
             // Envoi du message avec récupération du nombre d'octets envoyés
             int sent = _socket.Send(encapsulated, encapsulated.Length, 0);
@@ -65,13 +65,13 @@ namespace LibrairieTropBien.Network
             if(messageSize == 0 || buffer == null)
             {
                 // Récupération de la longeur
-                byte[] lol = new byte[] { _data[0], _data[1] };
-
-                messageSize = BitConverter.ToInt16(lol, 0);
+                byte[] lol = new byte[4];
+                Buffer.BlockCopy(_data, 0, lol, 0, 4);
+                messageSize = BitConverter.ToInt32(lol, 0);
 
                 // Récupération des données réelles
-                byte[] realData = new byte[_data.Length - 2];
-                Buffer.BlockCopy(_data, 2, realData, 0, realData.Length);
+                byte[] realData = new byte[_data.Length - 4];
+                Buffer.BlockCopy(_data, 4, realData, 0, realData.Length);
                 _data = realData;
             }
 
