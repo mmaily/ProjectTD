@@ -4,6 +4,7 @@ using DowerTefense.Commons.Managers;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using LibrairieTropBien.SerializableObjects;
 
 namespace DowerTefense.Commons.GameElements.Projectiles
 {
@@ -14,7 +15,7 @@ namespace DowerTefense.Commons.GameElements.Projectiles
         public Entity target; // Suit cette unité
         public int damage; //Fais ce nombre de dégats à l'impact
         public float speed; // vitesse du projectile
-        public Vector2 position;
+        public SVector2 position;
         public Vector2 direction;//Direction normalisée
         public double tol = 5; //Tolérence pour le detection de collision
         public Boolean Exists = true;
@@ -48,9 +49,9 @@ namespace DowerTefense.Commons.GameElements.Projectiles
         public void UpdateDirection()
         {
             // Récupération du vecteur direction
-            direction = -(position - target.Position);
+            direction = -(position - (Vector2)target.Position);
             // Normalisation
-            direction.Normalize();
+            (direction).Normalize();
         }
        
         /// <summary>
@@ -59,7 +60,7 @@ namespace DowerTefense.Commons.GameElements.Projectiles
         /// <param name="_gameTime"></param>
         public void UpdatePosition(GameTime _gameTime)
         {
-            position += direction * speed * _gameTime.ElapsedGameTime.Milliseconds/1000;
+            position += (Vector2)direction * speed * _gameTime.ElapsedGameTime.Milliseconds/1000;
         }
 
         /// <summary>
