@@ -48,7 +48,7 @@ namespace DowerTefense.Commons.Managers
                 while (movementAvailable != 0 && !mob.Dead)
                 {
                     // Destination
-                    Vector2 destinationPosition = mob.DestinationTile.getTilePosition() * _tileSize;
+                    Vector2 destinationPosition = mob.DestinationTile.GetTilePosition() * _tileSize;
                     // Quantité de mouvement nécessaire pour le déplacement
                     Vector2 movement = destinationPosition - mob.Position;
                     // Etude de faisabilité du déplacement

@@ -90,7 +90,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             {
                 Unit unit= this.Unit.DeepCopy();
                 // On définit sa position comme étant celle du spawn
-                unit.UpdatePosition(map.Spawns[0].getTilePosition() * map.tileSize);
+                unit.UpdatePosition(map.Spawns[0].GetTilePosition() * map.tileSize);
                 // On définit sa destination comme étant la tuile suivante
                 unit.DestinationTile = map.Spawns[0].NextTile;
                 // On l'ajoute à la liste des mobs

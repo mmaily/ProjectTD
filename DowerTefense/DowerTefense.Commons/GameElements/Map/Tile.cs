@@ -43,6 +43,8 @@ namespace DowerTefense.Commons.GameElements
         // Type de la tuile
         public TileTypeEnum TileType { get; set; }
         //Offset de la position de la tile ( la map n'est pas toujours collée en haut à droite de la fenêtre)
+
+        [NonSerialized]
         public Building building;
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace DowerTefense.Commons.GameElements
         /// Méthode pour obtenir la position du centre de la tuile
         /// </summary>
         /// <returns>Le Vecteur2 (ligne, colonne). Attention à le multiplier par la taille des tuiles</returns>
-        public Vector2 getTilePosition()
+        public Vector2 GetTilePosition()
         {
             Vector2 res = new Vector2(this.line + 0.5f, this.column + 0.5f);
 

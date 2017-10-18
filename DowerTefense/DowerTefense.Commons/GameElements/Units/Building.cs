@@ -14,14 +14,14 @@ namespace DowerTefense.Commons.Units
     public abstract class Building : Entity
     {
         ///Type de focus adopté
-    /// <summary>
-    /// Tuile sur laquelle est positionné le bâtiment
-    /// </summary>
-    private Tile tile;
+        /// <summary>
+        /// Tuile sur laquelle est positionné le bâtiment
+        /// </summary>
+        private Tile tile;
 
         public Building() : base()
         {
-         //CreateOnEventListener();
+            //CreateOnEventListener();
         }
         #region===Partie du code avec les events : obsolète===
         //public void CreateOnEventListener()
@@ -61,7 +61,7 @@ namespace DowerTefense.Commons.Units
             tile = _tile;
             // On informe la tuile qu'un bâtiment est dessus
             //tile.building = this;
-            this.Position = tile.getTilePosition() * map.tileSize;
+            this.Position = tile.GetTilePosition() * map.tileSize;
         }
         public virtual void SetInfoPopUp(InfoPopUp _info) { }
         public abstract Building DeepCopy();

@@ -16,6 +16,7 @@ namespace DowerTefense.Commons.GameElements.Projectiles
         public int damage; //Fais ce nombre de dégats à l'impact
         public float speed; // vitesse du projectile
         public SVector2 position;
+        [NonSerialized]
         public Vector2 direction;//Direction normalisée
         public double tol = 5; //Tolérence pour le detection de collision
         public Boolean Exists = true;

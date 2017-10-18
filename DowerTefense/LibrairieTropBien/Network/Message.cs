@@ -32,12 +32,21 @@ namespace LibrairieTropBien.Network
             // Enregistrement de l'objet envoyé
             this.send = _object;
 
-            // Transformation de l'objet en array
-            using (var memoryStream = new MemoryStream())
+            try
             {
-                (new BinaryFormatter()).Serialize(memoryStream, _object);
-                Data = memoryStream.ToArray();
+                // Transformation de l'objet en array
+                using (var memoryStream = new MemoryStream())
+                {
+                    (new BinaryFormatter()).Serialize(memoryStream, _object);
+                    Data = memoryStream.ToArray();
+                }
             }
+            catch (System.Exception)
+            {
+                System.Console.WriteLine("Oulà !");
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -46,17 +55,25 @@ namespace LibrairieTropBien.Network
         /// <param name="_bArray"></param>
         public Message(byte[] _bArray)
         {
-            using (MemoryStream ms = new MemoryStream(_bArray))
+            try
             {
-                // Récupération du message
-                IFormatter br = new BinaryFormatter();
-                Message received = (Message)br.Deserialize(ms);
-                this.Subject = received.Subject;
-
-                using (var memoryStream = new MemoryStream(received.Data))
+                using (MemoryStream ms = new MemoryStream(_bArray))
                 {
-                    this.received = (new BinaryFormatter()).Deserialize(memoryStream);
+                    // Récupération du message
+                    IFormatter br = new BinaryFormatter();
+                    Message received = (Message)br.Deserialize(ms);
+                    this.Subject = received.Subject;
+
+                    using (var memoryStream = new MemoryStream(received.Data))
+                    {
+                        this.received = (new BinaryFormatter()).Deserialize(memoryStream);
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+                System.Console.WriteLine("Oulà");
+                throw;
             }
         }
 

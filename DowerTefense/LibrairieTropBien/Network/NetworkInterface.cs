@@ -81,7 +81,7 @@ namespace LibrairieTropBien.Network
                 // Reconstitution du message
                 Message messageReceived = new Message(_data);
                 // Invocation de l'évènement
-                MessageReceived?.Invoke(messageReceived);
+                MessageReceived?.BeginInvoke(messageReceived, null, null);
 
                 // Réinitialisation de la taille du message attendu pour la prochaine fois
                 messageSize = 0;

@@ -114,7 +114,6 @@ namespace DowerTefense.Commons.GameElements.Units
         /// Verrou pour sécuriser les accès à la vie de l'unité
         /// </summary>
         private Object lockHealth = new Object();
-        private IEnumerable<SerializationEntry> collection;
 
 
         /// <summary>
