@@ -65,9 +65,7 @@ namespace LibrairieTropBien.Network
             if(messageSize == 0 || buffer == null)
             {
                 // Récupération de la longeur
-                byte[] lol = new byte[4];
-                Buffer.BlockCopy(_data, 0, lol, 0, 4);
-                messageSize = BitConverter.ToInt32(lol, 0);
+                messageSize = BitConverter.ToInt32(_data, 0);
 
                 // Récupération des données réelles
                 byte[] realData = new byte[_data.Length - 4];
