@@ -92,8 +92,16 @@ namespace DowerTefense.Game.Translator
                     default:
                         break;
                     case "upTowerSpeed":
-                        Building upT = ((Tower)message.send).DeepCopy();
-                        game.WaitingForUpdate.Add(upT, "SpeedLvlUp");
+                        Building upTS = ((Tower)message.send).DeepCopy();
+                        game.WaitingForUpdate.Add(upTS, "SpeedLvlUp");
+                        break;
+                    case "upTowerRange":
+                        Building upTR = ((Tower)message.send).DeepCopy();
+                        game.WaitingForUpdate.Add(upTR, "RangeLvlUp");
+                        break;
+                    case "upTowerDmg":
+                        Building upTD = ((Tower)message.send).DeepCopy();
+                        game.WaitingForUpdate.Add(upTD, "DmgLvlUp");
                         break;
                 }
             }
