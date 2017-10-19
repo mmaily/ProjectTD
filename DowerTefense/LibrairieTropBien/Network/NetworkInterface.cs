@@ -78,8 +78,12 @@ namespace LibrairieTropBien.Network
             // Si la longueur des données reçues est exactement la longueur attendue, nous avons reçu un message en entier
             if (messageSize == _data.Length)
             {
+                // Ajout au buffer
+                buffer = buffer.Append(_data);
+
                 // Reconstitution du message
-                Message messageReceived = new Message(_data);
+                Message messageReceived = new Message(buffer);
+
                 // Invocation de l'évènement
                 MessageReceived?.BeginInvoke(messageReceived, null, null);
 
