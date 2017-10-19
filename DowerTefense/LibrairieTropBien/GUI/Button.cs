@@ -17,22 +17,17 @@ namespace LibrairieTropBien.GUI
     public class Button : GuiElement
     {
         #region === Etat du bouton ===
-
         // Bouton cliqué
         public Boolean pressed = false;
         // Bouton sous la souris
         private Boolean hovered = false;
-
-
-
-
         #endregion
         #region === Propriétés du bouton
         /// <summary>
         /// Action à réaliser
         /// </summary>
         public string Action { get; set; }
-
+        public InfoPopUp info;
         #endregion
         #region === Affichage ===
         /// <summary>
@@ -77,9 +72,16 @@ namespace LibrairieTropBien.GUI
             // Si le bouton n'est pas activé, ce n'est pas la peine
             if (!this.Enabled)
             {
+                if (info != null)
+                {
+                    info.Enabled = false;
+                }
                 return;
             }
-
+            if (info != null)
+            {
+                info.Enabled = true;
+            }
             // Récupération de l'état de la souris
             MouseState mouseState = Mouse.GetState();
 
@@ -105,7 +107,6 @@ namespace LibrairieTropBien.GUI
                         pressed = false;
                         this.OnReleaseHandle(new EventArgs());
                     }
-
                 }
                 // Sinon si on n'est pas sous la souris
                 else
@@ -204,6 +205,10 @@ namespace LibrairieTropBien.GUI
             this.Text = _text;
             this.font= _font;
             HasText = true;
+        }
+        public void SetInfoPopUp(InfoPopUp _info)
+        {
+            this.info = _info;
         }
     }
 }

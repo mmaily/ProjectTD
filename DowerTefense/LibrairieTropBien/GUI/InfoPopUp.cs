@@ -22,7 +22,7 @@ namespace LibrairieTropBien.GUI
         }
         public InfoPopUp(Rectangle _area )
         {
-            this.ElementColor = Microsoft.Xna.Framework.Color.White;
+            this.ElementColor =Color.White;
             this.elementBox = new Rectangle();
             this.area = _area;
         }

@@ -17,16 +17,16 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         protected Entity target;//Cible actuelle
         protected String projectileName;
         //Coefficient de leveling
-        protected double rangeCoeff;
-        protected double fireRateCoeff;
-        protected double dmgCoeff;
+        public double rangeCoeff;
+        public double fireRateCoeff;
+        public double dmgCoeff;
         //Prix du leveling et coeff d'augmentation
         public int rangePrice;
-        protected double rangePriceCoeff;
+        public double rangePriceCoeff;
         public int fireRatePrice;
-        protected double fireRatePriceCoeff;
+        public double fireRatePriceCoeff;
         public int dmgPrice;
-        protected double dmgPriceCoeff;
+        public double dmgPriceCoeff;
 
         public List<Projectile> ProjectileList { get; protected set; }//  Liste de ses munitions en vol
 

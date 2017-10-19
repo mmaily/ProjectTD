@@ -64,7 +64,7 @@ namespace DowerTefense.Game.Managers
         public List<GuiElement> UIElementsList;
         //Liste des boutons de la liste locked
         private List<Button> lockedButton;
-        private Dictionary<Button, InfoPopUp> PopUp;
+        private List<InfoPopUp> PopUp;
         // Exception pour la barre de progression
         private ProgressBar progressBarWaves;
         public ButtonArray DefenseLvlUp { get; protected set; }
@@ -109,7 +109,7 @@ namespace DowerTefense.Game.Managers
 
             // Initialisation de la liste des éléments d'interface
             UIElementsList = new List<GuiElement>();
-            PopUp = new Dictionary<Button, InfoPopUp>();
+            PopUp = new List<InfoPopUp>();
 
 
         }
@@ -150,7 +150,8 @@ namespace DowerTefense.Game.Managers
                         font = CustomContentManager.Fonts["font"],
                         texture = CustomContentManager.Colors["pixel"]
                     };
-                    PopUp.Add(btnBuild, info);
+                    btnBuild.SetInfoPopUp(info);
+                    PopUp.Add(info);
                     Dummies.Find(b => b.Name.Equals(btnBuild.Name)).SetInfoPopUp(info);
                 }
                 #endregion
@@ -176,7 +177,8 @@ namespace DowerTefense.Game.Managers
                     font = CustomContentManager.Fonts["font"],
                     texture = CustomContentManager.Colors["pixel"]
                 };
-                PopUp.Add(btnBuild, infoLvlUpSpeed);
+                btnBuild.SetInfoPopUp(infoLvlUpSpeed);
+                PopUp.Add(infoLvlUpSpeed);
                 #endregion
             }
             if (role == PlayerRole.Attacker || role == PlayerRole.Debug)
@@ -204,7 +206,8 @@ namespace DowerTefense.Game.Managers
                         font = CustomContentManager.Fonts["font"],
                         texture = CustomContentManager.Colors["pixel"]
                     };
-                    PopUp.Add(btnBuild, info);
+                    btnBuild.SetInfoPopUp(info);
+                    PopUp.Add(info);
                     Dummies.Find(b => b.Name.Equals(btnBuild.Name)).SetInfoPopUp(info);
                     n++;
                 }
@@ -362,12 +365,6 @@ namespace DowerTefense.Game.Managers
             // Mise à jour de tous les élémets d'interface
             foreach (GuiElement element in UIElementsList)
             {
-                if (element.GetType().Equals(typeof(InfoPopUp)))
-                {
-                    element.Update();
-                }
-               
-
                 if (element.GetType().Equals(typeof(Button)) && element.Tag == role + "Build")
                 {
                     // On récupère le bâtiment associé
@@ -384,59 +381,55 @@ namespace DowerTefense.Game.Managers
                 }                // Si l'élément est de type bouton
                 //On update le bouton
                 element.Update();
-                //On update la popUp associée
-                if (element.PopUpAttached == true)
-                {
-                    PopUp[(Button)element].Enabled = element.Enabled;
-                    PopUp[(Button)element].Update();
-
-                }
-
-                foreach(InfoPopUp info in PopUp.Values)
-                {
-                    info.Update();
-                }
             }
             // Si l'élément est de type bouton
 
             #region ===Update interface defense ===
-            DefenseConstruction.Enabled = false;
-            DefenseLvlUp.Enabled = false;
+            DefenseConstruction.Disable();
+            DefenseLvlUp.Disable();
             if (role.Equals("defense") || role.Equals(PlayerRole.Debug))
             {
                 if (SelectedTile != null)
                 {
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
                     {
-                        DefenseConstruction.Enabled = true;
-                        DefenseConstruction.Update();
+                        
+                        DefenseConstruction.Activate();
                     }
                     if (SelectedTile.building != null)
                     {
-                        DefenseLvlUp.Enabled = true;
-                        DefenseLvlUp.Update();
+                        
+                        DefenseLvlUp.Activate();
                         //Selon le bâtiment séléctionné, affiche la bonne popUp
                         DefenseUpdateLvlUpPopUp();
                     }
                 }
             }
+            DefenseConstruction.Update();
+            DefenseLvlUp.Update();
             #endregion
-            foreach (Button element in lockedButton)
+            #region
+            foreach (InfoPopUp info in PopUp)
             {
-                PopUp[(Button)element].Enabled = element.Enabled;
-                PopUp[(Button)element].Update();
+                info.Update();
             }
-            //Liste des Spawner libres
-            UpdateBtnLists();
-            //Lock de la liste si newWave et attaquant
-            if ((role == PlayerRole.Attacker||role == PlayerRole.Debug) && game.newWave == true)
-            {
-                CreateLockedList();
-            }
-            #region Calcul des frame/seconde
-            millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
-            time = _gameTime.TotalGameTime.TotalMilliseconds;
             #endregion
+            //foreach (Button element in lockedButton)
+            //{
+            //    PopUp[(Button)element].Enabled = element.Enabled;
+            //    PopUp[(Button)element].Update();
+            //}
+            ////Liste des Spawner libres
+            //UpdateBtnLists();
+            ////Lock de la liste si newWave et attaquant
+            //if ((role == PlayerRole.Attacker||role == PlayerRole.Debug) && game.newWave == true)
+            //{
+            //    CreateLockedList();
+            //}
+            //#region Calcul des frame/seconde
+            //millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
+            //time = _gameTime.TotalGameTime.TotalMilliseconds;
+            //#endregion
 
         }
         /// <summary>
@@ -618,11 +611,7 @@ namespace DowerTefense.Game.Managers
                 element.Draw(_spriteBatch);
             }
 
-            //Affichage des popUp en dernier
-            foreach (GuiElement element in PopUp.Values)
-            {
-                element.Draw(_spriteBatch);
-            }
+
             #region === A dessiner en attaque ===
             if (mode.Equals("attack"))
             {
@@ -656,6 +645,11 @@ namespace DowerTefense.Game.Managers
             }
 
             #endregion
+            //Affichage des popUp en dernier
+            foreach (GuiElement element in PopUp)
+            {
+                element.Draw(_spriteBatch);
+            }
         }
 
         /// <summary>
@@ -705,7 +699,7 @@ namespace DowerTefense.Game.Managers
                         font = CustomContentManager.Fonts["font"],
                         texture = CustomContentManager.Colors["pixel"]
                     };
-                    PopUp.Add(btnBuild, info);
+                    PopUp.Add(info);
                     _sp.SetInfoPopUp(info);
 
                     ActiveList.Add(btnBuild, _sp);
@@ -739,7 +733,7 @@ namespace DowerTefense.Game.Managers
                     font = CustomContentManager.Fonts["font"],
                     texture = CustomContentManager.Colors["pixel"]
                 };
-                PopUp.Add(btnBuild, info);
+                PopUp.Add(info);
                 sp.SetInfoPopUp(info);
                 LockedList.Add(btnBuild, (SpawnerBuilding)sp);
             }
@@ -753,6 +747,21 @@ namespace DowerTefense.Game.Managers
         }
         private void DefenseUpdateLvlUpPopUp()
         {
+            //TODO : Moche
+            Tower t = (Tower)SelectedTile.building;
+            foreach(Button b in DefenseLvlUp.GetArray())
+            {
+                if (b != null)
+                {
+                    switch (b.Tag)
+                    {
+                        case "AttackSpeedLvlUp":
+                            b.info.setText("Prix: " + t.fireRatePrice + Environment.NewLine + "AS: " + (t.RateOfFire*1000) + " --> " + ((t.RateOfFire+t.BaseRateOfFire * t.fireRateCoeff)*1000));
+                            break;
+                    }
+                }
+                else { return; }
+            }
         }
 
     }

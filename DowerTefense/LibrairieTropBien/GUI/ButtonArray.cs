@@ -75,6 +75,39 @@ namespace LibrairieTropBien.GUI
                 }
             }
         }
+        public void Disable()
+        {
+            this.Enabled = false;
+            foreach (Button b in array)
+            {
+                if (b != null)
+                {
+                    b.Enabled = false;
+                }
+                else
+                {
+                    //Fin du tableau
+                    return;
+                }
+            }
+        }
+        public void Activate()
+        {
+            this.Enabled = true;
+            foreach (Button b in array)
+            {
+                if (b != null)
+                {
+                    b.Enabled = true;
+                }
+                else
+                {
+                    //Fin du tableau
+                    return;
+                }
+            }
+        }
+
     }
 
 }
