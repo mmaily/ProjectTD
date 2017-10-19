@@ -414,22 +414,17 @@ namespace DowerTefense.Game.Managers
                 info.Update();
             }
             #endregion
-            //foreach (Button element in lockedButton)
-            //{
-            //    PopUp[(Button)element].Enabled = element.Enabled;
-            //    PopUp[(Button)element].Update();
-            //}
-            ////Liste des Spawner libres
-            //UpdateBtnLists();
-            ////Lock de la liste si newWave et attaquant
-            //if ((role == PlayerRole.Attacker||role == PlayerRole.Debug) && game.newWave == true)
-            //{
-            //    CreateLockedList();
-            //}
-            //#region Calcul des frame/seconde
-            //millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
-            //time = _gameTime.TotalGameTime.TotalMilliseconds;
-            //#endregion
+            //Liste des Spawner libres
+            UpdateBtnLists();
+            //Lock de la liste si newWave et attaquant
+            if ((role == PlayerRole.Attacker || role == PlayerRole.Debug) && game.newWave == true)
+            {
+                CreateLockedList();
+            }
+            #region Calcul des frame/seconde
+            millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
+            time = _gameTime.TotalGameTime.TotalMilliseconds;
+            #endregion
 
         }
         /// <summary>
