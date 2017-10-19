@@ -385,10 +385,10 @@ namespace DowerTefense.Game.Managers
             // Si l'élément est de type bouton
 
             #region ===Update interface defense ===
-            DefenseConstruction.Disable();
-            DefenseLvlUp.Disable();
-            if (role.Equals("defense") || role.Equals(PlayerRole.Debug))
+            if (role.Equals("defense") || role.Equals(PlayerRole.Debug)|| role == PlayerRole.Defender)
             {
+                DefenseConstruction.Disable();
+                DefenseLvlUp.Disable();
                 if (SelectedTile != null)
                 {
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
@@ -404,9 +404,9 @@ namespace DowerTefense.Game.Managers
                         DefenseUpdateLvlUpPopUp();
                     }
                 }
+                DefenseConstruction.Update();
+                DefenseLvlUp.Update();
             }
-            DefenseConstruction.Update();
-            DefenseLvlUp.Update();
             #endregion
             #region
             foreach (InfoPopUp info in PopUp)
@@ -631,7 +631,7 @@ namespace DowerTefense.Game.Managers
 
             #endregion
             #region=== A dessiner en défense ===
-            if (mode.Equals("defense"))
+            if (mode.Equals("defense")|| role == PlayerRole.Defender)
             {
                 offset = 380;
                 _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
