@@ -282,6 +282,14 @@ namespace DowerTefense.Commons
                                 //On lvl up la tour + retire les golds
                                 defensePlayer.totalGold-=t.FRLvlUp(defensePlayer.totalGold);
                                 break;
+                            case "RangeLvlUp":
+                                //On lvl up la tour + retire les golds
+                                defensePlayer.totalGold -= t.RangeLvlUp(defensePlayer.totalGold);
+                                break;
+                            case "DmgLvlUp":
+                                //On lvl up la tour + retire les golds
+                                defensePlayer.totalGold -= t.RangeLvlUp(defensePlayer.totalGold);
+                                break;
                         }
                         Changes[DDefenseBuildingsList] = true;
                         Changes[DdefensePlayer] = true;

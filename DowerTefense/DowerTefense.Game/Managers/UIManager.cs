@@ -158,6 +158,7 @@ namespace DowerTefense.Game.Managers
 
                 #region Interfce de lvlUp en déf
                 DefenseLvlUp = new ButtonArray(leftUIOffset + 30, 100, 4, 2, new Rectangle(0, 0, btnSize, btnSize));
+                //FireRate
                 btnBuild = new Button(0, 0, btnSize, btnSize)
                 {
                     Name = "BasicTower",
@@ -179,7 +180,52 @@ namespace DowerTefense.Game.Managers
                 };
                 btnBuild.SetInfoPopUp(infoLvlUpSpeed);
                 PopUp.Add(infoLvlUpSpeed);
+                //Range
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicTower",
+                    Tag = "RangeLvlUp",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };
+
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                DefenseLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoLvlUpRange = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "Range" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                btnBuild.SetInfoPopUp(infoLvlUpRange);
+                PopUp.Add(infoLvlUpRange);
+                //Damage
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicTower",
+                    Tag = "DmgLvlUp",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };
+
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                DefenseLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoLvlUpDmg = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "Dmg" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                btnBuild.SetInfoPopUp(infoLvlUpDmg);
+                PopUp.Add(infoLvlUpDmg);
                 #endregion
+
             }
             if (role == PlayerRole.Attacker || role == PlayerRole.Debug)
             {
@@ -295,7 +341,20 @@ namespace DowerTefense.Game.Managers
                     Tower t = (Tower)SelectedTile.building;
                     game.DTowerUp["upTowerSpeed"] = t;
                     game.Changes[game.DTowerUp] = true;
-                    game.defensePlayer.totalGold -= t.FRLvlUp(game.defensePlayer.totalGold);
+
+                }
+                if (btn.Tag.Equals("RangeLvlUp"))
+                {
+                    Tower t = (Tower)SelectedTile.building;
+                    game.DTowerUp["upTowerRange"] = t;
+                    game.Changes[game.DTowerUp] = true;
+
+                }
+                if (btn.Tag.Equals("DmgLvlUp"))
+                {
+                    Tower t = (Tower)SelectedTile.building;
+                    game.DTowerUp["upTowerDamage"] = t;
+                    game.Changes[game.DTowerUp] = true;
 
                 }
                 // Si le bouton est une construction attaque
@@ -392,13 +451,11 @@ namespace DowerTefense.Game.Managers
                 if (SelectedTile != null)
                 {
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
-                    {
-                        
+                    {                       
                         DefenseConstruction.Activate();
                     }
                     if (SelectedTile.building != null)
-                    {
-                        
+                    {                       
                         DefenseLvlUp.Activate();
                         //Selon le bâtiment séléctionné, affiche la bonne popUp
                         DefenseUpdateLvlUpPopUp();
@@ -751,12 +808,20 @@ namespace DowerTefense.Game.Managers
                     switch (b.Tag)
                     {
                         case "AttackSpeedLvlUp":
-                            b.info.setText("Prix: " + t.fireRatePrice + Environment.NewLine + "AS: " + (t.RateOfFire*1000) + " --> " + ((t.RateOfFire+t.BaseRateOfFire * t.fireRateCoeff)*1000));
+                            b.info.setText("Prix: " + t.fireRatePrice + Environment.NewLine + "AS: " + (t.RateOfFire * 1000) + " --> " + ((t.RateOfFire + t.BaseRateOfFire * t.fireRateCoeff) * 1000));
+                            break;
+
+                        case "RangeLvlUp":
+                            b.info.setText("Prix: " + t.rangePrice + Environment.NewLine + "Range: " + (t.Range) + " --> " + ((t.Range + t.BaseRange * t.rangeCoeff)));
+                            break;
+                        case "DmgLvlUp":
+                            b.info.setText("Prix: " + t.rangePrice + Environment.NewLine + "DMG: " + (t.Range) + " --> " + ((t.Range + t.BaseRange * t.rangeCoeff)));
                             break;
                     }
                 }
                 else { return; }
             }
+            
         }
 
     }
