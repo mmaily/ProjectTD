@@ -53,6 +53,10 @@ namespace DowerTefense.Server.Elements
                 case "newSpawner":
                     game.WaitingForConstruction.Add((Building)message.received);
                     break;
+                case "upTowerSpeed":
+                    Building upT = ((Tower)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upT, "SpeedLvlUp");
+                    break;
                 default:
                     break;
             }
