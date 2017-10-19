@@ -89,6 +89,7 @@ namespace LibrairieTropBien.Network
 
                 // Réinitialisation de la taille du message attendu pour la prochaine fois
                 messageSize = 0;
+                buffer = null;
             }
             // Sinon, si nous n'avons pas reçu assez de données
             else if (messageSize > _data.Length)
