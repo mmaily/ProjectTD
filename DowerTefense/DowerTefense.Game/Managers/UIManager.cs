@@ -70,6 +70,9 @@ namespace DowerTefense.Game.Managers
         public ButtonArray DefenseLvlUp { get; protected set; }
         public ButtonArray DefenseConstruction { get; protected set; }
         public ButtonArray AttackLvlUp { get; private set; }
+        public ButtonArray AttackConstruction { get; protected set; }
+        public ButtonArray AttackFree { get; protected set; }
+        public ButtonArray AttackLock { get; protected set; }
         #endregion
         //Role
         protected PlayerRole role;
@@ -230,12 +233,15 @@ namespace DowerTefense.Game.Managers
             if (role == PlayerRole.Attacker || role == PlayerRole.Debug)
             {
                 #region Interface de construction en attaque
+                //Bouton des freeBuildingList
+                AttackFree = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 2, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
+                AttackLock = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 5, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
                 // Bouton de contruction de spawner
-                int n = 0;
+                AttackConstruction = new ButtonArray(leftUIOffset + 30, 100, 2, 3, new Rectangle(0, 0, btnSize, btnSize));
                 foreach (SpawnerBuilding.NameEnum spawner in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
                 {
 
-                    btnBuild = new Button(leftUIOffset + 30 + n * btnSize, 100, btnSize, btnSize)
+                    btnBuild = new Button( 0, 0, btnSize, btnSize)
                     {
                         Name = spawner.ToString(),
                         Tag = "attackBuild",
@@ -243,7 +249,7 @@ namespace DowerTefense.Game.Managers
                     };
                     btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                     btnBuild.OnRelease += Btn_OnClick;
-                    UIElementsList.Add(btnBuild);
+                    AttackConstruction.Add(btnBuild);
                     //Add la popUp qui va bien
                     InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
                     {
@@ -255,7 +261,6 @@ namespace DowerTefense.Game.Managers
                     btnBuild.SetInfoPopUp(info);
                     PopUp.Add(info);
                     Dummies.Find(b => b.Name.Equals(btnBuild.Name)).SetInfoPopUp(info);
-                    n++;
                 }
                 #endregion
                 #region Interface de composition d'armée
@@ -444,10 +449,10 @@ namespace DowerTefense.Game.Managers
             // Si l'élément est de type bouton
 
             #region ===Update interface defense ===
-            if (role.Equals("defense") || role.Equals(PlayerRole.Debug)|| role == PlayerRole.Defender)
+            DefenseConstruction.Disable();
+            DefenseLvlUp.Disable();
+            if (mode.Equals("defense") ||role == PlayerRole.Defender)
             {
-                DefenseConstruction.Disable();
-                DefenseLvlUp.Disable();
                 if (SelectedTile != null)
                 {
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
@@ -462,8 +467,22 @@ namespace DowerTefense.Game.Managers
                     }
                 }
                 DefenseConstruction.Update();
-                DefenseLvlUp.Update();
             }
+            DefenseLvlUp.Update();
+            #endregion
+            #region Update interface attaque ===
+            AttackConstruction.Disable();
+            AttackFree.Disable();
+            AttackLock.Disable();
+            if (mode.Equals("attack") ||role == PlayerRole.Attacker)
+            {
+                AttackConstruction.Activate();
+                AttackFree.Activate();
+                AttackLock.Activate();
+            }
+            AttackConstruction.Update();
+            AttackFree.Update();
+            AttackLock.Update();
             #endregion
             #region
             foreach (InfoPopUp info in PopUp)
@@ -665,7 +684,7 @@ namespace DowerTefense.Game.Managers
 
 
             #region === A dessiner en attaque ===
-            if (mode.Equals("attack"))
+            if (mode.Equals("attack")||role == PlayerRole.Attacker)
             {
                 #region  Infos tuile et construction 
                 //Display les info de bases en mode attaque
@@ -677,11 +696,9 @@ namespace DowerTefense.Game.Managers
                 _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
                 #endregion
                 #region Listes de spawner
-                //Affichage des bouttons de la liste vérouillée qui part en guerre
-                foreach (GuiElement element in lockedButton)
-                {
-                    element.Draw(_spriteBatch);
-                }
+                AttackConstruction.Draw(_spriteBatch);
+                AttackFree.Draw(_spriteBatch);
+                AttackLock.Draw(_spriteBatch);
             }
 
             #endregion
@@ -698,9 +715,9 @@ namespace DowerTefense.Game.Managers
 
             #endregion
             //Affichage des popUp en dernier
-            foreach (GuiElement element in PopUp)
+            foreach (GuiElement info in PopUp)
             {
-                element.Draw(_spriteBatch);
+                info.Draw(_spriteBatch);
             }
         }
 
@@ -727,14 +744,13 @@ namespace DowerTefense.Game.Managers
 
 
         }
-
         public void UpdateBtnLists()
         {
             if (game.FreeBuildingsList.Count != ActiveList.Count)
             {
 
               SpawnerBuilding _sp = game.FreeBuildingsList[game.FreeBuildingsList.Count - 1];
-                    Button btnBuild = new Button(leftUIOffset + 30 + ActiveList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 2, btnSize, btnSize)
+                    Button btnBuild = new Button(0, 0, btnSize, btnSize)
                     {
                         Name = _sp.Name,
                         Tag = "ActiveList",
@@ -742,7 +758,7 @@ namespace DowerTefense.Game.Managers
                     };
                     btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                     btnBuild.OnRelease += Btn_OnClick;
-                    UIElementsList.Add(btnBuild);
+                    AttackFree.Add(btnBuild);
                     //Add la popUp qui va bien
                     InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
                     {
@@ -753,7 +769,6 @@ namespace DowerTefense.Game.Managers
                     };
                     PopUp.Add(info);
                     _sp.SetInfoPopUp(info);
-
                     ActiveList.Add(btnBuild, _sp);
                 
 
@@ -763,8 +778,8 @@ namespace DowerTefense.Game.Managers
         }
         public void CreateLockedList()
         {
-            lockedButton.Clear();
             LockedList.Clear();
+            AttackLock = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 5, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
             foreach (SpawnerBuilding sp in game.LockedBuildingsList)
             {
                 Button btnBuild = new Button(leftUIOffset + 30 + LockedList.Count * btnSize, Graphics.PreferredBackBufferHeight - btnSize * 4, btnSize, btnSize)
@@ -776,7 +791,7 @@ namespace DowerTefense.Game.Managers
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 btnBuild.OnRelease += Btn_OnClick;
                 btnBuild.GreyedOut = true;
-                lockedButton.Add(btnBuild);
+                AttackLock.Add(btnBuild);
                 //Add la popUp qui va bien
                 InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -815,7 +830,7 @@ namespace DowerTefense.Game.Managers
                             b.info.setText("Prix: " + t.rangePrice + Environment.NewLine + "Range: " + (t.Range) + " --> " + ((t.Range + t.BaseRange * t.rangeCoeff)));
                             break;
                         case "DmgLvlUp":
-                            b.info.setText("Prix: " + t.rangePrice + Environment.NewLine + "DMG: " + (t.Range) + " --> " + ((t.Range + t.BaseRange * t.rangeCoeff)));
+                            b.info.setText("Prix: " + t.dmgPrice + Environment.NewLine + "DMG: " + (t.AttackPower) + " --> " + ((t.AttackPower + t.BaseAttackPower * t.dmgCoeff)));
                             break;
                     }
                 }
