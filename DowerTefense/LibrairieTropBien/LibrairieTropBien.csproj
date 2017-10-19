@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GUI\Button.cs" />
+    <Compile Include="GUI\ButtonArray.cs" />
     <Compile Include="GUI\GuiElement.cs" />
     <Compile Include="GUI\InfoPopUp.cs" />
     <Compile Include="GUI\ProgressBar.cs" />

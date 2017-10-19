@@ -67,6 +67,9 @@ namespace DowerTefense.Game.Managers
         private Dictionary<Button, InfoPopUp> PopUp;
         // Exception pour la barre de progression
         private ProgressBar progressBarWaves;
+        public ButtonArray DefenseLvlUp { get; protected set; }
+        public ButtonArray DefenseConstruction { get; protected set; }
+        public ButtonArray AttackLvlUp { get; private set; }
         #endregion
         //Role
         protected PlayerRole role;
@@ -126,11 +129,11 @@ namespace DowerTefense.Game.Managers
             {
                 #region Interface de construction de défense
                 // Boutons de contruction des tours
-                int j = 0;
+                DefenseConstruction = new ButtonArray(leftUIOffset + 30, 100, 4, 4, new Rectangle(0,0,btnSize, btnSize));
                 foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
                 {
 
-                    btnBuild = new Button(leftUIOffset + 30 + j * btnSize, 100, btnSize, btnSize)
+                    btnBuild = new Button(0,0, btnSize, btnSize)
                     {
                         Name = tower.ToString(),
                         Tag = "defenseBuild",
@@ -138,7 +141,7 @@ namespace DowerTefense.Game.Managers
                     };
                     btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                     btnBuild.OnRelease += Btn_OnClick;
-                    UIElementsList.Add(btnBuild);
+                    DefenseConstruction.Add(btnBuild);
                     //Add la popUp qui va bien
                     InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
                     {
@@ -149,8 +152,31 @@ namespace DowerTefense.Game.Managers
                     };
                     PopUp.Add(btnBuild, info);
                     Dummies.Find(b => b.Name.Equals(btnBuild.Name)).SetInfoPopUp(info);
-                    j++;
                 }
+                #endregion
+
+                #region Interfce de lvlUp en déf
+                DefenseLvlUp = new ButtonArray(leftUIOffset + 30, 100, 4, 2, new Rectangle(0, 0, btnSize, btnSize));
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicTower",
+                    Tag = "AttackSpeedLvlUp",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };
+
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);               
+                DefenseLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoLvlUpSpeed = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "AttackSpeed" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                PopUp.Add(btnBuild, infoLvlUpSpeed);
                 #endregion
             }
             if (role == PlayerRole.Attacker || role == PlayerRole.Debug)
@@ -193,6 +219,9 @@ namespace DowerTefense.Game.Managers
                 };
                 panel.setText("Lol");
                 UIElementsList.Add(panel);
+                #endregion
+                #region Interface de lvlUp
+
                 #endregion
             }
             if (role == PlayerRole.Debug)
@@ -257,6 +286,14 @@ namespace DowerTefense.Game.Managers
                         game.DTowerWaiting["newTower"] = building;
                         game.Changes[game.DTowerWaiting] = true;
                     }
+                }
+                if (btn.Tag.Equals("AttackSpeedLvlUp"))
+                {
+                    Tower t = (Tower)SelectedTile.building;
+                    game.DTowerUp["upTowerSpeed"] = t;
+                    game.Changes[game.DTowerUp] = true;
+                    game.defensePlayer.totalGold -= t.FRLvlUp(game.defensePlayer.totalGold);
+
                 }
                 // Si le bouton est une construction attaque
                 if (btn.Tag.Equals("attackBuild"))
@@ -329,7 +366,8 @@ namespace DowerTefense.Game.Managers
                 {
                     element.Update();
                 }
-                // Si l'élément est de type bouton
+               
+
                 if (element.GetType().Equals(typeof(Button)) && element.Tag == role + "Build")
                 {
                     // On récupère le bâtiment associé
@@ -353,8 +391,36 @@ namespace DowerTefense.Game.Managers
                     PopUp[(Button)element].Update();
 
                 }
-            }
 
+                foreach(InfoPopUp info in PopUp.Values)
+                {
+                    info.Update();
+                }
+            }
+            // Si l'élément est de type bouton
+
+            #region ===Update interface defense ===
+            DefenseConstruction.Enabled = false;
+            DefenseLvlUp.Enabled = false;
+            if (role.Equals("defense") || role.Equals(PlayerRole.Debug))
+            {
+                if (SelectedTile != null)
+                {
+                    if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
+                    {
+                        DefenseConstruction.Enabled = true;
+                        DefenseConstruction.Update();
+                    }
+                    if (SelectedTile.building != null)
+                    {
+                        DefenseLvlUp.Enabled = true;
+                        DefenseLvlUp.Update();
+                        //Selon le bâtiment séléctionné, affiche la bonne popUp
+                        DefenseUpdateLvlUpPopUp();
+                    }
+                }
+            }
+            #endregion
             foreach (Button element in lockedButton)
             {
                 PopUp[(Button)element].Enabled = element.Enabled;
@@ -497,16 +563,6 @@ namespace DowerTefense.Game.Managers
             //Display le nombre de Spawner
             offset = 360;
             _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + game.defensePlayer.lives, new Vector2(leftUIOffset, offset), Color.White);
-            if (mode.Equals("defense"))
-            {
-                offset = 380;
-                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
-            }
-            if (mode.Equals("attack"))
-            {
-                offset = 380;
-                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
-            }
             offset = 400;
             _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + game.FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             offset = 420;
@@ -517,14 +573,6 @@ namespace DowerTefense.Game.Managers
 
             #endregion
             #region === Infos tuile et construction ===
-
-
-            //Display les info de bases en mode attaque
-            if (mode.Equals("attack"))
-            {
-                offset = 340;
-                _spriteBatch.DrawString(deFaultFont, "Energie du joueur : " + (game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy) + "/" + game.attackPlayer.totalEnergy, new Vector2(leftUIOffset, offset), Color.White);
-            }
             // Si une tuile est sélectionnée
             if (SelectedTile != null)
             {
@@ -551,19 +599,7 @@ namespace DowerTefense.Game.Managers
             // Booléen d'affichage de l'interface de construction
             bool drawButton = false;
             // Récupération de tous les éléments liés à la construction en défense
-            List<GuiElement> buildElements = UIElementsList.FindAll(element => element.Tag.Equals("defenseBuild"));
-            // Activation de tous les éléments d'inteface liés à la construction en défense
-            foreach (GuiElement element in buildElements)
-            {
-                if (SelectedTile != null)
-                {
-                    if (mode.Equals("defense") && SelectedTile.TileType == Tile.TileTypeEnum.Free)
-                    {
-                        drawButton = true;
-                    }
-                }//Si une tile est séléctionné+mode défense le booléen passe true
-                element.Enabled = drawButton;
-            }
+            List<GuiElement> buildElements;
             buildElements = UIElementsList.FindAll(element => element.Tag.Equals("attackBuild"));
             drawButton = false;
             foreach (GuiElement element in buildElements)
@@ -581,16 +617,45 @@ namespace DowerTefense.Game.Managers
             {
                 element.Draw(_spriteBatch);
             }
-            //Affichage des bouttons de la liste vérouillée qui part en guerre
-            foreach (GuiElement element in lockedButton)
-            {
-                element.Draw(_spriteBatch);
-            }
+
             //Affichage des popUp en dernier
             foreach (GuiElement element in PopUp.Values)
             {
                 element.Draw(_spriteBatch);
             }
+            #region === A dessiner en attaque ===
+            if (mode.Equals("attack"))
+            {
+                #region  Infos tuile et construction 
+                //Display les info de bases en mode attaque
+                offset = 340;
+                _spriteBatch.DrawString(deFaultFont, "Energie du joueur : " + (game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy) + "/" + game.attackPlayer.totalEnergy, new Vector2(leftUIOffset, offset), Color.White);
+                #endregion
+                #region Info Joueur
+                offset = 380;
+                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+                #endregion
+                #region Listes de spawner
+                //Affichage des bouttons de la liste vérouillée qui part en guerre
+                foreach (GuiElement element in lockedButton)
+                {
+                    element.Draw(_spriteBatch);
+                }
+            }
+
+            #endregion
+
+            #endregion
+            #region=== A dessiner en défense ===
+            if (mode.Equals("defense"))
+            {
+                offset = 380;
+                _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+                DefenseConstruction.Draw(_spriteBatch);
+                DefenseLvlUp.Draw(_spriteBatch);
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -686,5 +751,10 @@ namespace DowerTefense.Game.Managers
             // Mode d'affichage (pour debug / spectator ?)
             this.mode = _role == PlayerRole.Attacker ? "attack" : "defense";
         }
+        private void DefenseUpdateLvlUpPopUp()
+        {
+        }
+
     }
+
 }

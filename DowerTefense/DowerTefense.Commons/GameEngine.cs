@@ -42,6 +42,7 @@ namespace DowerTefense.Commons
         /// Liste de construction en attente pour le prochain update
         /// </summary>
         public List<Building> WaitingForConstruction { get; set; }
+        public Dictionary<Building, string> WaitingForUpdate { get; set; }
         public object CustomContentManager { get; private set; }
 
         // Projectiles
@@ -74,6 +75,7 @@ namespace DowerTefense.Commons
         public Dictionary<String, object> Dprojectiles;
         public Dictionary<String, object> DFreeBuildingsList;
         public Dictionary<String, object> DTowerWaiting;
+        public Dictionary<String, object> DTowerUp;
         public Dictionary<String, object> DSpawnerWaiting;
         public Dictionary<String, object> Dmobs;
         public Dictionary<String, object> DnewWave;
@@ -114,6 +116,7 @@ namespace DowerTefense.Commons
             FreeBuildingsList = new List<SpawnerBuilding>();
             DefenseBuildingsList = new List<Building>();
             WaitingForConstruction = new List<Building>();
+            WaitingForUpdate = new Dictionary<Building, string>();
             #endregion
             #region===Initialise le dictionnaire des changements===
             //Ces mini-dicionnaire contiennent l'objet qui à changé et son nom
@@ -146,6 +149,10 @@ namespace DowerTefense.Commons
             {
                 { "newTower", null }
             };
+            DTowerUp = new Dictionary<String, object>
+            {
+                { "upTowerSpeed", null},{ "upTowerRange", null},{ "upTowerDmg", null}
+            };
             DSpawnerWaiting = new Dictionary<String, object>
             {
                 { "newSpawner", null }
@@ -169,6 +176,7 @@ namespace DowerTefense.Commons
                 { Dprojectiles, false },
                 { DFreeBuildingsList, false },
                 { DTowerWaiting, false },
+                { DTowerUp, false },
                 { DSpawnerWaiting, false },
                 { Dmobs, false },
                 { DnewWave, false },
@@ -222,6 +230,7 @@ namespace DowerTefense.Commons
                             DefenseBuildingsList.Add(t);
                             // Ajout sur la tuile
                             bd.GetTile().GetCorrespondingTile(map).building = t;
+                            bd.GetTile().GetCorrespondingTile(map).TileType = Tile.TileTypeEnum.Blocked;
                             // Notification de changement
                             Changes[DDefenseBuildingsList] = true;
                             Changes[DdefensePlayer] = true;
@@ -258,8 +267,30 @@ namespace DowerTefense.Commons
                 }
                 //Une fois traitée, on vide les éléments de la waiting List
                 WaitingForConstruction.Clear();
-
-                // Vagues
+                //On update les bâtiments qui ont reçu un upgrade
+                foreach (var dic in WaitingForUpdate)
+                {
+                    // Différence Tour (défense) / Spawner (attaque)
+                    if (dic.Key is Tower)
+                    {
+                        Tower _t = (Tower)dic.Key;
+                        //On retrouve la tour grâce à la tile commune
+                        Tower t = (Tower)DefenseBuildingsList.Find(tower => tower.GetTile().Equals(_t.GetTile().GetCorrespondingTile(map)));
+                        switch (dic.Value)
+                        {
+                            case "SpeedLvlUp":
+                                //On lvl up la tour + retire les golds
+                                defensePlayer.totalGold-=t.FRLvlUp(defensePlayer.totalGold);
+                                break;
+                        }
+                        Changes[DDefenseBuildingsList] = true;
+                        Changes[DdefensePlayer] = true;
+                        // On peut passer directement au bâtiment suivant
+                        continue;
+                    }                  
+                }
+                //Une fois traitée, on vide les éléments de la waiting List
+                WaitingForUpdate.Clear();
 
                 // Calcul du cycle de 30 secondes
                 // Si le tic est vieux de 30 secondes

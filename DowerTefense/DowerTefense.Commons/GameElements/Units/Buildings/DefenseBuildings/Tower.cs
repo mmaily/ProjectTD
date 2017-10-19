@@ -21,11 +21,11 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
         protected double fireRateCoeff;
         protected double dmgCoeff;
         //Prix du leveling et coeff d'augmentation
-        protected int rangePrice;
+        public int rangePrice;
         protected double rangePriceCoeff;
-        protected int fireRatePrice;
+        public int fireRatePrice;
         protected double fireRatePriceCoeff;
-        protected int dmgPrice;
+        public int dmgPrice;
         protected double dmgPriceCoeff;
 
         public List<Projectile> ProjectileList { get; protected set; }//  Liste de ses munitions en vol
@@ -167,7 +167,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             int lostGold = 0;
             if (fireRatePrice <= Gold)
             {
-                this.RateOfFire += (int)Math.Ceiling(this.BaseRateOfFire * fireRateCoeff);
+                this.RateOfFire += this.BaseRateOfFire * fireRateCoeff;
                 lostGold = fireRatePrice;
                 //Calcule le nouveau coût du lvl up
                 fireRatePrice *= (int)Math.Ceiling(1 + fireRatePriceCoeff);

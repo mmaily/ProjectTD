@@ -27,7 +27,6 @@ namespace LibrairieTropBien.GUI
 
 
         #endregion
-
         #region === Propriétés du bouton
         /// <summary>
         /// Action à réaliser
@@ -35,7 +34,6 @@ namespace LibrairieTropBien.GUI
         public string Action { get; set; }
 
         #endregion
-
         #region === Affichage ===
         /// <summary>
         /// Si sous la souris
@@ -44,7 +42,6 @@ namespace LibrairieTropBien.GUI
         /// <summary>
 
         #endregion
-
         /// <summary>
         /// Handler des clics
         /// </summary>
@@ -94,8 +91,7 @@ namespace LibrairieTropBien.GUI
                 if (this.elementBox.Contains(mouseState.Position))
                 {
                     // On l'enregistre
-                    hovered = true;
-
+                    hovered = true; 
                     // Si on clique gauche une première fois
                     if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                     {
@@ -209,6 +205,5 @@ namespace LibrairieTropBien.GUI
             this.font= _font;
             HasText = true;
         }
-
     }
 }

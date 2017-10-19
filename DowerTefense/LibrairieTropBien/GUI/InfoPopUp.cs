@@ -49,7 +49,6 @@ namespace LibrairieTropBien.GUI
             // Si la texture est définie
             if (hovered)
             {
-
                 _spriteBatch.Draw(texture,this.elementBox, ElementColor);
                 _spriteBatch.DrawString(font, text, elementBox.Location.ToVector2()+new Vector2(leftMargin,topMargin), Color.Azure);
             }
