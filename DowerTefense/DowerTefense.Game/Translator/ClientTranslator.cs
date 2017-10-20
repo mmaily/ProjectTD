@@ -42,7 +42,7 @@ namespace DowerTefense.Game.Translator
                 {
                     case "NewBuildingsList":
                         
-                        game.ToConstructList.AddRange((List<Building>)message.received);
+                        game.ToConstructList =(List<Building>)message.received;
                         break;
                     case "newWave":
                         game.newWave = true;
@@ -95,6 +95,16 @@ namespace DowerTefense.Game.Translator
                     case "upTowerDamage":
                         Building upTD = ((Tower)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upTD, "DmgLvlUp");
+                        break;
+                    case "SpawnRateLvlUp":
+                        Building upSP = ((SpawnerBuilding)message.send).DeepCopy();
+                        game.WaitingForUpdate.Add(upSP, "DmgLvlUp");
+                        break;
+                    case "NumberSpawnLvlUp":
+                        break;
+                    case "UnitHealthLvlUp":
+                        break;
+                    case "UnitSpeedLvlUp":
                         break;
                 }
             }

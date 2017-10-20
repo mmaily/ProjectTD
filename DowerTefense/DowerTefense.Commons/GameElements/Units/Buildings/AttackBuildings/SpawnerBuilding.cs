@@ -11,23 +11,41 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
     [Serializable()]
     public class SpawnerBuilding : Building
     {
+
+        [NonSerialized]
+        private Map map;
+        private bool blankShot;
+        public int NumberSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
         protected double SpawnRate; //Number of mobs/second
+        protected Unit Unit;// Type d'unité qu'il spawn
+        protected String UnitName;
+        #region ===Variable liée au levelling ===
+        //LvlUp Spawn Rate
         protected double BaseSpawnRate;//Nombre de mobs/seconde lvl 1
         protected double SpawnRateCoeff;//Coefficient d'évolution du SpawnRate pour lvlUp
         protected int SpawnRatePrice;//Prix de base de l'évolution du SpawnRate
         protected double SpawnRatePriceCoeff;//Evolution du prix du lvl de SpawnRate
+        //LvlUp Number of instant Spawn
+        protected double BaseNumberSpawn;//Nombre de Spawn à la création
+        protected double NumberSpawnCoeff;//Coefficient d'évolution du SpawnRate pour lvlUp
+        protected int NumberSpawnPrice;//Prix de base de l'évolution du SpawnRate
+        protected double NumberSpawnPriceCoeff;//Evolution du prix du lvl de SpawnRate
+        //LvlUp UnitSPeed
+        protected double BaseUnitSpeed; //Vitesse initiale de l'unité
+        protected double UnitSpeedCoeff;//Coefficient d'évolution de la vitesse de déplacement de l'unité
+        protected int UnitSpeedPrice;//Prix de base de l'évolution de la vitesse de déplacement de l'unité
+        protected double UnitSpeedPriceCoeff;//Evolution du prix du lvl de la vitesse de déplacement de l'unité
+        //LvlUp UnitHealth
+        protected double BaseUnitHealth;//Vie initiale de l'unité en question
+        protected double UnitHealthCoeff;//Coefficient d'évolution de la santé max de l'unité
+        protected int UnitHealthPrice;//Prix de base de l'évolution de la santé max de l'unité
+        protected double UnitHealthPriceCoeff;//Evolution du prix du lvl de la santé max de l'unité
+        #endregion
         protected double lastSpawn; // Time of the last spawned mob
         public Boolean locked=false; // Le batiment ne spawn que s'il est lock
         public Boolean powered; // Le bâtiment ne spawn que s'il est powered
         public int PowerNeeded { get; protected set; } // Energie requise par le bâtiment
-        public int NbreOfInstantSpawnPrice { get; set; }
 
-        public int NbreOfInstantSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
-        protected Unit Unit;// Type d'unité qu'il spawn
-        protected String UnitName;
-        [NonSerialized]
-        private Map map;
-        private bool blankShot;
 
         public enum NameEnum
         {
@@ -43,18 +61,8 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             this.PowerNeeded = 1;
             this.Cost = 100;
             setName();
-            this.NbreOfInstantSpawn = 1;
+            this.NumberSpawn = 1;
         }
-        #region ===Méthode OnDuty() obsolète===
-        //public override void OnDuty()
-        //{
-        //    base.OnDuty();
-        //    if (CanSpawn())
-        //    {
-        //        SpawnUnit();
-        //    }
-        //}
-        #endregion
         public void Update(GameTime _gameTime, Map _map,ref List<Unit> mobs)
         {
             this.map = _map;
@@ -86,7 +94,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         }
         public void SpawnUnit(ref List<Unit> mobs, GameTime _gameTime)
         {
-            for(int i = 0; i < NbreOfInstantSpawn; i++)
+            for(int i = 0; i < NumberSpawn; i++)
             {
                 Unit unit= this.Unit.DeepCopy();
                 // On définit sa position comme étant celle du spawn
@@ -122,7 +130,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         }
         public override void SetInfoPopUp(InfoPopUp _info)
         {
-            _info.setText( "Unit Spawned : " + UnitName + Environment.NewLine + "Spawn Rate : " + SpawnRate+ Environment.NewLine+ "Number spawned " + NbreOfInstantSpawn);
+            _info.setText( "Unit Spawned : " + UnitName + Environment.NewLine + "Spawn Rate : " + SpawnRate+ Environment.NewLine+ "Number spawned " + NumberSpawn);
         }
         public SpawnerBuilding(SerializationInfo info, StreamingContext ctxt)
         {
@@ -169,29 +177,52 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             info.AddValue("PowerNeeded", PowerNeeded);
 
         }
-        #region leveling
-        public Boolean NbreOfInstantSpawnLvlUp(int gold)
+        #region === leveling ===
+        public int NbreOfInstantSpawnLvlUp(int gold)
         {
-            Boolean success = false;
-            if (NbreOfInstantSpawnPrice <= gold)
+            int lostGold = 0;
+            if (NumberSpawnPrice <= gold)
             {
-                NbreOfInstantSpawn++;
-                NbreOfInstantSpawnPrice *= 2;
-                success = true;
+                lostGold = this.NumberSpawnPrice;
+                this.NumberSpawn = (int)Math.Ceiling(this.BaseNumberSpawn * NumberSpawnCoeff);
+                this.NumberSpawnPrice = (int)Math.Ceiling(this.NumberSpawnPrice * this.NumberSpawnPriceCoeff);
             }
-            return success;
+            return lostGold;
         }
-        public Boolean SpawnRateLvlUp(int gold)
+        public int SpawnRateLvlUp(int gold)
         {
-            Boolean success = false;
-
-            if (SpawnRatePrice <= gold)
             {
-                this.SpawnRate += (int)Math.Ceiling(this.BaseSpawnRate * SpawnRateCoeff);
-                //Calcule le nouveau coût du lvl up
-                SpawnRatePrice *= (int)Math.Ceiling(1 + SpawnRatePriceCoeff);
+                int lostGold = 0;
+                if (SpawnRatePrice <= gold)
+                {
+                    lostGold = this.SpawnRatePrice;
+                    this.SpawnRate = (int)Math.Ceiling(this.BaseSpawnRate * SpawnRateCoeff);
+                    this.SpawnRatePrice = (int)Math.Ceiling(this.SpawnRatePrice * this.SpawnRatePriceCoeff);
+                }
+                return lostGold;
             }
-            return success;
+        }
+        public int UnitSpeedLvlUp(int gold)
+        {
+            int lostGold = 0;
+            if (UnitSpeedPrice <= gold)
+            {
+                lostGold = this.NumberSpawnPrice;
+                this.Unit.Speed = (float)(this.BaseUnitSpeed * UnitSpeedCoeff);
+                this.UnitSpeedPrice = (int)Math.Ceiling(this.UnitSpeedPrice * this.UnitSpeedPriceCoeff);
+            }
+            return lostGold;
+        }
+        public int UnitHealthLvlUp(int gold)
+        {
+            int lostGold = 0;
+            if (UnitSpeedPrice <= gold)
+            {
+                lostGold = this.NumberSpawnPrice;
+                this.Unit.MaxHealthPoints = (int)Math.Ceiling(this.BaseUnitHealth * UnitHealthCoeff);
+                this.UnitHealthPrice = (int)Math.Ceiling(this.UnitHealthPrice * this.UnitHealthPriceCoeff);
+            }
+            return lostGold;
         }
         #endregion
     }

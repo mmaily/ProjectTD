@@ -60,6 +60,8 @@ namespace DowerTefense.Game.Managers
         private double millisecPerFrame;
         private double time;
         #region ==Element d'interface (boutons, bar de progression)
+        //Bouton sélectionné (Il ne peut en rester qu'un !!!)
+        private Button SelectedButton;
         // Éléments d'interface
         public List<GuiElement> UIElementsList;
         //Liste des boutons de la liste locked
@@ -128,10 +130,14 @@ namespace DowerTefense.Game.Managers
             Button btnBuild;
             GuiElement panel;
             //Tableau bouton défense
+            DefenseLvlUp = new ButtonArray(leftUIOffset + 30, 100, 4, 2, new Rectangle(0, 0, btnSize, btnSize));
             DefenseConstruction = new ButtonArray(leftUIOffset + 30, 100, 4, 4, new Rectangle(0, 0, btnSize, btnSize));
             //Bouton des freeBuildingList
             AttackFree = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 2, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
             AttackLock = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 5, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
+            // Bouton de contruction de spawner
+            AttackConstruction = new ButtonArray(leftUIOffset + 30, 100, 2, 3, new Rectangle(0, 0, btnSize, btnSize));
+            AttackLvlUp = new ButtonArray(leftUIOffset + 30, 100 + 3 * btnSize, 2, 3, new Rectangle(0, 0, btnSize, btnSize));
             //Chargement des éléments selon le role adopté
             if (role == PlayerRole.Defender || role == PlayerRole.Debug)
             {
@@ -162,9 +168,7 @@ namespace DowerTefense.Game.Managers
                     Dummies.Find(b => b.Name.Equals(btnBuild.Name)).SetInfoPopUp(info);
                 }
                 #endregion
-
                 #region Interfce de lvlUp en déf
-                DefenseLvlUp = new ButtonArray(leftUIOffset + 30, 100, 4, 2, new Rectangle(0, 0, btnSize, btnSize));
                 //FireRate
                 btnBuild = new Button(0, 0, btnSize, btnSize)
                 {
@@ -237,9 +241,6 @@ namespace DowerTefense.Game.Managers
             if (role == PlayerRole.Attacker || role == PlayerRole.Debug)
             {
                 #region Interface de construction en attaque
-              
-                // Bouton de contruction de spawner
-                AttackConstruction = new ButtonArray(leftUIOffset + 30, 100, 2, 3, new Rectangle(0, 0, btnSize, btnSize));
                 foreach (SpawnerBuilding.NameEnum spawner in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
                 {
 
@@ -277,7 +278,117 @@ namespace DowerTefense.Game.Managers
                 UIElementsList.Add(panel);
                 #endregion
                 #region Interface de lvlUp
+                //SpawnRate
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicSpawner",
+                    Tag = "SpawnRateLvlUp",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                AttackLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoLvlUpSpawnRate = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "SpawnRate" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                btnBuild.SetInfoPopUp(infoLvlUpSpawnRate);
+                PopUp.Add(infoLvlUpSpawnRate);
 
+                //NumberSpawn
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicSpawner",
+                    Tag = "NumberSpawnLvlUp",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                AttackLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoLvlUpNumberSpawn = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "SpawnRate" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                btnBuild.SetInfoPopUp(infoLvlUpNumberSpawn);
+                PopUp.Add(infoLvlUpNumberSpawn);
+
+                //UnitHealth
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicSpawner",
+                    Tag = "UnitHealthLvlUp",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                AttackLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoLvlUpUnitHealth = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "UnitHealt" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                btnBuild.SetInfoPopUp(infoLvlUpUnitHealth);
+                PopUp.Add(infoLvlUpUnitHealth);
+
+                //UnitSpeed
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicSpawner",
+                    Tag = "UnitSpeedLvlUp",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };           
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                AttackLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoLvlUpUnitSpeed = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "UnitSpeed" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                btnBuild.SetInfoPopUp(infoLvlUpUnitSpeed);
+                PopUp.Add(infoLvlUpUnitSpeed);
+
+                #endregion
+                #region Interface de Power de bâtiment
+                //SpawnRate
+                btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = "BasicSpawner",
+                    Tag = "Power",
+                    font = CustomContentManager.Fonts["font"],
+                    PopUpAttached = true
+                };
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                AttackLvlUp.Add(btnBuild);
+                btnBuild.OnRelease += Btn_OnClick;
+                //Add la popUp qui va bien
+                InfoPopUp infoPower = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "Power" + "Info",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                btnBuild.SetInfoPopUp(infoPower);
+                PopUp.Add(infoPower);
                 #endregion
             }
             if (role == PlayerRole.Debug)
@@ -379,22 +490,69 @@ namespace DowerTefense.Game.Managers
                     }
                 }
                 #region ===Gestion de l'appui sur les boutons de l'attaquant sur sa liste active===
-                if (btn.Tag.Equals("ActiveList") && game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy >= (ActiveList[btn].PowerNeeded) && !(ActiveList[btn].powered))
+                if (btn.Tag.Equals("ActiveList"))
                 {
-                    ActiveList[btn].powered = true;
-                    game.attackPlayer.usedEnergy += ActiveList[btn].PowerNeeded;
-                    btn.GreyedOut = false;
+                    //Si un bouton est déjà séléctionné
+                    if (SelectedButton != null)
+                    {
+                        if (!SelectedButton.Equals(btn))
+                        {
+                            SelectedButton.Selected = false;
+                            //Si c'était pas lui on dit que c'est lui
+                            SelectedButton = btn;
+                        }
+                        //Si c'est le même on dit qu'il est plus sélectionné
+                        if (SelectedButton.Equals(btn)) {SelectedButton = null;}
+                        //Si y'en avait un autre de sélectionné, on le désélectionne
+                    }
+                    else
+                    {
+                        SelectedButton = btn;
+                    }
+
+                }
+                if (btn.Tag.Equals("Power") && game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy >= (ActiveList[SelectedButton].PowerNeeded) && !(ActiveList[SelectedButton].powered))
+                {
+                    ActiveList[SelectedButton].powered = true;
+                    game.attackPlayer.usedEnergy += ActiveList[SelectedButton].PowerNeeded;
+                    SelectedButton.GreyedOut = false;
                     //TODO : Envoyer que a la fin d'une vague ?
                     game.Changes[game.DFreeBuildingsList] = true;
                     return;
                 }
-                if (btn.Tag.Equals("ActiveList") && (ActiveList[btn].powered))
+                if (btn.Tag.Equals("Power") && (ActiveList[SelectedButton].powered))
                 {
-                    ActiveList[btn].powered = false;
-                    game.attackPlayer.usedEnergy -= ActiveList[btn].PowerNeeded;
-                    btn.GreyedOut = true;
+                    ActiveList[SelectedButton].powered = false;
+                    game.attackPlayer.usedEnergy -= ActiveList[SelectedButton].PowerNeeded;
+                    SelectedButton.GreyedOut = true;
                     game.Changes[game.DFreeBuildingsList] = true;
                     return;
+                }
+                #endregion
+                #region ===Gestion de l'appui sur les boutons des lvl up spawner ===
+                if (btn.Tag.Equals("SpawnRateLvlUp"))
+                {
+                    SpawnerBuilding sp = ActiveList[SelectedButton];
+                    game.DSpawnerUp["upSpawnerSpawnRate"] = sp;
+                    game.Changes[game.DSpawnerUp] = true;
+                }
+                if (btn.Tag.Equals("NumberSpawnLvlUp"))
+                {
+                    SpawnerBuilding sp = ActiveList[SelectedButton];
+                    game.DSpawnerUp["upSpawnerNumberSpawn"] = sp;
+                    game.Changes[game.DSpawnerUp] = true;
+                }
+                if (btn.Tag.Equals("UnitHealthLvlUp"))
+                {
+                    SpawnerBuilding sp = ActiveList[SelectedButton];
+                    game.DSpawnerUp["upSpawnerUnitHealth"] = sp;
+                    game.Changes[game.DSpawnerUp] = true;
+                }
+                if (btn.Tag.Equals("UnitSpeedLvlUp"))
+                {
+                    SpawnerBuilding sp = ActiveList[SelectedButton];
+                    game.DSpawnerUp["upSpawnerUnitSpeed"] = sp;
+                    game.Changes[game.DSpawnerUp] = true;
                 }
                 #endregion
                 else if (btn.Tag.Equals("UI"))
@@ -449,7 +607,25 @@ namespace DowerTefense.Game.Managers
                 element.Update();
             }
             // Si l'élément est de type bouton
+            #region ===Update interface Debug ===
+            if(role == PlayerRole.Debug)
+            {
+                AttackConstruction.Disable();
+                AttackFree.Disable();
+                AttackLock.Disable();
+                AttackLvlUp.Disable();
+                DefenseConstruction.Disable();
+                DefenseLvlUp.Disable();
 
+                AttackConstruction.Update();
+                AttackFree.Update();
+                AttackLock.Update();
+                AttackLvlUp.Update();
+                DefenseConstruction.Update();
+                DefenseLvlUp.Update();
+            }
+
+            #endregion
             #region ===Update interface defense ===
 
             if (mode.Equals("defense") ||role == PlayerRole.Defender)
@@ -473,23 +649,27 @@ namespace DowerTefense.Game.Managers
                 DefenseLvlUp.Update();
             }
             #endregion
-            #region Update interface attaque ===
+            #region ===Update interface attaque ===
 
             if (mode.Equals("attack") ||role == PlayerRole.Attacker)
             {
                 AttackConstruction.Disable();
                 AttackFree.Disable();
                 AttackLock.Disable();
+                AttackLvlUp.Disable();
                 AttackConstruction.Activate();
                 AttackFree.Activate();
                 AttackLock.Activate();
+                if (SelectedButton != null) { AttackLvlUp.Activate(); }
                 AttackConstruction.Update();
                 AttackFree.Update();
                 AttackLock.Update();
+                AttackLvlUp.Update();
+
             }
 
             #endregion
-            #region
+            #region Update des popUp
             foreach (InfoPopUp info in PopUp)
             {
                 info.Update();
@@ -704,6 +884,7 @@ namespace DowerTefense.Game.Managers
                 AttackConstruction.Draw(_spriteBatch);
                 AttackFree.Draw(_spriteBatch);
                 AttackLock.Draw(_spriteBatch);
+                AttackLvlUp.Draw(_spriteBatch);
             }
 
             #endregion
@@ -774,6 +955,7 @@ namespace DowerTefense.Game.Managers
                     };
                     PopUp.Add(info);
                     _sp.SetInfoPopUp(info);
+                    btnBuild.CanBeSelected();
                     ActiveList.Add(btnBuild, _sp);
                 
 
