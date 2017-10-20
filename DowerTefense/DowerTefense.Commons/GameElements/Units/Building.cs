@@ -19,6 +19,11 @@ namespace DowerTefense.Commons.Units
         /// </summary>
         private Tile tile;
 
+        /// <summary>
+        /// Identifiant unique du bâtiment
+        /// </summary>
+        public int ID { get; set; }
+
         public Building() : base()
         {
             //CreateOnEventListener();

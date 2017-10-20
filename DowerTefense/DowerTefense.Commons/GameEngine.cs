@@ -46,6 +46,9 @@ namespace DowerTefense.Commons
         public Dictionary<Building, string> WaitingForUpdate { get; set; }
         public object CustomContentManager { get; private set; }
 
+        // Compteurs de bâtiments
+        int buildingId;
+
         // Projectiles
         public List<Projectile> projectiles;
 
@@ -209,6 +212,8 @@ namespace DowerTefense.Commons
             waveLength = 10 * 1000;
             #endregion
 
+            // Initialization de l'identifieur du bâtiment
+            buildingId = 0;
         }
 
         /// <summary>
@@ -239,6 +244,8 @@ namespace DowerTefense.Commons
                             Tower t = (Tower)bd;
                             // Retrait du coût du bâtiment
                             defensePlayer.totalGold -= t.Cost;
+                            // Affectation d'un ID
+                            t.ID = buildingId++;
                             // Ajout à la liste
                             DefenseBuildingsList.Add(t);
                             // Ajout sur la tuile
@@ -263,7 +270,7 @@ namespace DowerTefense.Commons
                             // Retrait du coût
                             attackPlayer.totalGold -= bd.Cost;
                             // Ajout à la liste
-                            spawner.id = FreeBuildingsList.Count;
+                            spawner.ID = buildingId++;
                             FreeBuildingsList.Add(spawner);
 
                             // Activation automatique si assez d'énergie

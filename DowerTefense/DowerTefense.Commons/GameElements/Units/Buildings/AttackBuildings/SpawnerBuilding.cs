@@ -11,7 +11,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
     [Serializable()]
     public class SpawnerBuilding : Building
     {
-        public int id;
         [NonSerialized]
         private Map map;
         private bool blankShot;
