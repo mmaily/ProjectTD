@@ -40,9 +40,9 @@ namespace DowerTefense.Game.Translator
                 //TODO : faire tous les cas qui intéressent les Clients ONLINE
                 switch (message.Subject)
                 {
-                    case "NewBuildingList":
+                    case "NewBuildingsList":
                         
-                        game.ToConstructList.AddRange((List<Building>)message.received));
+                        game.ToConstructList.AddRange((List<Building>)message.received);
                         break;
                     case "newWave":
                         game.newWave = true;
