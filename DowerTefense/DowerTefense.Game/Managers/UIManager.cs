@@ -283,6 +283,7 @@ namespace DowerTefense.Game.Managers
                 {
                     Name = "BasicSpawner",
                     Tag = "SpawnRateLvlUp",
+                    Text = "Rate",
                     font = CustomContentManager.Fonts["font"],
                     PopUpAttached = true
                 };
@@ -305,6 +306,7 @@ namespace DowerTefense.Game.Managers
                 {
                     Name = "BasicSpawner",
                     Tag = "NumberSpawnLvlUp",
+                    Text = "X",
                     font = CustomContentManager.Fonts["font"],
                     PopUpAttached = true
                 };
@@ -327,6 +329,7 @@ namespace DowerTefense.Game.Managers
                 {
                     Name = "BasicSpawner",
                     Tag = "UnitHealthLvlUp",
+                    Text = "H",
                     font = CustomContentManager.Fonts["font"],
                     PopUpAttached = true
                 };
@@ -349,6 +352,7 @@ namespace DowerTefense.Game.Managers
                 {
                     Name = "BasicSpawner",
                     Tag = "UnitSpeedLvlUp",
+                    Text = "S",
                     font = CustomContentManager.Fonts["font"],
                     PopUpAttached = true
                 };           
