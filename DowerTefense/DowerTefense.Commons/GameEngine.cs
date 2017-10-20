@@ -418,13 +418,13 @@ namespace DowerTefense.Commons
             {
                 // Récupération de l'ancien bâtiment
                 Building oldBd = null;
-                if(bd is Tower t)
+                if (bd is Tower t)
                 {
-                    oldBd = DefenseBuildingsList.Find(b => b.ID == bd.ID);
+                    DefenseBuildingsList[DefenseBuildingsList.FindIndex(old => old.ID == t.ID)] = t;
                 }
                 else if (bd is SpawnerBuilding sp)
                 {
-                    oldBd = FreeBuildingsList.Find(s => s.ID == sp.ID);
+                    FreeBuildingsList[FreeBuildingsList.FindIndex(s => s.ID == sp.ID)] = sp;
                 }
                 // Remplacement du bâtiment si il a été trouvé
                 if(oldBd != null)
