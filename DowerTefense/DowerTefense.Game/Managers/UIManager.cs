@@ -451,10 +451,11 @@ namespace DowerTefense.Game.Managers
             // Si l'élément est de type bouton
 
             #region ===Update interface defense ===
-            DefenseConstruction.Disable();
-            DefenseLvlUp.Disable();
+
             if (mode.Equals("defense") ||role == PlayerRole.Defender)
             {
+                DefenseConstruction.Disable();
+                DefenseLvlUp.Disable();
                 if (SelectedTile != null)
                 {
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
@@ -469,22 +470,24 @@ namespace DowerTefense.Game.Managers
                     }
                 }
                 DefenseConstruction.Update();
+                DefenseLvlUp.Update();
             }
-            DefenseLvlUp.Update();
             #endregion
             #region Update interface attaque ===
-            AttackConstruction.Disable();
-            AttackFree.Disable();
-            AttackLock.Disable();
+
             if (mode.Equals("attack") ||role == PlayerRole.Attacker)
             {
+                AttackConstruction.Disable();
+                AttackFree.Disable();
+                AttackLock.Disable();
                 AttackConstruction.Activate();
                 AttackFree.Activate();
                 AttackLock.Activate();
+                AttackConstruction.Update();
+                AttackFree.Update();
+                AttackLock.Update();
             }
-            AttackConstruction.Update();
-            AttackFree.Update();
-            AttackLock.Update();
+
             #endregion
             #region
             foreach (InfoPopUp info in PopUp)
