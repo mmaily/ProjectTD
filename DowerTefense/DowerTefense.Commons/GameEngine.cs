@@ -421,7 +421,7 @@ namespace DowerTefense.Commons
                 if (bd is Tower t)
                 {
                     DefenseBuildingsList[DefenseBuildingsList.FindIndex(old => old.ID == t.ID)] = t;
-                    t.GetTile().building = t;
+                    t.GetTile().GetCorrespondingTile(map).building = t;
                 }
                 else if (bd is SpawnerBuilding sp)
                 {
