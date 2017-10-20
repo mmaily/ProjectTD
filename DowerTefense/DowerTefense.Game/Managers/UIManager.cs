@@ -127,12 +127,16 @@ namespace DowerTefense.Game.Managers
             this.Dummies = _Dummies;
             Button btnBuild;
             GuiElement panel;
+            //Tableau bouton défense
+            DefenseConstruction = new ButtonArray(leftUIOffset + 30, 100, 4, 4, new Rectangle(0, 0, btnSize, btnSize));
+            //Bouton des freeBuildingList
+            AttackFree = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 2, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
+            AttackLock = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 5, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
             //Chargement des éléments selon le role adopté
             if (role == PlayerRole.Defender || role == PlayerRole.Debug)
             {
                 #region Interface de construction de défense
                 // Boutons de contruction des tours
-                DefenseConstruction = new ButtonArray(leftUIOffset + 30, 100, 4, 4, new Rectangle(0,0,btnSize, btnSize));
                 foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
                 {
 
@@ -233,9 +237,7 @@ namespace DowerTefense.Game.Managers
             if (role == PlayerRole.Attacker || role == PlayerRole.Debug)
             {
                 #region Interface de construction en attaque
-                //Bouton des freeBuildingList
-                AttackFree = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 2, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
-                AttackLock = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 5, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
+              
                 // Bouton de contruction de spawner
                 AttackConstruction = new ButtonArray(leftUIOffset + 30, 100, 2, 3, new Rectangle(0, 0, btnSize, btnSize));
                 foreach (SpawnerBuilding.NameEnum spawner in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
