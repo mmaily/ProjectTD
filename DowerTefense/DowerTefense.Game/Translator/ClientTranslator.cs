@@ -96,7 +96,7 @@ namespace DowerTefense.Game.Translator
                         Building upTR = ((Tower)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upTR, "RangeLvlUp");
                         break;
-                    case "upTowerDmg":
+                    case "upTowerDamage":
                         Building upTD = ((Tower)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upTD, "DmgLvlUp");
                         break;
