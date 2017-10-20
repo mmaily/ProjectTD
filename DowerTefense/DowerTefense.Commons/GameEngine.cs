@@ -382,7 +382,7 @@ namespace DowerTefense.Commons
                     LockSpawners();
                     //Attaquant gagne des sous
                     attackPlayer.totalGold += 200;
-                    Changes[DdefensePlayer] = true;
+                    Changes[DattackPlayer] = true;
                     // Notification de changement
                     Changes[DLockedBuildingsList] = true;
                 }
@@ -421,10 +421,12 @@ namespace DowerTefense.Commons
                 if (bd is Tower t)
                 {
                     DefenseBuildingsList[DefenseBuildingsList.FindIndex(old => old.ID == t.ID)] = t;
+                    t.GetTile().building = t;
                 }
                 else if (bd is SpawnerBuilding sp)
                 {
                     FreeBuildingsList[FreeBuildingsList.FindIndex(s => s.ID == sp.ID)] = sp;
+
                 }
                 // Remplacement du bâtiment si il a été trouvé
                 if(oldBd != null)
