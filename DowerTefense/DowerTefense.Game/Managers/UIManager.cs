@@ -506,7 +506,7 @@ namespace DowerTefense.Game.Managers
                             SelectedButton = btn;
                         }
                         //Si c'est le même on dit qu'il est plus sélectionné
-                        if (SelectedButton.Equals(btn)) {SelectedButton = null;}
+                        else{SelectedButton = null;}
                         //Si y'en avait un autre de sélectionné, on le désélectionne
                     }
                     else
@@ -664,7 +664,8 @@ namespace DowerTefense.Game.Managers
                 AttackConstruction.Activate();
                 AttackFree.Activate();
                 AttackLock.Activate();
-                if (SelectedButton != null) { AttackLvlUp.Activate(); }
+                if (SelectedButton != null) {
+                    AttackLvlUp.Activate(); }
                 AttackConstruction.Update();
                 AttackFree.Update();
                 AttackLock.Update();
