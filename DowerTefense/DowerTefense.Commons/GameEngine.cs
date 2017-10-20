@@ -220,7 +220,7 @@ namespace DowerTefense.Commons
                     if (bd is Tower)
                     {
                         // Si le joueur possède assez d'argent ET l'emplacement est disponible
-                        if(defensePlayer.totalGold >= bd.Cost && bd.GetTile().TileType == Tile.TileTypeEnum.Free && bd.GetTile()..GetCorrespondingTile(map).building == null)
+                        if(defensePlayer.totalGold >= bd.Cost && bd.GetTile().TileType == Tile.TileTypeEnum.Free && bd.GetTile().GetCorrespondingTile(map).building == null)
                         {
                             //Why ? Osef ! Tower t = (Tower)bd.DeepCopy();
                             Tower t = (Tower)bd;
