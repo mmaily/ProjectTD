@@ -28,6 +28,8 @@ namespace LibrairieTropBien.GUI
         /// </summary>
         public string Action { get; set; }
         public InfoPopUp info;
+        public Boolean canBeSelected = false; //On peut séléctionner un bouton
+        public Boolean Selected=false;
         #endregion
         #region === Affichage ===
         /// <summary>
@@ -106,6 +108,7 @@ namespace LibrairieTropBien.GUI
                         // On lance l'évènement
                         pressed = false;
                         this.OnReleaseHandle(new EventArgs());
+                        if (canBeSelected) { Selected = !Selected; }
                     }
                 }
                 // Sinon si on n'est pas sous la souris
@@ -158,8 +161,8 @@ namespace LibrairieTropBien.GUI
                 _spriteBatch.FillRectangle(this.elementBox, BackgroundColor);
             }
 
-            // Si on est sous la souris
-            if (hovered && !Disabled)
+            // Si on est sous la souris ou séléctionné
+            if ((hovered||Selected) && !Disabled )
             {
                 _spriteBatch.DrawRectangle(elementBox, HoveredColor * opacity, 2);
             }
@@ -209,6 +212,10 @@ namespace LibrairieTropBien.GUI
         public void SetInfoPopUp(InfoPopUp _info)
         {
             this.info = _info;
+        }
+        public void CanBeSelected()
+        {
+            this.canBeSelected = true;
         }
     }
 }

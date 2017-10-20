@@ -33,7 +33,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
             this.TargetNumber = 1;
             this.BulletSpeed = 5 * 64;
             this.projectileName = "BasicShot";
-            this.Cost = 10;
+            this.Cost = 50;
             //Leveling
             this.rangeCoeff = 0.10; //=10%
             this.rangePrice = 90;//Premiere upgrade à 90g

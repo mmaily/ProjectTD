@@ -78,6 +78,7 @@ namespace DowerTefense.Commons
         public Dictionary<String, object> DTowerWaiting;
         public Dictionary<String, object> DTowerUp;
         public Dictionary<String, object> DSpawnerWaiting;
+        public Dictionary<String, object> DSpawnerUp;
         public Dictionary<String, object> DNewBuildings;
         public Dictionary<String, object> Dmobs;
         public Dictionary<String, object> DnewWave;
@@ -159,6 +160,10 @@ namespace DowerTefense.Commons
             DSpawnerWaiting = new Dictionary<String, object>
             {
                 { "newSpawner", null }
+            };
+            DSpawnerUp = new Dictionary<String, object>
+            {
+                { "upSpawnerSpawnRate", null},{ "upSpawnerNumberSpawn", null},{ "upSpawnerUnitSpeed", null},{ "upSpawnerUnitHealth", null}
             };
             DNewBuildings = new Dictionary<String, object>
             {
@@ -353,6 +358,9 @@ namespace DowerTefense.Commons
 
                     // Verrouillage des spawners 
                     LockSpawners();
+                    //Attaquant gagne des sous
+                    attackPlayer.totalGold += 200;
+                    Changes[DdefensePlayer] = true;
                     // Notification de changement
                     Changes[DLockedBuildingsList] = true;
                 }

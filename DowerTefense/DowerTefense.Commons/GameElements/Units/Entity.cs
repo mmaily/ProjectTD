@@ -32,7 +32,7 @@ namespace DowerTefense.Commons.GameElements.Units
         /// <summary>
         /// Points de vie de base de l'unité
         /// </summary>
-        public int MaxHealthPoints { get; protected set; }
+        public int MaxHealthPoints { get; set; }
         /// <summary>
         /// Nombre de points de vie de l'unité (défaut : 1)
         /// </summary>
@@ -65,7 +65,7 @@ namespace DowerTefense.Commons.GameElements.Units
         /// <summary>
         /// Vitesse de déplacement en tuiles par seconde (défaut : 0)
         /// </summary>
-        public float Speed { get; protected set; }
+        public float Speed { get; set; }
         /// <summary>
         /// Distance totale parcourue par le mob
         /// </summary>
