@@ -87,6 +87,7 @@ namespace DowerTefense.Commons
         public Dictionary<String, object> DSpawnerWaiting;
         public Dictionary<String, object> DSpawnerUp;
         public Dictionary<String, object> DNewBuildings;
+        public Dictionary<String, object> DUpdateBuildings;
         public Dictionary<String, object> Dmobs;
         public Dictionary<String, object> DnewWave;
         #endregion
@@ -177,6 +178,10 @@ namespace DowerTefense.Commons
             {
                 { "NewBuildingsList", new List<Building>() }
             };
+            DUpdateBuildings = new Dictionary<String, object>
+            {
+                { "UpdateBuildingsList", new List<Building>() }
+            };
             Dmobs = new Dictionary<String, object>()
             {
                 { "mobs", "" }
@@ -233,6 +238,7 @@ namespace DowerTefense.Commons
 
             // Clean des bâtiments en construction
             ((List<Building>)DNewBuildings["NewBuildingsList"]).Clear();
+            ((List<Building>)DUpdateBuildings["UpdateBuildingsList"]).Clear();
 
 
             // Durée depuis ancien tic de vague
@@ -305,9 +311,8 @@ namespace DowerTefense.Commons
                 foreach (var dic in WaitingForUpdate)
                 {
                     // Différence Tour (défense) / Spawner (attaque)
-                    if (dic.Key is Tower)
+                    if (dic.Key is Tower _t)
                     {
-                        Tower _t = (Tower)dic.Key;
                         //On retrouve la tour grâce à la tile commune
                         Tower t = (Tower)DefenseBuildingsList.Find(tower => tower.ID == _t.ID);
                         switch (dic.Value)
@@ -325,7 +330,8 @@ namespace DowerTefense.Commons
                                 defensePlayer.totalGold -= t.DmgLvlUp(defensePlayer.totalGold);
                                 break;
                         }
-                        Changes[DDefenseBuildingsList] = true;
+                        ((List<Building>)DUpdateBuildings["UpdateBuildingsList"]).Add(t);
+                        Changes[DUpdateBuildings] = true;
                         Changes[DdefensePlayer] = true;
                         // On peut passer directement au bâtiment suivant
                         continue;
@@ -351,7 +357,8 @@ namespace DowerTefense.Commons
                             default:
                                 break;
                         }
-                        Changes[DFreeBuildingsList] = true;
+                        ((List<Building>)DUpdateBuildings["UpdateBuildingsList"]).Add(sp);
+                        Changes[DUpdateBuildings] = true;
                         Changes[DattackPlayer] = true;
                     }
                 }
@@ -425,6 +432,7 @@ namespace DowerTefense.Commons
                     oldBd = bd;
                 }
             }
+            ToUpdateList.Clear();
 
             // Si nouvelle vague :
             if (newWave)
