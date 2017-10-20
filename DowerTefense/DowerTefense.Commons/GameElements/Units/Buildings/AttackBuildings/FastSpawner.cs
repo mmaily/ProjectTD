@@ -20,10 +20,12 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             this.Name = "FastSpawner";
             this.UnitName = "FastUnit";
             this.Unit = new FastUnit();
+            this.NumberSpawn = 1;
             //Leveling du Spawnrate
+            this.BaseSpawnRate = this.SpawnRate;
             this.SpawnRateCoeff = 0.12;
             this.SpawnRatePrice = 150;
-            this.SpawnRatePriceCoeff = 0.08;
+            this.SpawnRatePriceCoeff =1.3;
             //Levling du nombre de spawn Instant
             this.BaseNumberSpawn = this.NumberSpawn;
             this.NumberSpawnPrice = 1000;
