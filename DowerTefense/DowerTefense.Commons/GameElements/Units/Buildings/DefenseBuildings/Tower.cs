@@ -184,7 +184,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
                 this.AttackPower += (int)Math.Ceiling(this.BaseAttackPower * dmgCoeff);
                 lostGold = dmgPrice;
                 //Calcule le nouveau coût du lvl up
-                fireRatePrice *= (int)Math.Ceiling(1 + dmgPriceCoeff);
+                dmgPrice *= (int)Math.Ceiling(1 + dmgPriceCoeff);
             }
             //Si les gold retournés sont nuls, on sait que le joueur n'avait pas les sous pour construire
             //TODO : Message d'avertissement si pas assez de sous ? valeur -1 si max de lvl up atteint ?

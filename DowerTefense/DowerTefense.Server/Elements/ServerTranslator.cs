@@ -54,10 +54,16 @@ namespace DowerTefense.Server.Elements
                     game.WaitingForConstruction.Add((Building)message.received);
                     break;
                 case "upTowerSpeed":
-                    Building upT = ((Tower)message.received).DeepCopy();
-                    game.WaitingForUpdate.Add(upT, "SpeedLvlUp");
+                    Building upTS = ((Tower)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upTS, "SpeedLvlUp");
                     break;
-                default:
+                case "upTowerRange":
+                    Building upTR = ((Tower)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upTR, "RangeLvlUp");
+                    break;
+                case "upTowerDamage":
+                    Building upTD = ((Tower)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upTD, "DmgLvlUp");
                     break;
             }
 
