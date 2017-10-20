@@ -77,6 +77,7 @@ namespace DowerTefense.Commons
         public Dictionary<String, object> DTowerWaiting;
         public Dictionary<String, object> DTowerUp;
         public Dictionary<String, object> DSpawnerWaiting;
+        public Dictionary<String, object> DNewBuildings;
         public Dictionary<String, object> Dmobs;
         public Dictionary<String, object> DnewWave;
         #endregion
@@ -157,6 +158,10 @@ namespace DowerTefense.Commons
             {
                 { "newSpawner", null }
             };
+            DNewBuildings = new Dictionary<String, object>
+            {
+                { "NewBuildingsList", new List<Building>() }
+            };
             Dmobs = new Dictionary<String, object>()
             {
                 { "mobs", "" }
@@ -178,6 +183,7 @@ namespace DowerTefense.Commons
                 { DTowerWaiting, false },
                 { DTowerUp, false },
                 { DSpawnerWaiting, false },
+                { DNewBuildings, false },
                 { Dmobs, false },
                 { DnewWave, false },
             };
@@ -232,6 +238,8 @@ namespace DowerTefense.Commons
                             bd.GetTile().GetCorrespondingTile(map).building = t;
                             bd.GetTile().GetCorrespondingTile(map).TileType = Tile.TileTypeEnum.Blocked;
                             // Notification de changement
+                            ((List<Building>)DNewBuildings["NewBuildingsList"]).Add(t);
+                            Changes[DNewBuildings] = true;
                             Changes[DDefenseBuildingsList] = true;
                             Changes[DdefensePlayer] = true;
                         }
@@ -257,7 +265,8 @@ namespace DowerTefense.Commons
                                 attackPlayer.usedEnergy += spawner.PowerNeeded;
                             }
                             // Notification de changement
-                            Changes[DFreeBuildingsList] = true;
+                            ((List<Building>)DNewBuildings["NewBuildingsList"]).Add(spawner);
+                            Changes[DNewBuildings] = true;
                             Changes[DattackPlayer] = true;
                         }
                         // On peut passer directement au bâtiment suivant
