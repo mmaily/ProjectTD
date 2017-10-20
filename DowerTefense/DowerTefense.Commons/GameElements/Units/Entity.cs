@@ -139,6 +139,13 @@ namespace DowerTefense.Commons.GameElements.Units
             //On renvoie l'état de l'unité
             return alive;
         }
+        public void UpdateHp(int _value)
+        {
+            lock (lockHealth)
+            {
+                this.HealthPoints -= _value;
+            }
+        }
 
         // TODO
         //Taille, Effet spécial;

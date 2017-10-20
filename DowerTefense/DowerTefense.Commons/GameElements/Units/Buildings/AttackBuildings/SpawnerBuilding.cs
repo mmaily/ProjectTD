@@ -220,6 +220,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             {
                 lostGold = this.UnitHealthPrice;
                 this.Unit.MaxHealthPoints += (int)Math.Ceiling(this.BaseUnitHealth * UnitHealthCoeff);
+                this.Unit.UpdateHp(MaxHealthPoints);
                 this.UnitHealthPrice = (int)Math.Ceiling(this.UnitHealthPrice * this.UnitHealthPriceCoeff);
             }
             return lostGold;
