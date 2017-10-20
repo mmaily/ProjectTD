@@ -78,6 +78,8 @@ namespace LibrairieTropBien.Network
             // Si la longueur des données reçues est exactement la longueur attendue, nous avons reçu un message en entier
             if (messageSize == _data.Length)
             {
+                // Les quatre lignes qui suivent nous ont emmerdé pendant un bon moment. Alors respectez-les.
+
                 // Ajout au buffer
                 buffer = buffer.Append(_data);
 
