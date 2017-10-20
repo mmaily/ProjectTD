@@ -42,6 +42,7 @@ namespace DowerTefense.Commons
         /// Liste de construction en attente pour le prochain update
         /// </summary>
         public List<Building> WaitingForConstruction { get; set; }
+        public List<Building> ToConstructList { get; set; }
         public Dictionary<Building, string> WaitingForUpdate { get; set; }
         public object CustomContentManager { get; private set; }
 
@@ -117,6 +118,7 @@ namespace DowerTefense.Commons
             FreeBuildingsList = new List<SpawnerBuilding>();
             DefenseBuildingsList = new List<Building>();
             WaitingForConstruction = new List<Building>();
+            ToConstructList = new List<Building>();
             WaitingForUpdate = new Dictionary<Building, string>();
             #endregion
             #region===Initialise le dictionnaire des changements===
@@ -219,7 +221,7 @@ namespace DowerTefense.Commons
             // Partie uniquement pour le serveur : bâtiments construction + vagues
             if (serverMode)
             {
-                // Construire la liste des tours en attente
+                // Construire la liste des tours en attente + retrait gold (serveur)
                 foreach (Building bd in WaitingForConstruction)
                 {
                     // Différence Tour (défense) / Spawner (attaque)
@@ -276,6 +278,33 @@ namespace DowerTefense.Commons
                 }
                 //Une fois traitée, on vide les éléments de la waiting List
                 WaitingForConstruction.Clear();
+                //On ajoute les bâtiments venu du serveur
+                foreach (Building bd in ToConstructList)
+                {
+                    // Différence Tour (défense) / Spawner (attaque)
+                    if (bd is Tower)
+                    {
+                            Tower t = (Tower)bd;
+                            // Ajout à la liste
+                            DefenseBuildingsList.Add(t);
+                            bd.GetTile().GetCorrespondingTile(map).building = t;
+                            bd.GetTile().GetCorrespondingTile(map).TileType = Tile.TileTypeEnum.Blocked;
+                        // On peut passer directement au bâtiment suivant
+                        continue;
+                    }
+                    if (bd is SpawnerBuilding)
+                    {
+                            //On le cast en spawner pour appliquer les méthodes propres aux spawner
+                            SpawnerBuilding spawner = (SpawnerBuilding)bd;
+                            // Ajout à la liste
+                            FreeBuildingsList.Add(spawner);
+                        // On peut passer directement au bâtiment suivant
+                        continue;
+                    }
+
+                }
+                //Une fois traitée, on vide les éléments de la waiting List
+                ToConstructList.Clear();
                 //On update les bâtiments qui ont reçu un upgrade
                 foreach (var dic in WaitingForUpdate)
                 {

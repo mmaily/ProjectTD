@@ -40,23 +40,19 @@ namespace DowerTefense.Game.Translator
                 //TODO : faire tous les cas qui intéressent les Clients ONLINE
                 switch (message.Subject)
                 {
-                    case "newTower":
-                        Building t = ((Tower)message.received).DeepCopy();
-                        game.WaitingForConstruction.Add(t);
-                        break;
-                    case "newSpawner":
-                        Building sp = ((SpawnerBuilding)message.received).DeepCopy();
-                        game.WaitingForConstruction.Add(sp);
+                    case "NewBuildingList":
+                        
+                        game.ToConstructList.AddRange((List<Building>)message.received));
                         break;
                     case "newWave":
                         game.newWave = true;
                         break;
-                    case "DefenseBuildingsList":
-                        game.DefenseBuildingsList = (List<Building>)message.received;
-                        break;
-                    case "FreeBuildingsList":
-                        game.FreeBuildingsList = (List<SpawnerBuilding>)message.received;
-                        break;
+                    //case "DefenseBuildingsList":
+                    //    game.DefenseBuildingsList = (List<Building>)message.received;
+                    //    break;
+                    //case "FreeBuildingsList":
+                    //    game.FreeBuildingsList = (List<SpawnerBuilding>)message.received;
+                        //break;
                     case "LockedBuildingsList":
                         game.LockedBuildingsList = (List<SpawnerBuilding>)message.received;
                         break;
