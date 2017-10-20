@@ -226,6 +226,10 @@ namespace DowerTefense.Commons
             //TODO : Boucle assez lourde... Peut être multitread si ça ralentit
             Changes = new Dictionary<Dictionary<string, object>, bool>(Initial);
 
+            // Clean des bâtiments en construction
+            ((List<Building>)DNewBuildings["NewBuildingsList"]).Clear();
+
+
             // Durée depuis ancien tic de vague
             timeSince = (int)(gameTime.TotalGameTime.TotalMilliseconds - lastWaveTick);
             // Partie uniquement pour le serveur : bâtiments construction + vagues
@@ -238,7 +242,7 @@ namespace DowerTefense.Commons
                     if (bd is Tower)
                     {
                         // Si le joueur possède assez d'argent ET l'emplacement est disponible
-                        if(defensePlayer.totalGold >= bd.Cost && bd.GetTile().TileType == Tile.TileTypeEnum.Free && bd.GetTile().GetCorrespondingTile(map).building == null)
+                        if (defensePlayer.totalGold >= bd.Cost && bd.GetTile().TileType == Tile.TileTypeEnum.Free && bd.GetTile().GetCorrespondingTile(map).building == null)
                         {
                             //Why ? Osef ! Tower t = (Tower)bd.DeepCopy();
                             Tower t = (Tower)bd;
@@ -263,7 +267,7 @@ namespace DowerTefense.Commons
                     if (bd is SpawnerBuilding)
                     {
                         // Si le joueur possède assez d'argent
-                        if(attackPlayer.totalGold >= bd.Cost)
+                        if (attackPlayer.totalGold >= bd.Cost)
                         {
                             //On le cast en spawner pour appliquer les méthodes propres aux spawner
                             SpawnerBuilding spawner = (SpawnerBuilding)bd;
@@ -300,12 +304,12 @@ namespace DowerTefense.Commons
                     {
                         Tower _t = (Tower)dic.Key;
                         //On retrouve la tour grâce à la tile commune
-                        Tower t = (Tower)DefenseBuildingsList.Find(tower => tower.ID==_t.ID);
+                        Tower t = (Tower)DefenseBuildingsList.Find(tower => tower.ID == _t.ID);
                         switch (dic.Value)
                         {
                             case "SpeedLvlUp":
                                 //On lvl up la tour + retire les golds
-                                defensePlayer.totalGold-=t.FRLvlUp(defensePlayer.totalGold);
+                                defensePlayer.totalGold -= t.FRLvlUp(defensePlayer.totalGold);
                                 break;
                             case "RangeLvlUp":
                                 //On lvl up la tour + retire les golds
@@ -323,7 +327,7 @@ namespace DowerTefense.Commons
                     }
                     if (dic.Key is SpawnerBuilding sp)
                     {
-                        
+
                         sp = FreeBuildingsList.Find(_sp => _sp.ID == sp.ID);
                         switch (dic.Value)
                         {
@@ -355,7 +359,7 @@ namespace DowerTefense.Commons
                 {
                     // Vague suivante
                     waveCount++;
-                    
+
                     // Nouvelle vague
                     newWave = true;
 
@@ -414,13 +418,13 @@ namespace DowerTefense.Commons
                 Changes[Dmobs] = true;
 
                 // Si changement état player, envoi
-                if(goldWon > 0)
+                if (goldWon > 0)
                 {
                     defensePlayer.totalGold += goldWon;
                     Changes[DdefensePlayer] = true;
                 }
 
-                if(livesLost > 0)
+                if (livesLost > 0)
                 {
                     defensePlayer.lives -= livesLost;
                     Changes[DdefensePlayer] = true;
@@ -439,7 +443,7 @@ namespace DowerTefense.Commons
             // Mise à jour des spawners
             foreach (SpawnerBuilding sp in LockedBuildingsList)
             {
-                sp.Update(gameTime,map, ref mobs);
+                sp.Update(gameTime, map, ref mobs);
             }
 
 
