@@ -126,7 +126,7 @@ namespace DowerTefense.Game.Translator
             foreach (var dic in Changes.Where(pair => pair.Value == true))
             {
                 //Une fois qu'on a trouvé les changement, on extrait les paires objet/nom et on les envoie
-                foreach (var underDic in dic.Key)
+                foreach (var underDic in dic.Key.Where(pair => pair.Value != null))
                 {
                     //Les sous dictionnaires sont définis dans le GameEngine
                     MultiplayerManager.Send(underDic.Key, underDic.Value);
