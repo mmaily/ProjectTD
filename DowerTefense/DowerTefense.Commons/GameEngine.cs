@@ -339,7 +339,18 @@ namespace DowerTefense.Commons
                         Changes[DdefensePlayer] = true;
                         // On peut passer directement au bâtiment suivant
                         continue;
-                    }                  
+                    }
+                    if (dic.Key is SpawnerBuilding sp)
+                    {
+                        
+                        sp = FreeBuildingsList.Find(_sp => _sp.id == sp.id);
+                        switch (dic.Value)
+                        {
+                            case "SpawnRateLvlUp":
+                               
+                                break;
+                        }
+                    }
                 }
                 //Une fois traitée, on vide les éléments de la waiting List
                 WaitingForUpdate.Clear();
