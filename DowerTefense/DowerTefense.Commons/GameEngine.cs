@@ -300,7 +300,7 @@ namespace DowerTefense.Commons
                     {
                         Tower _t = (Tower)dic.Key;
                         //On retrouve la tour grâce à la tile commune
-                        Tower t = (Tower)DefenseBuildingsList.Find(tower => tower.GetTile().Equals(_t.GetTile().GetCorrespondingTile(map)));
+                        Tower t = (Tower)DefenseBuildingsList.Find(tower => tower.ID==_t.ID);
                         switch (dic.Value)
                         {
                             case "SpeedLvlUp":
