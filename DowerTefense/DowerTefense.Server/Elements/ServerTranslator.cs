@@ -65,6 +65,22 @@ namespace DowerTefense.Server.Elements
                     Building upTD = ((Tower)message.received).DeepCopy();
                     game.WaitingForUpdate.Add(upTD, "DmgLvlUp");
                     break;
+                case "upSpawnerSpawnRate":
+                    Building upSPR = ((SpawnerBuilding)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upSPR, "SpawnRateLvlUp");
+                    break;
+                case "upSpawnerNumberSpawn":
+                    Building upSNS = ((SpawnerBuilding)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upSNS, "NumberSpawnLvlUp");
+                    break;
+                case "upSpawnerUnitHealth":
+                    Building upSUH = ((SpawnerBuilding)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upSUH, "UnitHealthLvlUp");
+                    break;
+                case "upSpawnerUnitSpeed":
+                    Building upSUS = ((SpawnerBuilding)message.received).DeepCopy();
+                    game.WaitingForUpdate.Add(upSUS, "UnitSpeedLvlUp");
+                    break;
             }
 
         }
