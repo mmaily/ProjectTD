@@ -324,7 +324,7 @@ namespace DowerTefense.Commons
                     if (dic.Key is SpawnerBuilding sp)
                     {
                         
-                        sp = FreeBuildingsList.Find(_sp => _sp.id == sp.id);
+                        sp = FreeBuildingsList.Find(_sp => _sp.ID == sp.ID);
                         switch (dic.Value)
                         {
                             case "SpawnRateLvlUp":
