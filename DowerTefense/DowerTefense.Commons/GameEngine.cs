@@ -42,9 +42,13 @@ namespace DowerTefense.Commons
         /// Liste de construction en attente pour le prochain update
         /// </summary>
         public List<Building> WaitingForConstruction { get; set; }
-        public List<Building> ToConstructList { get; set; }
         public Dictionary<Building, string> WaitingForUpdate { get; set; }
         public object CustomContentManager { get; private set; }
+
+        // Liste des modifications provenant du serveur à appliquer côté client
+        public List<Building> ToConstructList { get; set; }
+        public List<Building> ToUpdateList { get; set; }
+
 
         // Compteurs de bâtiments
         int buildingId;
@@ -123,6 +127,7 @@ namespace DowerTefense.Commons
             DefenseBuildingsList = new List<Building>();
             WaitingForConstruction = new List<Building>();
             ToConstructList = new List<Building>();
+            ToUpdateList = new List<Building>();
             WaitingForUpdate = new Dictionary<Building, string>();
             #endregion
             #region===Initialise le dictionnaire des changements===
@@ -400,6 +405,26 @@ namespace DowerTefense.Commons
             }
             //Une fois traitée, on vide les éléments de la waiting List
             ToConstructList.Clear();
+
+            // On update les bâtiments venus du serveur
+            foreach (Building bd in ToUpdateList)
+            {
+                // Récupération de l'ancien bâtiment
+                Building oldBd = null;
+                if(bd is Tower t)
+                {
+                    oldBd = DefenseBuildingsList.Find(b => b.ID == bd.ID);
+                }
+                else if (bd is SpawnerBuilding sp)
+                {
+                    oldBd = FreeBuildingsList.Find(s => s.ID == sp.ID);
+                }
+                // Remplacement du bâtiment si il a été trouvé
+                if(oldBd != null)
+                {
+                    oldBd = bd;
+                }
+            }
 
             // Si nouvelle vague :
             if (newWave)

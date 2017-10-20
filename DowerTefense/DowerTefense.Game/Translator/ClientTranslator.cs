@@ -32,17 +32,19 @@ namespace DowerTefense.Game.Translator
         }
 
         //Méthode qui transforme le message en action sur le jeu
-        public static void Translate(ref GameEngine game, Message message,Boolean vsAi)
+        public static void Translate(ref GameEngine game, Message message, Boolean vsAi)
         {
-            
+
             if (!vsAi)
             {
                 //TODO : faire tous les cas qui intéressent les Clients ONLINE
                 switch (message.Subject)
                 {
                     case "NewBuildingsList":
-                        
-                        game.ToConstructList =(List<Building>)message.received;
+                        game.ToConstructList = (List<Building>)message.received;
+                        break;
+                    case "UpdateBuildingsList":
+                        game.ToUpdateList = (List<Building>)message.received;
                         break;
                     case "newWave":
                         game.newWave = true;
@@ -52,7 +54,7 @@ namespace DowerTefense.Game.Translator
                     //    break;
                     //case "FreeBuildingsList":
                     //    game.FreeBuildingsList = (List<SpawnerBuilding>)message.received;
-                        //break;
+                    //break;
                     case "LockedBuildingsList":
                         game.LockedBuildingsList = (List<SpawnerBuilding>)message.received;
                         break;
@@ -68,15 +70,15 @@ namespace DowerTefense.Game.Translator
             }
             else
             {
-                
+
                 //TODO : faire tous les cas qui intéressent les Clients OFFLINE
                 switch (message.Subject)
                 {
-                    
+
                     case "newTower":
                         Building t = ((Tower)message.send).DeepCopy();
                         game.WaitingForConstruction.Add(t);
-                        
+
                         break;
                     case "newSpawner":
                         Building sp = (SpawnerBuilding)((SpawnerBuilding)message.send).DeepCopy();
@@ -140,13 +142,13 @@ namespace DowerTefense.Game.Translator
             //Là attention, il y a un Dictionnaire qui contient des dictionnaires. Les sous dictionnaire contiennent
             //la paire objet/nom de l'objet, et ce mini-dictionnaire est associé à un boolean pour savoir si ça a changé
             Message message;
-            Dictionary < String, object> underdic;
+            Dictionary<String, object> underdic;
             foreach (var dic in Changes.Where(pair => pair.Value == true))
             {
                 underdic = dic.Key;
                 //Une fois qu'on a trouvé les changement, on extrait les paires objet/nom et on se les auto-envoi
                 // C'est à dire on les place dans la list orders
-                foreach (var minidic in underdic.Where(pair => pair.Value !=null))
+                foreach (var minidic in underdic.Where(pair => pair.Value != null))
                 {
                     message = new Message(minidic.Key, minidic.Value);
                     lock (orders)
