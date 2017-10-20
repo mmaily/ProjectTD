@@ -242,7 +242,7 @@ namespace DowerTefense.Commons
                             // Notification de changement
                             ((List<Building>)DNewBuildings["NewBuildingsList"]).Add(t);
                             Changes[DNewBuildings] = true;
-                            Changes[DDefenseBuildingsList] = true;
+                            //Changes[DDefenseBuildingsList] = true;
                             Changes[DdefensePlayer] = true;
                         }
                         // On peut passer directement au bâtiment suivant
