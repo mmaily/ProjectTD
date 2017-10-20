@@ -263,6 +263,7 @@ namespace DowerTefense.Commons
                             // Retrait du coût
                             attackPlayer.totalGold -= bd.Cost;
                             // Ajout à la liste
+                            spawner.id = FreeBuildingsList.Count;
                             FreeBuildingsList.Add(spawner);
 
                             // Activation automatique si assez d'énergie

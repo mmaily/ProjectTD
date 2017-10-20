@@ -98,7 +98,7 @@ namespace DowerTefense.Game.Translator
                         break;
                     case "SpawnRateLvlUp":
                         Building upSP = ((SpawnerBuilding)message.send).DeepCopy();
-                        game.WaitingForUpdate.Add(upSP, "DmgLvlUp");
+                        game.WaitingForUpdate.Add(upSP, "SpawnRateLvlUp");
                         break;
                     case "NumberSpawnLvlUp":
                         break;
