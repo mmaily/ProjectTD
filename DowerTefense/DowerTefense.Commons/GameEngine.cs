@@ -328,9 +328,22 @@ namespace DowerTefense.Commons
                         switch (dic.Value)
                         {
                             case "SpawnRateLvlUp":
-                               
+                                attackPlayer.totalGold -= sp.SpawnRateLvlUp(attackPlayer.totalGold);
+                                break;
+                            case "NumberSpawnLvlUp":
+                                attackPlayer.totalGold -= sp.NbreOfInstantSpawnLvlUp(attackPlayer.totalGold);
+                                break;
+                            case "UnitHealthLvlUp":
+                                attackPlayer.totalGold -= sp.UnitHealthLvlUp(attackPlayer.totalGold);
+                                break;
+                            case "UnitSpeedLvlUp":
+                                attackPlayer.totalGold -= sp.UnitSpeedLvlUp(attackPlayer.totalGold);
+                                break;
+                            default:
                                 break;
                         }
+                        Changes[DFreeBuildingsList] = true;
+                        Changes[DattackPlayer] = true;
                     }
                 }
                 //Une fois traitée, on vide les éléments de la waiting List

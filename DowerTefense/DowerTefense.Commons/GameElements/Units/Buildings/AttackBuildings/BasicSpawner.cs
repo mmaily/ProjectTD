@@ -17,11 +17,12 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             this.UnitName = "BasicUnit";
             this.Unit = new BasicUnit();
             this.SpawnRate = 0.4;
-            this.BaseSpawnRate = SpawnRate;
+            this.NumberSpawn = 1;
             //leveling
+            this.BaseSpawnRate = this.SpawnRate;
             this.SpawnRateCoeff = 0.1;
             this.SpawnRatePrice = 200;
-            this.SpawnRatePriceCoeff = 0.1;
+            this.SpawnRatePriceCoeff = 2;
             //Levling du nombre de spawn Instant
             this.BaseNumberSpawn = this.NumberSpawn;
             this.NumberSpawnPrice = 1000;

@@ -96,19 +96,19 @@ namespace DowerTefense.Game.Translator
                         Building upTD = ((Tower)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upTD, "DmgLvlUp");
                         break;
-                    case "SpawnRateLvlUp":
+                    case "upSpawnerSpawnRate":
                         Building upSPR = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSPR, "SpawnRateLvlUp");
                         break;
-                    case "NumberSpawnLvlUp":
+                    case "upSpawnerNumberSpawn":
                         Building upSNS = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSNS, "NumberSpawnLvlUp");
                         break;
-                    case "UnitHealthLvlUp":
+                    case "upSpawnerUnitHealth":
                         Building upSUH = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSUH, "UnitHealthLvlUp");
                         break;
-                    case "UnitSpeedLvlUp":
+                    case "upSpawnerUnitSpeed":
                         Building upSUS = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSUS, "UnitSpeedLvlUp");
                         break;

@@ -183,7 +183,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             if (NumberSpawnPrice <= gold)
             {
                 lostGold = this.NumberSpawnPrice;
-                this.NumberSpawn = (int)Math.Ceiling(this.BaseNumberSpawn * NumberSpawnCoeff);
+                this.NumberSpawn += (int)Math.Ceiling(this.BaseNumberSpawn * NumberSpawnCoeff);
                 this.NumberSpawnPrice = (int)Math.Ceiling(this.NumberSpawnPrice * this.NumberSpawnPriceCoeff);
             }
             return lostGold;
@@ -195,7 +195,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
                 if (SpawnRatePrice <= gold)
                 {
                     lostGold = this.SpawnRatePrice;
-                    this.SpawnRate = (int)Math.Ceiling(this.BaseSpawnRate * SpawnRateCoeff);
+                    this.SpawnRate += (int)Math.Ceiling(this.BaseSpawnRate * SpawnRateCoeff);
                     this.SpawnRatePrice = (int)Math.Ceiling(this.SpawnRatePrice * this.SpawnRatePriceCoeff);
                 }
                 return lostGold;
@@ -206,8 +206,8 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             int lostGold = 0;
             if (UnitSpeedPrice <= gold)
             {
-                lostGold = this.NumberSpawnPrice;
-                this.Unit.Speed = (float)(this.BaseUnitSpeed * UnitSpeedCoeff);
+                lostGold = this.UnitSpeedPrice;
+                this.Unit.Speed += (float)(this.BaseUnitSpeed * UnitSpeedCoeff);
                 this.UnitSpeedPrice = (int)Math.Ceiling(this.UnitSpeedPrice * this.UnitSpeedPriceCoeff);
             }
             return lostGold;
@@ -215,10 +215,11 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         public int UnitHealthLvlUp(int gold)
         {
             int lostGold = 0;
-            if (UnitSpeedPrice <= gold)
+            if (UnitHealthPrice <= gold)
             {
-                lostGold = this.NumberSpawnPrice;
-                this.Unit.MaxHealthPoints = (int)Math.Ceiling(this.BaseUnitHealth * UnitHealthCoeff);
+                lostGold = this.UnitHealthPrice;
+                this.Unit.MaxHealthPoints += (int)Math.Ceiling(this.BaseUnitHealth * UnitHealthCoeff);
+                this.Unit.UpdateHp(MaxHealthPoints);
                 this.UnitHealthPrice = (int)Math.Ceiling(this.UnitHealthPrice * this.UnitHealthPriceCoeff);
             }
             return lostGold;
