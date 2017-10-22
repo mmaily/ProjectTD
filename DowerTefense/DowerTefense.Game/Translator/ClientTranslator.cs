@@ -114,6 +114,10 @@ namespace DowerTefense.Game.Translator
                         Building upSUS = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSUS, "UnitSpeedLvlUp");
                         break;
+                    case "switchPower":
+                        Building upSSP = ((SpawnerBuilding)message.send).DeepCopy();
+                        game.WaitingForUpdate.Add(upSSP, "SwitchPower");
+                        break;
                 }
             }
 

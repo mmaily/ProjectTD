@@ -43,7 +43,8 @@ namespace DowerTefense.Game.Screens
             };
             newButton.SetText("Versus IA", CustomContentManager.Fonts["font"]);
             newButton.BackgroundColor = Color.DarkGreen;
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             #endregion
             #region Création du bouton matchmaking
@@ -55,7 +56,8 @@ namespace DowerTefense.Game.Screens
             newButton.SetText("Matchmaking", CustomContentManager.Fonts["font"]);
             newButton.BackgroundColor = Color.Blue;
             newButton.TextColor = Color.White;
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             newButton.Disabled = true;
             UIElementsList.Add(newButton);
             #endregion
@@ -69,7 +71,8 @@ namespace DowerTefense.Game.Screens
             };
             newButton.SetText("EDITEUR MAP", CustomContentManager.Fonts["font"]);
             newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             #endregion
 
@@ -81,7 +84,8 @@ namespace DowerTefense.Game.Screens
                 BackgroundColor = Color.DarkRed,
             };
             connectionButton.SetText("Connexion", CustomContentManager.Fonts["font"]);
-            connectionButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(connectionButton);
 
 
@@ -97,7 +101,8 @@ namespace DowerTefense.Game.Screens
                 TextColor = Color.Black,
                 font = CustomContentManager.Fonts["font"],
             };
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             newButton = new Button(10, 150, 100, 20)
             {
@@ -109,7 +114,8 @@ namespace DowerTefense.Game.Screens
                 font = CustomContentManager.Fonts["font"],
 
             };
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             #endregion
             // Abonnement aux modifications de l'état de connexion du compte
@@ -169,7 +175,7 @@ namespace DowerTefense.Game.Screens
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Btn_OnClick(object sender, EventArgs e)
+        private void Btn_OnClickLeft(object sender, EventArgs e)
         {
             if (sender.GetType() == typeof(Button)
                && System.Windows.Forms.Form.ActiveForm != null
@@ -213,6 +219,7 @@ namespace DowerTefense.Game.Screens
             }
 
         }
+        private void Btn_OnClickRight(object sender, EventArgs e) { }
 
 
         /// <summary>

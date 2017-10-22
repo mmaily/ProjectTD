@@ -15,30 +15,30 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
         private Map map;
         private bool blankShot;
         public int NumberSpawn;//Nombre de Spawn simultané d'un batiment, peut être amélioré
-        protected double SpawnRate; //Number of mobs/second
-        protected Unit Unit;// Type d'unité qu'il spawn
-        protected String UnitName;
+        public double SpawnRate; //Number of mobs/second
+        public Unit Unit;// Type d'unité qu'il spawn
+        public String UnitName;
         #region ===Variable liée au levelling ===
         //LvlUp Spawn Rate
-        protected double BaseSpawnRate;//Nombre de mobs/seconde lvl 1
-        protected double SpawnRateCoeff;//Coefficient d'évolution du SpawnRate pour lvlUp
-        protected int SpawnRatePrice;//Prix de base de l'évolution du SpawnRate
-        protected double SpawnRatePriceCoeff;//Evolution du prix du lvl de SpawnRate
+        public double BaseSpawnRate;//Nombre de mobs/seconde lvl 1
+        public double SpawnRateCoeff;//Coefficient d'évolution du SpawnRate pour lvlUp
+        public int SpawnRatePrice;//Prix de base de l'évolution du SpawnRate
+        public double SpawnRatePriceCoeff;//Evolution du prix du lvl de SpawnRate
         //LvlUp Number of instant Spawn
-        protected double BaseNumberSpawn;//Nombre de Spawn à la création
-        protected double NumberSpawnCoeff;//Coefficient d'évolution du SpawnRate pour lvlUp
-        protected int NumberSpawnPrice;//Prix de base de l'évolution du SpawnRate
-        protected double NumberSpawnPriceCoeff;//Evolution du prix du lvl de SpawnRate
+        public double BaseNumberSpawn;//Nombre de Spawn à la création
+        public double NumberSpawnCoeff;//Coefficient d'évolution du SpawnRate pour lvlUp
+        public int NumberSpawnPrice;//Prix de base de l'évolution du SpawnRate
+        public double NumberSpawnPriceCoeff;//Evolution du prix du lvl de SpawnRate
         //LvlUp UnitSPeed
-        protected double BaseUnitSpeed; //Vitesse initiale de l'unité
-        protected double UnitSpeedCoeff;//Coefficient d'évolution de la vitesse de déplacement de l'unité
-        protected int UnitSpeedPrice;//Prix de base de l'évolution de la vitesse de déplacement de l'unité
-        protected double UnitSpeedPriceCoeff;//Evolution du prix du lvl de la vitesse de déplacement de l'unité
+        public double BaseUnitSpeed; //Vitesse initiale de l'unité
+        public double UnitSpeedCoeff;//Coefficient d'évolution de la vitesse de déplacement de l'unité
+        public int UnitSpeedPrice;//Prix de base de l'évolution de la vitesse de déplacement de l'unité
+        public double UnitSpeedPriceCoeff;//Evolution du prix du lvl de la vitesse de déplacement de l'unité
         //LvlUp UnitHealth
-        protected double BaseUnitHealth;//Vie initiale de l'unité en question
-        protected double UnitHealthCoeff;//Coefficient d'évolution de la santé max de l'unité
-        protected int UnitHealthPrice;//Prix de base de l'évolution de la santé max de l'unité
-        protected double UnitHealthPriceCoeff;//Evolution du prix du lvl de la santé max de l'unité
+        public double BaseUnitHealth;//Vie initiale de l'unité en question
+        public double UnitHealthCoeff;//Coefficient d'évolution de la santé max de l'unité
+        public int UnitHealthPrice;//Prix de base de l'évolution de la santé max de l'unité
+        public double UnitHealthPriceCoeff;//Evolution du prix du lvl de la santé max de l'unité
         #endregion
         protected double lastSpawn; // Time of the last spawned mob
         public Boolean locked=false; // Le batiment ne spawn que s'il est lock
@@ -109,9 +109,26 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             }
 
         }
-        public void TurnPower()
+        public int SwitchPower(int playerEnergy)
         {
-            powered = !powered;
+            int consumedEnergy = 0;
+            if (this.powered)
+            {
+                //De l'energie sera rendue au joueur et le bat est désactivé
+                powered = false;
+                consumedEnergy = -this.PowerNeeded;
+            }
+            else
+            {
+                if (playerEnergy >= this.PowerNeeded)
+                {
+                    //De l'energie sera soustraite au joueur et le bat est activé
+                    powered = true;
+                    consumedEnergy = this.PowerNeeded;
+                }
+            }
+            
+            return consumedEnergy;
         }
         public virtual void setName()
         {
@@ -195,7 +212,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
                 if (SpawnRatePrice <= gold)
                 {
                     lostGold = this.SpawnRatePrice;
-                    this.SpawnRate += (int)Math.Ceiling(this.BaseSpawnRate * SpawnRateCoeff);
+                    this.SpawnRate += (this.BaseSpawnRate * SpawnRateCoeff);
                     this.SpawnRatePrice = (int)Math.Ceiling(this.SpawnRatePrice * this.SpawnRatePriceCoeff);
                 }
                 return lostGold;

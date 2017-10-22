@@ -172,7 +172,7 @@ namespace DowerTefense.Commons
             };
             DSpawnerUp = new Dictionary<String, object>
             {
-                { "upSpawnerSpawnRate", null},{ "upSpawnerNumberSpawn", null},{ "upSpawnerUnitSpeed", null},{ "upSpawnerUnitHealth", null}
+                { "upSpawnerSpawnRate", null},{ "upSpawnerNumberSpawn", null},{ "upSpawnerUnitSpeed", null},{ "upSpawnerUnitHealth", null},{ "switchPower", null}
             };
             DNewBuildings = new Dictionary<String, object>
             {
@@ -353,6 +353,9 @@ namespace DowerTefense.Commons
                                 break;
                             case "UnitSpeedLvlUp":
                                 attackPlayer.totalGold -= sp.UnitSpeedLvlUp(attackPlayer.totalGold);
+                                break;
+                            case "SwitchPower":
+                                attackPlayer.usedEnergy -= sp.SwitchPower(attackPlayer.totalEnergy-attackPlayer.usedEnergy);
                                 break;
                             default:
                                 break;

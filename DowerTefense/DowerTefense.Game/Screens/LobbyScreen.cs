@@ -74,7 +74,8 @@ namespace DowerTefense.Game.Screens
                 BackgroundColor = Color.Indigo,
                 GreyedOut = true,
             };
-            readyButton.OnRelease += Btn_OnClick;
+            readyButton.OnReleaseLeft += Btn_OnClickLeft;
+            readyButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(readyButton);
 
         }
@@ -84,7 +85,7 @@ namespace DowerTefense.Game.Screens
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Btn_OnClick(object sender, EventArgs e)
+        private void Btn_OnClickLeft(object sender, EventArgs e)
         {
             if (sender.GetType() == typeof(Button)
               && System.Windows.Forms.Form.ActiveForm != null
@@ -103,6 +104,7 @@ namespace DowerTefense.Game.Screens
                 }
             }
         }
+        private void Btn_OnClickRight(object sender, EventArgs e) { }
 
         /// <summary>
         /// Mise à jour de tous les éléments d'interface

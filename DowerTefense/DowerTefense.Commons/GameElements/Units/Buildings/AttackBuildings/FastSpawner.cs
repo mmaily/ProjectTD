@@ -23,7 +23,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             this.NumberSpawn = 1;
             //Leveling du Spawnrate
             this.BaseSpawnRate = this.SpawnRate;
-            this.SpawnRateCoeff = 0.12;
+            this.SpawnRateCoeff = 0.55;
             this.SpawnRatePrice = 150;
             this.SpawnRatePriceCoeff =1.3;
             //Levling du nombre de spawn Instant

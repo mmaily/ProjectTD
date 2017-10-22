@@ -18,7 +18,8 @@ namespace LibrairieTropBien.GUI
     {
         #region === Etat du bouton ===
         // Bouton cliqué
-        public Boolean pressed = false;
+        public Boolean pressedRight = false;
+        public Boolean pressedLeft = false;
         // Bouton sous la souris
         private Boolean hovered = false;
         #endregion
@@ -42,7 +43,8 @@ namespace LibrairieTropBien.GUI
         /// <summary>
         /// Handler des clics
         /// </summary>
-        public event EventHandler OnRelease;
+        public event EventHandler OnReleaseRight;
+        public event EventHandler OnReleaseLeft;
 
         /// <summary>
         /// Bouton de base
@@ -88,7 +90,8 @@ namespace LibrairieTropBien.GUI
             MouseState mouseState = Mouse.GetState();
 
             // Si on écoute le clic, on regarde si la souris est sur le bouton
-            if (this.OnRelease != null && this.OnRelease.GetInvocationList().Length > 0)
+            if ((this.OnReleaseLeft!=null|| this.OnReleaseRight != null) 
+                &&( this.OnReleaseRight.GetInvocationList().Length > 0|| this.OnReleaseLeft.GetInvocationList().Length > 0))
             {
 
                 // Si la souris est sur le bouton
@@ -96,20 +99,40 @@ namespace LibrairieTropBien.GUI
                 {
                     // On l'enregistre
                     hovered = true; 
-                    // Si on clique gauche une première fois
-                    if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                    //Gestion du clic gauche
+                    if(this.OnReleaseLeft != null)
                     {
-                        // Etat appuyé
-                        pressed = true;
+                        // Si on clique gauche une première fois bouton gauche
+                        if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+                        {
+                            // Etat appuyé
+                            pressedLeft = true;
+                        }
+                        // Si on relâche alors qu'on avait appuyé sur le bouton droit
+                        else if (pressedLeft && mouseState.LeftButton == ButtonState.Released)
+                        {
+                            // On lance l'évènement
+                            pressedLeft = false;
+                            this.OnReleaseHandleLeft(new EventArgs());
+                            if (canBeSelected) { Selected = !Selected; }
+                        }
                     }
-                    // Si on relâche alors qu'on avait appuyé
-                    else if (pressed && mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
+                    if (this.OnReleaseRight != null)
                     {
-                        // On lance l'évènement
-                        pressed = false;
-                        this.OnReleaseHandle(new EventArgs());
-                        if (canBeSelected) { Selected = !Selected; }
+                        if (mouseState.RightButton == ButtonState.Pressed)
+                        {
+                            // Etat appuyé
+                            pressedRight = true;
+                        }
+                        // Si on relâche alors qu'on avait appuyé sur le bouton droit
+                        else if (pressedRight && mouseState.RightButton == ButtonState.Released)
+                        {
+                            // On lance l'évènement
+                            pressedRight = false;
+                            this.OnReleaseHandleRight(new EventArgs());
+                        }
                     }
+                       
                 }
                 // Sinon si on n'est pas sous la souris
                 else
@@ -118,7 +141,8 @@ namespace LibrairieTropBien.GUI
                     hovered = false;
 
                     // On oublie qu'on l'on a cliqué
-                    pressed = false;
+                    pressedRight = false;
+                    pressedLeft = false;
                 }
 
             }
@@ -128,9 +152,15 @@ namespace LibrairieTropBien.GUI
         /// Handler de clic
         /// </summary>
         /// <param name="e">Evenement du clic</param>
-        protected virtual void OnReleaseHandle(EventArgs e)
+        protected virtual void OnReleaseHandleLeft(EventArgs e)
         {
-            EventHandler handler = OnRelease;
+            EventHandler handler = OnReleaseLeft;
+            if (handler != null)
+                handler(this, e);
+        }
+        protected virtual void OnReleaseHandleRight(EventArgs e)
+        {
+            EventHandler handler = OnReleaseRight;
             if (handler != null)
                 handler(this, e);
         }

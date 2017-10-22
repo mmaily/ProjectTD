@@ -153,7 +153,8 @@ namespace DowerTefense.Game.Managers
                         PopUpAttached = true
                     };
                     btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
-                    btnBuild.OnRelease += Btn_OnClick;
+                    btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                    btnBuild.OnReleaseRight += Btn_OnClickRight;
                     DefenseConstruction.Add(btnBuild);
                     //Add la popUp qui va bien
                     InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
@@ -180,7 +181,8 @@ namespace DowerTefense.Game.Managers
 
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);               
                 DefenseLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoLvlUpSpeed = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -202,7 +204,8 @@ namespace DowerTefense.Game.Managers
 
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 DefenseLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoLvlUpRange = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -224,7 +227,8 @@ namespace DowerTefense.Game.Managers
 
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 DefenseLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoLvlUpDmg = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -251,7 +255,8 @@ namespace DowerTefense.Game.Managers
                         PopUpAttached = true
                     };
                     btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
-                    btnBuild.OnRelease += Btn_OnClick;
+                    btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                    btnBuild.OnReleaseRight += Btn_OnClickRight;
                     AttackConstruction.Add(btnBuild);
                     //Add la popUp qui va bien
                     InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
@@ -289,7 +294,8 @@ namespace DowerTefense.Game.Managers
                 };
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 AttackLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoLvlUpSpawnRate = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -312,7 +318,8 @@ namespace DowerTefense.Game.Managers
                 };
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 AttackLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoLvlUpNumberSpawn = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -335,7 +342,8 @@ namespace DowerTefense.Game.Managers
                 };
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 AttackLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoLvlUpUnitHealth = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -358,7 +366,8 @@ namespace DowerTefense.Game.Managers
                 };           
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 AttackLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoLvlUpUnitSpeed = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -382,7 +391,8 @@ namespace DowerTefense.Game.Managers
                 };
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 AttackLvlUp.Add(btnBuild);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 //Add la popUp qui va bien
                 InfoPopUp infoPower = new InfoPopUp(btnBuild.elementBox)
                 {
@@ -404,7 +414,9 @@ namespace DowerTefense.Game.Managers
                     Tag = "UI",
                     Enabled = true
                 };
-                btnMode.OnRelease += Btn_OnClick;
+                btnMode.OnReleaseLeft += Btn_OnClickLeft;
+                btnMode.OnReleaseRight += Btn_OnClickRight;
+
 
                 UIElementsList.Add(btnMode);
             }
@@ -429,7 +441,7 @@ namespace DowerTefense.Game.Managers
 
         }
 
-        private void Btn_OnClick(object sender, System.EventArgs e)
+        private void Btn_OnClickLeft(object sender, System.EventArgs e)
         {
 
             if (sender.GetType() == typeof(Button)
@@ -515,21 +527,28 @@ namespace DowerTefense.Game.Managers
                     }
 
                 }
-                if (btn.Tag.Equals("Power") && game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy >= (ActiveList[SelectedButton].PowerNeeded) && !(ActiveList[SelectedButton].powered))
+                //if (btn.Tag.Equals("Power") && game.attackPlayer.totalEnergy - game.attackPlayer.usedEnergy >= (ActiveList[SelectedButton].PowerNeeded) && !(ActiveList[SelectedButton].powered))
+                //{
+                //    ActiveList[SelectedButton].powered = true;
+                //    game.attackPlayer.usedEnergy += ActiveList[SelectedButton].PowerNeeded;
+                //    SelectedButton.GreyedOut = false;
+                //    //TODO : Envoyer que a la fin d'une vague ?
+                //    game.Changes[game.DFreeBuildingsList] = true;
+                //    return;
+                //}
+                //if (btn.Tag.Equals("Power") && (ActiveList[SelectedButton].powered))
+                //{
+                //    ActiveList[SelectedButton].powered = false;
+                //    game.attackPlayer.usedEnergy -= ActiveList[SelectedButton].PowerNeeded;
+                //    SelectedButton.GreyedOut = true;
+                //    game.Changes[game.DFreeBuildingsList] = true;
+                //    return;
+                //}
+                if (btn.Tag.Equals("Power"))
                 {
-                    ActiveList[SelectedButton].powered = true;
-                    game.attackPlayer.usedEnergy += ActiveList[SelectedButton].PowerNeeded;
-                    SelectedButton.GreyedOut = false;
-                    //TODO : Envoyer que a la fin d'une vague ?
-                    game.Changes[game.DFreeBuildingsList] = true;
-                    return;
-                }
-                if (btn.Tag.Equals("Power") && (ActiveList[SelectedButton].powered))
-                {
-                    ActiveList[SelectedButton].powered = false;
-                    game.attackPlayer.usedEnergy -= ActiveList[SelectedButton].PowerNeeded;
-                    SelectedButton.GreyedOut = true;
-                    game.Changes[game.DFreeBuildingsList] = true;
+                    SpawnerBuilding sp = ActiveList[SelectedButton];
+                    game.DSpawnerUp["switchPower"] = sp;
+                    game.Changes[game.DSpawnerUp] = true;
                     return;
                 }
                 #endregion
@@ -577,12 +596,27 @@ namespace DowerTefense.Game.Managers
             }
 
         }
-
-        /// <summary>
-        /// Mise à jour de l'interface
-        /// </summary>
-        /// <param name="_gameTime"></param>
-        public void Update(GameTime _gameTime)
+        private void Btn_OnClickRight(object sender, System.EventArgs e)
+        {
+            if (sender.GetType() == typeof(Button)
+             && System.Windows.Forms.Form.ActiveForm != null
+             && System.Windows.Forms.Form.ActiveForm.Text.Equals("DowerTefense"))
+            {
+                Button btn = (Button)sender;
+                if (btn.Tag.Equals("ActiveList"))
+                {
+                    SpawnerBuilding sp = ActiveList[btn];
+                    game.DSpawnerUp["switchPower"] = sp;
+                    game.Changes[game.DSpawnerUp] = true;
+                    return;
+                }
+            }
+        }
+            /// <summary>
+            /// Mise à jour de l'interface
+            /// </summary>
+            /// <param name="_gameTime"></param>
+            public void Update(GameTime _gameTime)
         {
             // Mise à jour de la sélection de tuile
             UpdateSelectedTile();
@@ -664,10 +698,14 @@ namespace DowerTefense.Game.Managers
                 AttackConstruction.Activate();
                 AttackFree.Activate();
                 AttackLock.Activate();
-                if (SelectedButton != null) {
-                    AttackLvlUp.Activate(); }
+                if (SelectedButton != null)
+                {
+                    AttackLvlUp.Activate();
+                    AttackUpdateLvlUpPopUp();
+                }
                 AttackConstruction.Update();
                 AttackFree.Update();
+                UpdateGreyedButton(AttackFree.GetArray());
                 AttackLock.Update();
                 AttackLvlUp.Update();
 
@@ -948,7 +986,8 @@ namespace DowerTefense.Game.Managers
                         PopUpAttached = true
                     };
                     btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
-                    btnBuild.OnRelease += Btn_OnClick;
+                    btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                    btnBuild.OnReleaseRight+= Btn_OnClickRight;
                     AttackFree.Add(btnBuild);
                     //Add la popUp qui va bien
                     InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
@@ -965,8 +1004,6 @@ namespace DowerTefense.Game.Managers
                 
 
             }
-
-
         }
         public void CreateLockedList()
         {
@@ -981,7 +1018,8 @@ namespace DowerTefense.Game.Managers
                     PopUpAttached = true
                 };
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
-                btnBuild.OnRelease += Btn_OnClick;
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
                 btnBuild.GreyedOut = true;
                 AttackLock.Add(btnBuild);
                 //Add la popUp qui va bien
@@ -1014,6 +1052,8 @@ namespace DowerTefense.Game.Managers
                 {
                     switch (b.Tag)
                     {
+                        default:
+                            break;
                         case "AttackSpeedLvlUp":
                             b.info.setText("Prix: " + t.fireRatePrice + Environment.NewLine + "AS: " + (t.RateOfFire * 1000) + " --> " + ((t.RateOfFire + t.BaseRateOfFire * t.fireRateCoeff) * 1000));
                             break;
@@ -1030,7 +1070,55 @@ namespace DowerTefense.Game.Managers
             }
             
         }
+        private void AttackUpdateLvlUpPopUp()
+        {
+            //TODO : Moche
+            SpawnerBuilding sp = (ActiveList[SelectedButton]);
+            foreach (Button b in AttackLvlUp.GetArray())
+            {
+                if (b != null)
+                {
+                    switch (b.Tag)
+                    {
+                        case "NumberSpawnLvlUp":
+                            b.info.setText("Prix: " + sp.NumberSpawnPrice + Environment.NewLine + "Nombre d'unites crees: " + Environment.NewLine + sp.NumberSpawn + " --> " + ((sp.NumberSpawn + sp.BaseNumberSpawn * sp.NumberSpawnCoeff) ));
+                            break;
 
+                        case "SpawnRateLvlUp":
+                            b.info.setText("Prix: " + sp.SpawnRatePrice + Environment.NewLine + "Vitesse de creation: " + Environment.NewLine + sp.SpawnRate + " --> " + ((sp.SpawnRate + sp.BaseSpawnRate * sp.SpawnRateCoeff)));
+                            break;
+                        case "UnitSpeedLvlUp":
+                            b.info.setText("Prix: " + sp.UnitSpeedPrice + Environment.NewLine + "Vitesse des unites crees: " + Environment.NewLine + sp.Unit.Speed + " --> " + ((sp.Unit.Speed + sp.BaseUnitSpeed * sp.UnitSpeedCoeff)));
+
+                            break;
+                        case "UnitHealthLvlUp":
+                            b.info.setText("Prix: " + sp.UnitHealthPrice + Environment.NewLine + "Vie des unites crees: " + Environment.NewLine + sp.Unit.MaxHealthPoints + " --> " + ((sp.Unit.MaxHealthPoints + sp.BaseUnitHealth * sp.UnitHealthCoeff)));
+
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else { return; }
+            }
+
+        }
+        public List<Button> UpdateGreyedButton(Button[,] array)
+        {
+            List<Button> list = null;
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+                    if (array[i, j] != null)
+                    {
+                        array[i, j].GreyedOut = !ActiveList[array[i, j]].powered;
+                    }
+                }
+            }
+
+            return list;
+        }
     }
 
 }

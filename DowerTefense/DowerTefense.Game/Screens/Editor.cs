@@ -109,7 +109,8 @@ namespace DowerTefense.Game.Screens
             };
             newButton.SetText("Reset", CustomContentManager.Fonts["font"]);
             newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             //On sauve la map ou bien ?
             newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 4*uiZone.Height / 10, width, height)
@@ -120,7 +121,8 @@ namespace DowerTefense.Game.Screens
             };
             newButton.SetText("Save", CustomContentManager.Fonts["font"]);
             newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             //On charge une map ou bien ?
             newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 6* uiZone.Height / 10, width, height)
@@ -131,7 +133,8 @@ namespace DowerTefense.Game.Screens
             };
             newButton.SetText("Open", CustomContentManager.Fonts["font"]);
             newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             //On retourne au menu ou bien ??!
             newButton = new Button(uiZone.Left + uiZone.Width / 2 - width / 2, 8 * uiZone.Height / 10, width, height)
@@ -142,7 +145,8 @@ namespace DowerTefense.Game.Screens
             };
             newButton.SetText("Back", CustomContentManager.Fonts["font"]);
             newButton.SetTexture(CustomContentManager.Textures[newButton.Name], false);
-            newButton.OnRelease += Btn_OnClick;
+            newButton.OnReleaseLeft += Btn_OnClickLeft;
+            newButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(newButton);
             #endregion
         }
@@ -150,7 +154,7 @@ namespace DowerTefense.Game.Screens
         {
             base.LoadContent();
         }
-        private void Btn_OnClick(object sender, EventArgs e)
+        private void Btn_OnClickLeft(object sender, EventArgs e)
         {
             if (sender.GetType() == typeof(Button))
             {
@@ -176,6 +180,7 @@ namespace DowerTefense.Game.Screens
             }
 
         }
+        private void Btn_OnClickRight(object sender, EventArgs e) { }
         public override void Update(GameTime _gameTime)
         {
             UpdateSelectedTileMap();
