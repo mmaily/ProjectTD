@@ -19,6 +19,7 @@ using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 using DowerTefense.Commons.GameElements.Units;
 using DowerTefense.Commons.GameElements.Projectiles;
 using LibrairieTropBien.ObjectExtension;
+using DownerTefense.Game.Managers;
 
 namespace DowerTefense.Game.Managers
 {
@@ -56,6 +57,9 @@ namespace DowerTefense.Game.Managers
         private GameEngine game;
         // Carte en cours
         public Map currentMap { get; set; }
+        #endregion
+        #region Gestion des inputs joueur
+        UserInputManager inputManager;
         #endregion
         private double millisecPerFrame;
         private double time;
@@ -122,6 +126,8 @@ namespace DowerTefense.Game.Managers
         public void Initialize(GraphicsDeviceManager _graphics)
         {
             this.Graphics = _graphics;
+            inputManager = new UserInputManager();
+            this.inputManager.KeyPressed += ProcessInput;
         }
         public void LoadContent(List<Building> _Dummies)
         {
@@ -612,12 +618,38 @@ namespace DowerTefense.Game.Managers
                 }
             }
         }
+        private void ProcessInput(object sender, EventArgs e)
+        {
+            //Cast le sender en tableau de touche
+            Keys[] keyArray = (Keys[])sender;
+            foreach(Keys key in keyArray)
+            {
+                switch (key)
+                {
+                    case Keys.Escape:
+                        if (SelectedButton != null)
+                        {
+                            SelectedButton.Selected = false;
+                            SelectedButton = null;
+                        }
+                        if (SelectedTile != null)
+                        {
+                            SelectedTile.selected = false;
+                            SelectedTile = null;
+                        }
+
+                        break;
+                }
+            }
+
+        }
             /// <summary>
             /// Mise à jour de l'interface
             /// </summary>
             /// <param name="_gameTime"></param>
             public void Update(GameTime _gameTime)
         {
+            inputManager.Update();
             // Mise à jour de la sélection de tuile
             UpdateSelectedTile();
 
