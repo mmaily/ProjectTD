@@ -35,10 +35,10 @@ namespace DowerTefense.Game.Managers
         private bool leftClicked = false;
 
         #region Paramètres d'affichage
+
         private GraphicsDeviceManager Graphics;
         // Mode attaque ou défense
         private string mode = "defense";
-
         // Police par défaut
         private SpriteFont deFaultFont;
         // Décalage de l'interface
@@ -52,6 +52,7 @@ namespace DowerTefense.Game.Managers
         //Offset de la map par rapport au coin sup droit
         private Vector2 mapOffset;
         #endregion
+
         #region Copie des éléments du jeu
         private GameEngine game;
         // Carte en cours
@@ -59,7 +60,7 @@ namespace DowerTefense.Game.Managers
         #endregion
         private double millisecPerFrame;
         private double time;
-        #region ==Element d'interface (boutons, bar de progression)
+        #region Element d'interface (boutons, bar de progression)
         //Bouton sélectionné (Il ne peut en rester qu'un !!!)
         private Button SelectedButton;
         // Éléments d'interface
@@ -76,7 +77,7 @@ namespace DowerTefense.Game.Managers
         public ButtonArray AttackFree { get; protected set; }
         public ButtonArray AttackLock { get; protected set; }
         #endregion
-        //Role
+        // Role
         protected PlayerRole role;
         //Point de vue adoptée par l'interface
         #region Gestion du lock des spawn
@@ -731,13 +732,12 @@ namespace DowerTefense.Game.Managers
             #endregion
 
         }
+
         /// <summary>
         /// Mise à jour de la tuile sélectionnée
         /// </summary>
         private void UpdateSelectedTile()
         {
-            #region === Sélection d'une tuile ===
-
             // Récupération de l'état de la souris
             MouseState mouseState = Mouse.GetState();
             // Récupération de la position de la souris
@@ -784,7 +784,6 @@ namespace DowerTefense.Game.Managers
                     leftClicked = false;
                 }
             }
-            #endregion
         }
 
 
@@ -877,7 +876,7 @@ namespace DowerTefense.Game.Managers
                     // Si le bâtiment possède une portée non nulle
                     if (SelectedTile.building.Range > 0)
                     {
-                        _spriteBatch.DrawCircle(SelectedTile.building.Position, SelectedTile.building.Range, 50, Color.Green, 5);
+                        _spriteBatch.DrawCircle(SelectedTile.building.Position + marginOffset, SelectedTile.building.Range, 100, Color.Green, 3);
                     }
 
                     if (mode.Equals("defense"))
