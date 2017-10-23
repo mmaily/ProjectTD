@@ -31,9 +31,6 @@ namespace DowerTefense.Server.Elements
         // Buffer de réception du callback
         private byte[] receivedBuffer = new byte[255];     // Receive data buffer
 
-        // Buffer de réception pour fusion des paquets
-        private byte[] messageBuffer;
-
         /// <summary>
         /// Durée de connexion
         /// </summary>
