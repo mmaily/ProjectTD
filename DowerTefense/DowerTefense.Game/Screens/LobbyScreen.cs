@@ -168,10 +168,10 @@ namespace DowerTefense.Game.Screens
                                 ScreenManager.UpdateGameScreenMode(false, PlayerRole.Debug);
 
                             }
-                            // Le jeu commence, on change d'écran
-                            ScreenManager.SelectScreen("GameScreen");
                             // Passage en mode jeu
                             MultiplayerManager.State = MultiplayerState.InGame;
+                            // Le jeu commence, on change d'écran
+                            ScreenManager.SelectScreen("GameScreen");
                         }
                         break;
                     default:

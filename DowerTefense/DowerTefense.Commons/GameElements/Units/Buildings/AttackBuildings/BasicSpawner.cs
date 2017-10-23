@@ -7,11 +7,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
     [Serializable()]
     class BasicSpawner : SpawnerBuilding
     {
-        public BasicSpawner()
-        {
-
-        }
-        public override void setName()
+        public BasicSpawner() : base()
         {
             this.Name = "BasicSpawner";
             this.UnitName = "BasicUnit";

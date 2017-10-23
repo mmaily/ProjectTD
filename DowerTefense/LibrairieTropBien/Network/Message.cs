@@ -70,7 +70,7 @@ namespace LibrairieTropBien.Network
                     }
                 }
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
                 System.Console.WriteLine("Oulà");
                 throw;

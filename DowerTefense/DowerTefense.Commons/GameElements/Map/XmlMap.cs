@@ -8,7 +8,7 @@ using System.Text;
 namespace DowerTefense.Commons.GameElements
 {
     [Serializable()]
-    public class XmlMap: ISerializable
+    public class XmlMap : ISerializable
     {
         public Tile[,] map;
         public int tileSize;

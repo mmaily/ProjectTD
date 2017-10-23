@@ -11,11 +11,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
     [Serializable()]
     class FastSpawner : SpawnerBuilding
     {
-        public FastSpawner()
-        {
-
-        }
-        public override void setName()
+        public FastSpawner() : base()
         {
             this.Name = "FastSpawner";
             this.UnitName = "FastUnit";

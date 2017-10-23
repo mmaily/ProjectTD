@@ -7,11 +7,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
     [Serializable()]
     class ToughSpawner : SpawnerBuilding
     {
-        public ToughSpawner()
-        {
-
-        }
-        public override void setName()
+        public ToughSpawner() : base()
         {
             this.Name = "ToughSpawner";
             this.UnitName = "ToughUnit";

@@ -59,7 +59,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             this.SpawnRate = 0.2;
             this.PowerNeeded = 1;
             this.Cost = 100;
-            setName();
             this.NumberSpawn = 1;
         }
         public void Update(GameTime _gameTime, Map _map,ref List<Unit> mobs)
@@ -129,10 +128,6 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings
             }
             
             return consumedEnergy;
-        }
-        public virtual void setName()
-        {
-
         }
         public void Lock()
         {

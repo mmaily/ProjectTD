@@ -78,6 +78,9 @@ namespace DowerTefense.Game.Screens
             // Abonnement aux mises à jour du jeu
             MultiplayerManager.GameUpdate += this.GameUpdate;
 
+            // Début de vague
+            game.newWave = true;
+
         }
 
         /// <summary>
