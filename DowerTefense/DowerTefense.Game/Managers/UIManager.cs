@@ -52,6 +52,8 @@ namespace DowerTefense.Game.Managers
         private byte btnSize = 35;
         //Offset de la map par rapport au coin sup droit
         private Vector2 mapOffset;
+        // Qualité des cercles dessinés
+        private static byte circleQuality = 100;
         #endregion
 
         #region Copie des éléments du jeu
@@ -137,7 +139,7 @@ namespace DowerTefense.Game.Managers
             Button btnBuild;
             GuiElement panel;
             //Tableau bouton défense
-            DefenseLvlUp = new ButtonArray(leftUIOffset + 30, 100, 4, 2, new Rectangle(0, 0, btnSize, btnSize));
+            DefenseLvlUp = new ButtonArray(leftUIOffset + 30, 150, 4, 2, new Rectangle(0, 0, btnSize, btnSize));
             DefenseConstruction = new ButtonArray(leftUIOffset + 30, 100, 4, 4, new Rectangle(0, 0, btnSize, btnSize));
             //Bouton des freeBuildingList
             AttackFree = new ButtonArray(leftUIOffset + 30, Graphics.PreferredBackBufferHeight - btnSize * 2, 7, 3, new Rectangle(0, 0, btnSize, btnSize));
@@ -153,7 +155,7 @@ namespace DowerTefense.Game.Managers
                 foreach (Tower.NameEnum tower in Enum.GetValues(typeof(Tower.NameEnum)))
                 {
 
-                    btnBuild = new Button(0,0, btnSize, btnSize)
+                    btnBuild = new Button(0, 0, btnSize, btnSize)
                     {
                         Name = tower.ToString(),
                         Tag = "defenseBuild",
@@ -186,7 +188,7 @@ namespace DowerTefense.Game.Managers
                     PopUpAttached = true
                 };
 
-                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);               
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 DefenseLvlUp.Add(btnBuild);
                 btnBuild.OnReleaseLeft += Btn_OnClickLeft;
                 btnBuild.OnReleaseRight += Btn_OnClickRight;
@@ -255,7 +257,7 @@ namespace DowerTefense.Game.Managers
                 foreach (SpawnerBuilding.NameEnum spawner in Enum.GetValues(typeof(SpawnerBuilding.NameEnum)))
                 {
 
-                    btnBuild = new Button( 0, 0, btnSize, btnSize)
+                    btnBuild = new Button(0, 0, btnSize, btnSize)
                     {
                         Name = spawner.ToString(),
                         Tag = "attackBuild",
@@ -370,7 +372,7 @@ namespace DowerTefense.Game.Managers
                     Text = "S",
                     font = CustomContentManager.Fonts["font"],
                     PopUpAttached = true
-                };           
+                };
                 btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
                 AttackLvlUp.Add(btnBuild);
                 btnBuild.OnReleaseLeft += Btn_OnClickLeft;
@@ -441,7 +443,7 @@ namespace DowerTefense.Game.Managers
                 Name = "ProgressBarWave",
                 Max = game.waveLength,
                 Tag = "UI",
-                
+
             };
 
             UIElementsList.Add(progressBarWaves);
@@ -471,7 +473,7 @@ namespace DowerTefense.Game.Managers
                         building = (Tower)building.CloneObject();
                         // Installation sur la tuile
                         building.SetTile(SelectedTile, game.map);
-                        
+
                         // Notification de changement de tour à construire
                         game.DTowerWaiting["newTower"] = building;
                         game.Changes[game.DTowerWaiting] = true;
@@ -525,7 +527,7 @@ namespace DowerTefense.Game.Managers
                             SelectedButton = btn;
                         }
                         //Si c'est le même on dit qu'il est plus sélectionné
-                        else{SelectedButton = null;}
+                        else { SelectedButton = null; }
                         //Si y'en avait un autre de sélectionné, on le désélectionne
                     }
                     else
@@ -623,7 +625,7 @@ namespace DowerTefense.Game.Managers
         {
             //Cast le sender en tableau de touche
             Keys[] keyArray = (Keys[])sender;
-            foreach(Keys key in keyArray)
+            foreach (Keys key in keyArray)
             {
                 switch (key)
                 {
@@ -644,11 +646,11 @@ namespace DowerTefense.Game.Managers
             }
 
         }
-            /// <summary>
-            /// Mise à jour de l'interface
-            /// </summary>
-            /// <param name="_gameTime"></param>
-            public void Update(GameTime _gameTime)
+        /// <summary>
+        /// Mise à jour de l'interface
+        /// </summary>
+        /// <param name="_gameTime"></param>
+        public void Update(GameTime _gameTime)
         {
             inputManager.Update();
             // Mise à jour de la sélection de tuile
@@ -679,7 +681,7 @@ namespace DowerTefense.Game.Managers
             }
             // Si l'élément est de type bouton
             #region ===Update interface Debug ===
-            if(role == PlayerRole.Debug)
+            if (role == PlayerRole.Debug)
             {
                 AttackConstruction.Disable();
                 AttackFree.Disable();
@@ -699,18 +701,18 @@ namespace DowerTefense.Game.Managers
             #endregion
             #region ===Update interface defense ===
 
-            if (mode.Equals("defense") ||role == PlayerRole.Defender)
+            if (mode.Equals("defense") || role == PlayerRole.Defender)
             {
                 DefenseConstruction.Disable();
                 DefenseLvlUp.Disable();
                 if (SelectedTile != null)
                 {
                     if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
-                    {                       
+                    {
                         DefenseConstruction.Activate();
                     }
                     if (SelectedTile.building != null)
-                    {                       
+                    {
                         DefenseLvlUp.Activate();
                         //Selon le bâtiment séléctionné, affiche la bonne popUp
                         DefenseUpdateLvlUpPopUp();
@@ -722,7 +724,7 @@ namespace DowerTefense.Game.Managers
             #endregion
             #region ===Update interface attaque ===
 
-            if (mode.Equals("attack") ||role == PlayerRole.Attacker)
+            if (mode.Equals("attack") || role == PlayerRole.Attacker)
             {
                 AttackConstruction.Disable();
                 AttackFree.Disable();
@@ -851,20 +853,20 @@ namespace DowerTefense.Game.Managers
                 _spriteBatch.Draw(CustomContentManager.Textures[building.Name],
                                 new Vector2(building.GetTile().line * game.map.tileSize, building.GetTile().column * game.map.tileSize) + marginOffset,
                                 null, null, null, 0f, Vector2.One * imageRatio,
-                                Color.White);              
+                                Color.White);
             }
-            foreach(Projectile proj in game.projectiles)
+            foreach (Projectile proj in game.projectiles)
             {
                 _spriteBatch.Draw(CustomContentManager.Textures[proj.name], proj.position, Color.White);
             }
             #endregion
             #region===Affichage des Unités===
-            foreach(Unit mob in game.mobs)
+            foreach (Unit mob in game.mobs)
             {
                 _spriteBatch.Draw(CustomContentManager.Textures[mob.Name], mob.Position, Color.White);
                 // Si le monstre n'est pas au maximum de sa vie
                 float percentage = (float)mob.HealthPoints / (float)mob.MaxHealthPoints;
-                if(percentage != 1)
+                if (percentage != 1)
                 {
                     // On affiche une petite barre de progression en dessous
                     Rectangle healthBar = new Rectangle((int)mob.Position.X - 2, (int)mob.Position.Y + 12, (int)(12 * percentage), 2);
@@ -909,7 +911,7 @@ namespace DowerTefense.Game.Managers
                     // Si le bâtiment possède une portée non nulle
                     if (SelectedTile.building.Range > 0)
                     {
-                        _spriteBatch.DrawCircle(SelectedTile.building.Position + marginOffset, SelectedTile.building.Range, 100, Color.Green, 3);
+                        _spriteBatch.DrawCircle(SelectedTile.building.Position + marginOffset, SelectedTile.building.Range, circleQuality, Color.Green, 3);
                     }
 
                     if (mode.Equals("defense"))
@@ -944,7 +946,7 @@ namespace DowerTefense.Game.Managers
 
 
             #region === A dessiner en attaque ===
-            if (mode.Equals("attack")||role == PlayerRole.Attacker)
+            if (mode.Equals("attack") || role == PlayerRole.Attacker)
             {
                 #region  Infos tuile et construction 
                 //Display les info de bases en mode attaque
@@ -966,7 +968,7 @@ namespace DowerTefense.Game.Managers
 
             #endregion
             #region=== A dessiner en défense ===
-            if (mode.Equals("defense")|| role == PlayerRole.Defender)
+            if (mode.Equals("defense") || role == PlayerRole.Defender)
             {
                 offset = 380;
                 _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
@@ -979,6 +981,55 @@ namespace DowerTefense.Game.Managers
             foreach (GuiElement info in PopUp)
             {
                 info.Draw(_spriteBatch);
+            }
+
+            // Action si un bouton est sous le curseur
+            if (DefenseConstruction.Enabled)
+            {
+                DrawMouseover(_spriteBatch, DefenseConstruction.GetHovered());
+            }
+            if (DefenseLvlUp.Enabled)
+            {
+                DrawMouseover(_spriteBatch, DefenseLvlUp.GetHovered());
+            }
+        }
+
+        /// <summary>
+        /// Affichage des infos du bouton sous la souris
+        /// </summary>
+        /// <param name="_spriteBatch"></param>
+        /// <param name="_hovered"></param>
+        private void DrawMouseover(SpriteBatch _spriteBatch, Button _hovered)
+        {
+            // Si aucun bouton n'est survolé OU aucune case sélectionnée
+            if (_hovered == null || SelectedTile == null)
+            {
+                return;
+            }
+
+            // Sinon, on récupère le tag du bouton
+            switch (_hovered.Tag)
+            {
+                case "defenseBuild":
+                    // On récupère le bâtiment à construire
+                    Building building = Dummies.Find(b => b.Name.Equals(_hovered.Name));
+                    // Si la tuile est libre, n'a pas de bâtiment dessus et le joueur a assez d'argent
+                    if (SelectedTile.TileType == Tile.TileTypeEnum.Free
+                        && SelectedTile.building == null)
+                    {
+                        // Affichage de la range pour info
+                        _spriteBatch.DrawCircle(marginOffset + SelectedTile.GetTilePosition(), building.Range, circleQuality, Color.LightGreen);
+                    }
+                    break;
+                case "RangeLvlUp":
+                    Tower tower = (Tower)SelectedTile.building;
+                    if (tower != null)
+                    {
+                        _spriteBatch.DrawCircle(marginOffset + SelectedTile.GetTilePosition(), (float)(tower.Range + tower.BaseRange * tower.rangeCoeff), circleQuality, Color.LightGreen);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1010,30 +1061,30 @@ namespace DowerTefense.Game.Managers
             if (game.FreeBuildingsList.Count != ActiveList.Count)
             {
 
-              SpawnerBuilding _sp = game.FreeBuildingsList[game.FreeBuildingsList.Count - 1];
-                    Button btnBuild = new Button(0, 0, btnSize, btnSize)
-                    {
-                        Name = _sp.Name,
-                        Tag = "ActiveList",
-                        PopUpAttached = true
-                    };
-                    btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
-                    btnBuild.OnReleaseLeft += Btn_OnClickLeft;
-                    btnBuild.OnReleaseRight+= Btn_OnClickRight;
-                    AttackFree.Add(btnBuild);
-                    //Add la popUp qui va bien
-                    InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
-                    {
-                        Name = "ActiveSpawnInfo",
-                        Tag = "InfoPopUp",
-                        font = CustomContentManager.Fonts["font"],
-                        texture = CustomContentManager.Colors["pixel"]
-                    };
-                    PopUp.Add(info);
-                    _sp.SetInfoPopUp(info);
-                    btnBuild.CanBeSelected();
-                    ActiveList.Add(btnBuild, _sp);
-                
+                SpawnerBuilding _sp = game.FreeBuildingsList[game.FreeBuildingsList.Count - 1];
+                Button btnBuild = new Button(0, 0, btnSize, btnSize)
+                {
+                    Name = _sp.Name,
+                    Tag = "ActiveList",
+                    PopUpAttached = true
+                };
+                btnBuild.SetTexture(CustomContentManager.Textures[btnBuild.Name], false);
+                btnBuild.OnReleaseLeft += Btn_OnClickLeft;
+                btnBuild.OnReleaseRight += Btn_OnClickRight;
+                AttackFree.Add(btnBuild);
+                //Add la popUp qui va bien
+                InfoPopUp info = new InfoPopUp(btnBuild.elementBox)
+                {
+                    Name = "ActiveSpawnInfo",
+                    Tag = "InfoPopUp",
+                    font = CustomContentManager.Fonts["font"],
+                    texture = CustomContentManager.Colors["pixel"]
+                };
+                PopUp.Add(info);
+                _sp.SetInfoPopUp(info);
+                btnBuild.CanBeSelected();
+                ActiveList.Add(btnBuild, _sp);
+
 
             }
         }
@@ -1078,7 +1129,7 @@ namespace DowerTefense.Game.Managers
         {
             //TODO : Moche
             Tower t = (Tower)SelectedTile.building;
-            foreach(Button b in DefenseLvlUp.GetArray())
+            foreach (Button b in DefenseLvlUp.GetArray())
             {
                 if (b != null)
                 {
@@ -1112,7 +1163,7 @@ namespace DowerTefense.Game.Managers
                     switch (b.Tag)
                     {
                         case "NumberSpawnLvlUp":
-                            b.info.setText("Prix: " + sp.NumberSpawnPrice + Environment.NewLine + "Nombre d'unites crees: " + Environment.NewLine + sp.NumberSpawn + " --> " + ((sp.NumberSpawn + sp.BaseNumberSpawn * sp.NumberSpawnCoeff) ));
+                            b.info.setText("Prix: " + sp.NumberSpawnPrice + Environment.NewLine + "Nombre d'unites crees: " + Environment.NewLine + sp.NumberSpawn + " --> " + ((sp.NumberSpawn + sp.BaseNumberSpawn * sp.NumberSpawnCoeff)));
                             break;
 
                         case "SpawnRateLvlUp":

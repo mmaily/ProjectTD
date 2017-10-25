@@ -83,7 +83,7 @@ namespace DowerTefense.Commons.GameElements
         /// <returns>Le Vecteur2 (ligne, colonne). Attention à le multiplier par la taille des tuiles</returns>
         public Vector2 GetTilePosition()
         {
-            Vector2 res = new Vector2(this.line + 0.5f, this.column + 0.5f);
+            Vector2 res = new Vector2(this.line, this.column) * tileSize + new Vector2(tileSize/2);
 
             return res;
         }

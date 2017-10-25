@@ -41,6 +41,30 @@ namespace LibrairieTropBien.GUI
         {
             return array;
         }
+
+        /// <summary>
+        /// Retourne le bouton actuellement sous le curseur
+        /// </summary>
+        /// <returns></returns>
+        public Button GetHovered()
+        {
+            // Bouton sous le curseur
+            Button hovered = null;
+
+            // Pour tous les boutons du tableau
+            foreach (Button btn in array)
+            {
+                // Si il est sous le curseur
+                if (btn != null && btn.Hovered)
+                {
+                    // C'est lui !
+                    hovered = btn;
+                }
+            }
+            // On le renvoie
+            return hovered;
+        }
+
         public override void Draw(SpriteBatch _sp)
         {
             if (!this.Enabled)

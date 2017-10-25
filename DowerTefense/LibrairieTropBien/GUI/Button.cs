@@ -22,6 +22,7 @@ namespace LibrairieTropBien.GUI
         public Boolean pressedLeft = false;
         // Bouton sous la souris
         private Boolean hovered = false;
+        public bool Hovered { get => hovered; set => hovered = value; }
         #endregion
         #region === Propriétés du bouton
         /// <summary>
@@ -37,6 +38,7 @@ namespace LibrairieTropBien.GUI
         /// Si sous la souris
         /// </summary>
         public Color HoveredColor { get; set; }
+
         /// <summary>
 
         #endregion
@@ -98,7 +100,7 @@ namespace LibrairieTropBien.GUI
                 if (this.elementBox.Contains(mouseState.Position))
                 {
                     // On l'enregistre
-                    hovered = true; 
+                    Hovered = true; 
                     //Gestion du clic gauche
                     if(this.OnReleaseLeft != null)
                     {
@@ -138,7 +140,7 @@ namespace LibrairieTropBien.GUI
                 else
                 {
                     // On l'enregistre
-                    hovered = false;
+                    Hovered = false;
 
                     // On oublie qu'on l'on a cliqué
                     pressedRight = false;
@@ -160,6 +162,7 @@ namespace LibrairieTropBien.GUI
         }
         protected virtual void OnReleaseHandleRight(EventArgs e)
         {
+            // TODO : autofix
             EventHandler handler = OnReleaseRight;
             if (handler != null)
                 handler(this, e);
@@ -192,7 +195,7 @@ namespace LibrairieTropBien.GUI
             }
 
             // Si on est sous la souris ou séléctionné
-            if ((hovered||Selected) && !Disabled )
+            if ((Hovered||Selected) && !Disabled )
             {
                 _spriteBatch.DrawRectangle(elementBox, HoveredColor * opacity, 2);
             }
