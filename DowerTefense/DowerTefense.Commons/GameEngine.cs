@@ -379,7 +379,7 @@ namespace DowerTefense.Commons
                                 attackPlayer.totalGold -= sp.UnitSpeedLvlUp(attackPlayer.totalGold);
                                 break;
                             case "SwitchPower":
-                                attackPlayer.usedEnergy -= sp.SwitchPower(attackPlayer.totalEnergy-attackPlayer.usedEnergy);
+                                attackPlayer.usedEnergy += sp.SwitchPower(attackPlayer.totalEnergy-attackPlayer.usedEnergy);
                                 break;
                             default:
                                 break;
@@ -453,7 +453,6 @@ namespace DowerTefense.Commons
                 else if (bd is SpawnerBuilding sp)
                 {
                     FreeBuildingsList[FreeBuildingsList.FindIndex(s => s.ID == sp.ID)] = sp;
-
                 }
                 // Remplacement du bâtiment si il a été trouvé
                 if(oldBd != null)

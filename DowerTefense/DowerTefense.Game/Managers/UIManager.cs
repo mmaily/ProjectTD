@@ -1099,8 +1099,7 @@ namespace DowerTefense.Game.Managers
                     }
                 }
                 else { return; }
-            }
-            
+            }          
         }
         private void AttackUpdateLvlUpPopUp()
         {

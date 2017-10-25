@@ -32,7 +32,7 @@ namespace DownerTefense.Game.Screens
             {
                 Name = "leave",
                 Tag = "leave",
-                Text = "Quitter",
+                Text = "Gagné !" + Environment.NewLine + "Quitter",
                 TextColor = Color.White,
                 BackgroundColor = Color.DarkRed,
                 font = CustomContentManager.Fonts["font"],

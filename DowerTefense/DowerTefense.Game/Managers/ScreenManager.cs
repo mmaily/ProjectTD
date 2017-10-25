@@ -81,7 +81,7 @@ namespace DowerTefense.Game.Screens
         /// <param name="spriteBatch"></param>
         public static void Draw(SpriteBatch spriteBatch)
         {
-                        if (backGroundScreen != null)
+            if (backGroundScreen != null)
             {
                 backGroundScreen.Draw(spriteBatch);
             }

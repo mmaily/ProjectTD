@@ -56,7 +56,7 @@ namespace DowerTefense.Game.Translator
                     //    break;
                     //case "FreeBuildingsList":
                     //    game.FreeBuildingsList = (List<SpawnerBuilding>)message.received;
-                    //break;
+                    //    break;
                     case "LockedBuildingsList":
                         game.LockedBuildingsList = (List<SpawnerBuilding>)message.received;
                         break;
@@ -104,7 +104,6 @@ namespace DowerTefense.Game.Translator
                     case "newTower":
                         Building t = ((Tower)message.send).DeepCopy();
                         game.WaitingForConstruction.Add(t);
-
                         break;
                     case "newSpawner":
                         Building sp = (SpawnerBuilding)((SpawnerBuilding)message.send).DeepCopy();
@@ -144,6 +143,9 @@ namespace DowerTefense.Game.Translator
                     case "switchPower":
                         Building upSSP = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSSP, "SwitchPower");
+                        break;
+                    case "UpdateBuildingsList":
+                        game.ToUpdateList = (List<Building>)message.send;
                         break;
                     #endregion
                     #region Ecran de fin de jeu
