@@ -1058,6 +1058,8 @@ namespace DowerTefense.Game.Managers
         }
         public void UpdateBtnLists()
         {
+            //Si on voit une différence entre la liste active (celle affichée par lIU) et la FreeBuildingList du game
+            //On ajoute un bouton, on l'associe à un spawner
             if (game.FreeBuildingsList.Count != ActiveList.Count)
             {
 
@@ -1087,6 +1089,22 @@ namespace DowerTefense.Game.Managers
 
 
             }
+                //Pour chaque bouton de spawner ans la liste des boutons, on lui associe un nouveau spawner
+                //ça permet de refresh les pairs Bouton/Spawner
+                //TODO : Trop bourrin ?
+                int k = 0;
+                for (int i = 0; i < AttackFree.GetArray().GetLength(0); i++)
+                {
+                    for (int j = 0; j < AttackFree.GetArray().GetLength(1); j++)
+                    {
+                        if (AttackFree.GetArray()[i, j] != null)
+                        {
+                            ActiveList[AttackFree.GetArray()[i, j]] = game.FreeBuildingsList[k];
+                                k++;
+                        }
+                    }
+                }
+            
         }
         public void CreateLockedList()
         {
