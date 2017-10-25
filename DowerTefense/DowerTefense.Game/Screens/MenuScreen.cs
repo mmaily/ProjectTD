@@ -84,8 +84,8 @@ namespace DowerTefense.Game.Screens
                 BackgroundColor = Color.DarkRed,
             };
             connectionButton.SetText("Connexion", CustomContentManager.Fonts["font"]);
-            newButton.OnReleaseLeft += Btn_OnClickLeft;
-            newButton.OnReleaseRight += Btn_OnClickRight;
+            connectionButton.OnReleaseLeft += Btn_OnClickLeft;
+            connectionButton.OnReleaseRight += Btn_OnClickRight;
             UIElementsList.Add(connectionButton);
 
 
