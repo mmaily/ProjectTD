@@ -90,6 +90,7 @@ namespace DowerTefense.Commons
         public Dictionary<String, object> DUpdateBuildings;
         public Dictionary<String, object> Dmobs;
         public Dictionary<String, object> DnewWave;
+        public Dictionary<String, object> DendGame;
         #endregion
 
         // Joueurs
@@ -98,6 +99,16 @@ namespace DowerTefense.Commons
 
         // Mode client / serveur
         private bool serverMode;
+
+        //Etat de la partie
+        public GameState state;
+        public enum GameState
+        {
+
+            Running, // Tour de base
+            Lost,// Tour d'essaie (tir rapide, courte portée)
+            Won
+        }
 
         #endregion
 
@@ -184,11 +195,15 @@ namespace DowerTefense.Commons
             };
             Dmobs = new Dictionary<String, object>()
             {
-                { "mobs", "" }
+                { "mobs", null }
             };
             DnewWave = new Dictionary<string, object>()
             {
                 { "newWave", lastWaveTick }
+            };
+            DendGame = new Dictionary<string, object>()
+            {
+                { "attackWon", null},{ "defenseWon", null }
             };
 
             //Dictionnaire de suivi des changements
@@ -206,6 +221,7 @@ namespace DowerTefense.Commons
                 { DNewBuildings, false },
                 { Dmobs, false },
                 { DnewWave, false },
+                { DendGame, false },
             };
 
             Initial = new Dictionary<Dictionary<string, object>, bool>(Changes);
@@ -232,10 +248,18 @@ namespace DowerTefense.Commons
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
+
             // Remise du dictionnaire des changement en état
             //TODO : Boucle assez lourde... Peut être multitread si ça ralentit
             Changes = new Dictionary<Dictionary<string, object>, bool>(Initial);
 
+            //Condition de fin de jeu
+            if (defensePlayer.lives <= 0)
+            {
+                DendGame["attackWon"] = "";
+                Changes[DendGame] = true;
+
+            }
             // Clean des bâtiments en construction
             ((List<Building>)DNewBuildings["NewBuildingsList"]).Clear();
             ((List<Building>)DUpdateBuildings["UpdateBuildingsList"]).Clear();

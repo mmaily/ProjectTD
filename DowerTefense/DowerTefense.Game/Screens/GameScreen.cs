@@ -160,7 +160,7 @@ namespace DowerTefense.Game.Screens
             if (loaded)
             {
                 //Update en fonction des ordres du serveur, et clear automatique de la liste d'ordres
-                ClientTranslator.UpdateGame(ref game, ref orders, VsAI);
+                ClientTranslator.UpdateGame(ref game, ref orders, VsAI, role);
 
                 //Update du jeu en interne
                 game.Update(_gameTime);

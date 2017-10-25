@@ -762,7 +762,8 @@ namespace DowerTefense.Game.Managers
             millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
             time = _gameTime.TotalGameTime.TotalMilliseconds;
             #endregion
-
+            #region Check si la game est finie
+            #endregion
         }
 
         /// <summary>

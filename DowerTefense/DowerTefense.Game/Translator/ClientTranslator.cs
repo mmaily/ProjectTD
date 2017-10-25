@@ -11,6 +11,8 @@ using DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings;
 using DowerTefense.Commons.Units;
 using DowerTefense.Commons.GameElements.Units.Buildings.AttackBuildings;
 using DowerTefense.Game.Players;
+using LibrairieTropBien.Network.Game;
+using DowerTefense.Game.Screens;
 
 namespace DowerTefense.Game.Translator
 {
@@ -19,20 +21,20 @@ namespace DowerTefense.Game.Translator
         //On envoie la liste des requêtes et on les traites une par une. 
         //Au final on fait une première update du Jeu en fonction des requêtes avant l'Update de la mécanique interne
         //On clear la liste des request à la fin
-        public static void UpdateGame(ref GameEngine game, ref List<Message> orders, Boolean vsAi)
+        public static void UpdateGame(ref GameEngine game, ref List<Message> orders, Boolean vsAi, PlayerRole _role)
         {
             lock (orders)
             {
                 foreach (Message message in orders)
                 {
-                    Translate(ref game, message, vsAi);
+                    Translate(ref game, message, vsAi, _role);
                 }
                 orders.Clear();
             }
         }
 
         //Méthode qui transforme le message en action sur le jeu
-        public static void Translate(ref GameEngine game, Message message, Boolean vsAi)
+        public static void Translate(ref GameEngine game, Message message, Boolean vsAi, PlayerRole _role)
         {
 
             if (!vsAi)
@@ -64,6 +66,30 @@ namespace DowerTefense.Game.Translator
                     case "attackPlayer":
                         game.attackPlayer = (AttackPlayer)message.received;
                         break;
+                    #region Ecran de fin de jeu
+                    case "attackWon":
+                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        if (_role == PlayerRole.Attacker || _role == PlayerRole.Debug)
+                        {
+                            ScreenManager.SelectScreen("WinScreen");
+                        }
+                        else
+                        {
+                            ScreenManager.SelectScreen("LoseScreen");
+                        }
+                        break;
+                    case "defenseWon":
+                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        if (_role == PlayerRole.Defender || _role == PlayerRole.Debug)
+                        {
+                            ScreenManager.SelectScreen("WinScreen");
+                        }
+                        else
+                        {
+                            ScreenManager.SelectScreen("LoseScreen");
+                        }
+                        break;
+                    #endregion
                     default:
                         break;
                 }
@@ -98,6 +124,7 @@ namespace DowerTefense.Game.Translator
                         Building upTD = ((Tower)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upTD, "DmgLvlUp");
                         break;
+                    #region UpSpawner
                     case "upSpawnerSpawnRate":
                         Building upSPR = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSPR, "SpawnRateLvlUp");
@@ -118,6 +145,32 @@ namespace DowerTefense.Game.Translator
                         Building upSSP = ((SpawnerBuilding)message.send).DeepCopy();
                         game.WaitingForUpdate.Add(upSSP, "SwitchPower");
                         break;
+                    #endregion
+                    #region Ecran de fin de jeu
+                    case "attackWon":
+                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        if (_role == PlayerRole.Attacker || _role == PlayerRole.Debug)
+                        {
+                            ScreenManager.SelectScreen("WinScreen");
+                        }
+                        else
+                        {
+                            ScreenManager.SelectScreen("LoseScreen");
+                        }
+                        break;
+                    case "defenseWon":
+                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        if (_role == PlayerRole.Defender || _role == PlayerRole.Debug)
+                        {
+                            ScreenManager.SelectScreen("WinScreen");
+                        }
+                        else
+                        {
+                            ScreenManager.SelectScreen("LoseScreen");
+                        }
+                        break;
+                        #endregion
+
                 }
             }
 

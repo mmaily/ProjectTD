@@ -2,9 +2,9 @@
 using System.Collections;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using DowerTefense.Game.Screens;
 using System.Collections.Generic;
 using LibrairieTropBien.Network.Game;
+using DownerTefense.Game.Screens;
 
 namespace DowerTefense.Game.Screens
 {
@@ -23,6 +23,8 @@ namespace DowerTefense.Game.Screens
         static Screen currentScreen;
         //Ecran à charger
         static Screen loadingScreen;
+        //Si on veut passer un écran en arrière plan (il se dessine juste mais n'agit plus, pas d'update)
+        static Screen backGroundScreen;
         //Dictionnaire des Screen
         public static Dictionary<String, Screen> Screens;
         public static void Initialize()
@@ -34,6 +36,8 @@ namespace DowerTefense.Game.Screens
             {
                 { "MenuScreen", new MenuScreen() },
                 { "GameScreen", new GameScreen() },
+                { "LoseScreen", new LoseScreen() },
+                { "WinScreen", new WinScreen() },
                 { "Editor", new Editor() },
                 { "Lobby", new LobbyScreen() }
             };
@@ -49,6 +53,17 @@ namespace DowerTefense.Game.Screens
             loadingScreen.Initialize(Graphics);
             LoadContent();
             currentScreen = loadingScreen;
+        }
+        public static void SetBackGroundScreen(String name)
+        {
+            if (name != null)
+            {
+                backGroundScreen = (Screen)Screens[name];
+            }
+            else
+            {
+                backGroundScreen = null;
+            }
         }
 
         /// <summary>
@@ -66,7 +81,12 @@ namespace DowerTefense.Game.Screens
         /// <param name="spriteBatch"></param>
         public static void Draw(SpriteBatch spriteBatch)
         {
+                        if (backGroundScreen != null)
+            {
+                backGroundScreen.Draw(spriteBatch);
+            }
             currentScreen.Draw(spriteBatch);
+
         }
 
         /// <summary>
