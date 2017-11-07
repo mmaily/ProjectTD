@@ -26,8 +26,6 @@ namespace DowerTefense.Game.Screens
             // Init liste éléments GUI
             UIElementsList = new List<GuiElement>();
 
-
-
             // Abonnement aux mises à jour du lobby
             MultiplayerManager.LobbyUpdate += this.LobbyUpdate;
         }
@@ -38,20 +36,20 @@ namespace DowerTefense.Game.Screens
         /// <param name="_graphics"></param>
         public override void Initialize(GraphicsDeviceManager _graphics)
         {
-            GuiElement attacker = new Button(50, 100, 80, 30)
+            GuiElement attacker = new GuiElement(50, 100, 80, 30)
             {
                 Name = "player",
-                Text = "Ici nom du joueur",
+                Text = "Vous",
                 TextColor = Color.White,
                 BackgroundColor = Color.DarkRed,
                 font = CustomContentManager.Fonts["font"],
                 GreyedOut = false,
             };
 
-            GuiElement defender = new Button(200, 100, 80, 30)
+            GuiElement defender = new GuiElement(200, 100, 80, 30)
             {
                 Name = "opponant",
-                Text = "",
+                Text = "Adversaire",
                 TextColor = Color.White,
                 BackgroundColor = Color.DarkRed,
                 font = CustomContentManager.Fonts["font"],
@@ -59,9 +57,11 @@ namespace DowerTefense.Game.Screens
             };
 
             // Init boutons
-            players = new Dictionary<PlayerRole, GuiElement>();
-            players.Add(PlayerRole.Attacker, attacker);
-            players.Add(PlayerRole.Defender, defender);
+            players = new Dictionary<PlayerRole, GuiElement>
+            {
+                { PlayerRole.Attacker, attacker },
+                { PlayerRole.Defender, defender }
+            };
             UIElementsList.Add(attacker);
             UIElementsList.Add(defender);
 
@@ -191,6 +191,18 @@ namespace DowerTefense.Game.Screens
             GuiElement toUpdate = players[newPlayer.Role];
             // Mise à jour
             toUpdate.GreyedOut = newPlayer.Ready;
+            // Selon l'état du joueur
+            if (newPlayer.Ready)
+            {
+                // Le joueur est prêt
+                toUpdate.BackgroundColor = Color.LawnGreen;
+            }
+            else
+            {
+                // Le joueur n'est pas prêt
+                toUpdate.BackgroundColor = Color.Red;
+            }
+
             toUpdate.Text = newPlayer.Name;
         }
 
@@ -205,6 +217,9 @@ namespace DowerTefense.Game.Screens
             {
                 element.Draw(_spriteBatch);
             }
+
+
+
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
             Texture2D fap = CustomContentManager.Textures["cursor"];
