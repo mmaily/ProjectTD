@@ -66,7 +66,7 @@ namespace DowerTefense.Game.Managers
         #endregion
         private double millisecPerFrame;
         private double time;
-        #region Element d'interface (boutons, bar de progression)
+        #region Element d'interface (boutons, bar de progression, icone souris)
         //Bouton sélectionné (Il ne peut en rester qu'un !!!)
         private Button SelectedButton;
         // Éléments d'interface
@@ -82,6 +82,8 @@ namespace DowerTefense.Game.Managers
         public ButtonArray AttackConstruction { get; protected set; }
         public ButtonArray AttackFree { get; protected set; }
         public ButtonArray AttackLock { get; protected set; }
+        public Button towerToConstruct = null;
+        public Color CursorColor;
         #endregion
         // Role
         protected PlayerRole role;
@@ -131,6 +133,8 @@ namespace DowerTefense.Game.Managers
             this.Graphics = _graphics;
             inputManager = new UserInputManager();
             this.inputManager.KeyPressed += ProcessInput;
+            CursorColor = Color.White;
+
         }
         public void LoadContent(List<Building> _Dummies)
         {
@@ -459,25 +463,34 @@ namespace DowerTefense.Game.Managers
             {
                 Button btn = (Button)sender;
                 // Si le bouton est une construction et qu'on l'on sélectionne une tuile
-                if (btn.Tag.Equals("defenseBuild") && SelectedTile != null)
+                if (btn.Tag.Equals("defenseBuild") )
                 {
-                    // On récupère le bâtiment à construire
-                    Building building = Dummies.Find(b => b.Name.Equals(btn.Name));
-                    // Si la tuile est libre, n'a pas de bâtiment dessus et le joueur a assez d'argent
-                    if (SelectedTile.TileType == Tile.TileTypeEnum.Free
-                        && SelectedTile.building == null
-                        && (building.Cost <= game.defensePlayer.totalGold))
+                    if(SelectedTile != null)
                     {
-                        // C'est bon !
-                        // Copie du bâtiment à construire
-                        building = (Tower)building.CloneObject();
-                        // Installation sur la tuile
-                        building.SetTile(SelectedTile, game.map);
+                        // On récupère le bâtiment à construire
+                        Building building = Dummies.Find(b => b.Name.Equals(btn.Name));
+                        // Si la tuile est libre, n'a pas de bâtiment dessus et le joueur a assez d'argent
+                        if (SelectedTile.TileType == Tile.TileTypeEnum.Free
+                            && SelectedTile.building == null
+                            && (building.Cost <= game.defensePlayer.totalGold))
+                        {
+                            // C'est bon !
+                            // Copie du bâtiment à construire
+                            building = (Tower)building.CloneObject();
+                            // Installation sur la tuile
+                            building.SetTile(SelectedTile, game.map);
 
-                        // Notification de changement de tour à construire
-                        game.DTowerWaiting["newTower"] = building;
-                        game.Changes[game.DTowerWaiting] = true;
+                            // Notification de changement de tour à construire
+                            game.DTowerWaiting["newTower"] = building;
+                            game.Changes[game.DTowerWaiting] = true;
+                        }
+                        
                     }
+                    else if (SelectedTile == null)
+                    {
+                        towerToConstruct = btn;
+                    }
+
                 }
                 if (btn.Tag.Equals("AttackSpeedLvlUp"))
                 {
@@ -640,6 +653,10 @@ namespace DowerTefense.Game.Managers
                             SelectedTile.selected = false;
                             SelectedTile = null;
                         }
+                        if (towerToConstruct != null)
+                        {
+                            towerToConstruct = null;
+                        }
 
                         break;
                 }
@@ -705,12 +722,10 @@ namespace DowerTefense.Game.Managers
             {
                 DefenseConstruction.Disable();
                 DefenseLvlUp.Disable();
+                DefenseConstruction.Activate();
+
                 if (SelectedTile != null)
                 {
-                    if (SelectedTile.TileType == Tile.TileTypeEnum.Free)
-                    {
-                        DefenseConstruction.Activate();
-                    }
                     if (SelectedTile.building != null)
                     {
                         DefenseLvlUp.Activate();
@@ -790,6 +805,7 @@ namespace DowerTefense.Game.Managers
                 {
                     // On signale le clic gauche
                     leftClicked = true;
+                    
 
                     // Récupération de l'ancienne tuile sélectionnée
                     Tile oldSelectedTile = this.SelectedTile;
@@ -811,6 +827,27 @@ namespace DowerTefense.Game.Managers
                         selectedTile.selected = true;
                         // On remplace l'ancienne par la nouvelle
                         this.SelectedTile = selectedTile;
+                        //Si on avait une tour "sous la main", tuile libre+pas de bâtiment dessus
+                        if (towerToConstruct != null
+                            && SelectedTile.TileType == Tile.TileTypeEnum.Free
+                            && SelectedTile.building == null)
+                        {
+                            Building building = Dummies.Find(b => b.Name.Equals(towerToConstruct.Name));
+                            if (building.Cost <= game.defensePlayer.totalGold)
+                            {
+                                // C'est bon !
+                                // Copie du bâtiment à construire
+                                building = (Tower)building.CloneObject();
+                                // Installation sur la tuile
+                                building.SetTile(SelectedTile, game.map);
+
+                                // Notification de changement de tour à construire
+                                game.DTowerWaiting["newTower"] = building;
+                                game.Changes[game.DTowerWaiting] = true;
+                                towerToConstruct = null;
+                            }
+
+                        }
                     }
                 }
                 else if (Mouse.GetState().LeftButton == ButtonState.Released && leftClicked == true)
@@ -840,6 +877,15 @@ namespace DowerTefense.Game.Managers
                 {
                     // On affiche la texture "sélectionnée" sur cette tuile
                     _spriteBatch.Draw(CustomContentManager.Textures["Mouseover"], new Vector2(tile.line * game.map.tileSize, tile.column * game.map.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, Color.White);
+                    if (tile.overviewed)
+                    {
+                        if(tile.TileType == Tile.TileTypeEnum.Free) { CursorColor = Color.White * 0.8f; }
+                        else { CursorColor = Color.Red * 0.5f; }
+                        if (towerToConstruct != null)
+                        {
+                            _spriteBatch.Draw(towerToConstruct.texture, new Vector2(tile.line * game.map.tileSize, tile.column * game.map.tileSize) + marginOffset, null, null, null, 0f, Vector2.One * imageRatio, CursorColor);
+                        }
+                    }
                     // On reset le boolée "sous le curseur"
                     tile.overviewed = false;
                 }

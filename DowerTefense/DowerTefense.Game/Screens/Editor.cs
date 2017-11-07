@@ -192,7 +192,7 @@ namespace DowerTefense.Game.Screens
         }
         public override void Draw(SpriteBatch _spriteBatch)
         {
-            base.Draw(_spriteBatch);
+            
             #region ===Affichage des Tiles modèles===
             foreach (Tile tile in modelTiles)
             {
@@ -246,12 +246,13 @@ namespace DowerTefense.Game.Screens
                 element.Draw(_spriteBatch);
             }
             // Affichage du curseur
-            Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.Textures["cursor"];
-            _spriteBatch.Draw(fap, lol, Color.White);
+            //Vector2 lol = Mouse.GetState().Position.ToVector2();
+            //Texture2D fap = CustomContentManager.Textures["cursor"];
+            //_spriteBatch.Draw(fap, lol, Color.White);
             #endregion
             //Gestion des Tiles modèles
-
+            //Curseur souris
+            base.Draw(_spriteBatch);
 
 
         }

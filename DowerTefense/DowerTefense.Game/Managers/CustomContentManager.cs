@@ -57,7 +57,7 @@ namespace DowerTefense.Game.Managers
             // Texture pour tuile sélectionnée
             AddTexture("Maps/Mouseover", "Mouseover");
             // Texture du curseur
-            AddTexture("Cursors/Banana", "cursor");
+            AddTexture("Cursors/Banana", "bananaCursor");
             // Texture des tours
             foreach (Tower.NameEnum Name in Enum.GetValues(typeof(Tower.NameEnum)))
             {

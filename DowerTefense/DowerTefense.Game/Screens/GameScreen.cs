@@ -166,7 +166,6 @@ namespace DowerTefense.Game.Screens
                 game.Update(_gameTime);
                 // Mise à jour du gestionnaire d'interface
                 uiManager.Update(_gameTime);
-
                 // TODO : meilleure place ?--->Nul parce qu'après on remet à true dans le ClientUpdate
                 game.newWave = false;
 
@@ -190,9 +189,6 @@ namespace DowerTefense.Game.Screens
                 // Affichage de l'interface
                 uiManager.Draw(_spriteBatch);
             }
-
-
-            //_spriteBatch.DrawString(CustomContentManager.Fonts["font"], "LOLILOL", new Vector2(lol++, lol++), Color.White);
 
             base.Draw(_spriteBatch);
         }

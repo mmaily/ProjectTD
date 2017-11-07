@@ -23,6 +23,8 @@ namespace DowerTefense.Game.Screens
         public int topMargin;
         //Stock les requetes serveur
         public List<Message> Messages;
+
+
         public Screen()
         {
             UIElementsList = new List<GuiElement>();
@@ -40,7 +42,7 @@ namespace DowerTefense.Game.Screens
         {
             // Affichage du curseur
             Vector2 lol = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.Textures["cursor"];
+            Texture2D fap = CustomContentManager.Textures["bananaCursor"];
             _spriteBatch.Draw(fap, lol, Color.White);
         }
         public virtual void Update(GameTime gameTime)
@@ -48,7 +50,7 @@ namespace DowerTefense.Game.Screens
         }
         public virtual void Initialize(GraphicsDeviceManager _graphics)
         {
-
+            //this.mouseIcone = CustomContentManager.Textures["bananaCursor"];
         }
         public virtual void TreatMessages() { }
     }
