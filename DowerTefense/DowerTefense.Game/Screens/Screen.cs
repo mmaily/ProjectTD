@@ -23,6 +23,7 @@ namespace DowerTefense.Game.Screens
         public int topMargin;
         //Stock les requetes serveur
         public List<Message> Messages;
+        public Boolean hideCursor = false;
 
 
         public Screen()
@@ -40,10 +41,13 @@ namespace DowerTefense.Game.Screens
         }
         public virtual void Draw(SpriteBatch _spriteBatch)
         {
-            // Affichage du curseur
-            Vector2 lol = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.Textures["bananaCursor"];
-            _spriteBatch.Draw(fap, lol, Color.White);
+            if (!hideCursor)
+            {
+                // Affichage du curseur
+                Vector2 lol = Microsoft.Xna.Framework.Input.Mouse.GetState().Position.ToVector2();
+                Texture2D fap = CustomContentManager.Textures["bananaCursor"];
+                _spriteBatch.Draw(fap, lol, Color.White);
+            }
         }
         public virtual void Update(GameTime gameTime)
         {

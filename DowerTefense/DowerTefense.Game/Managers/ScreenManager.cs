@@ -26,44 +26,50 @@ namespace DowerTefense.Game.Screens
         //Si on veut passer un écran en arrière plan (il se dessine juste mais n'agit plus, pas d'update)
         static Screen backGroundScreen;
         //Dictionnaire des Screen
-        public static Dictionary<String, Screen> Screens;
+        public static Dictionary<ScreenEnum, Screen> Screens;
+        public enum ScreenEnum
+        {
+            MenuScreens, //Screen de menu principal
+            GameScreen, // Screen du jeu
+            LoseScreen, // Screen de perdu
+            WinScreen, // Screen de gagné
+            Editor, // Editeur
+            Lobby,//Scrren de lobby pour matchmaking
+        }
         public static void Initialize()
         {
             //Initialisation des Screens
             // Instance du gestionnaire d'écran
             //Dictionnaire des Screen
-            Screens = new Dictionary<String, Screen>
+            Screens = new Dictionary<ScreenEnum, Screen>
             {
-                { "MenuScreen", new MenuScreen() },
-                { "GameScreen", new GameScreen() },
-                { "LoseScreen", new LoseScreen() },
-                { "WinScreen", new WinScreen() },
-                { "Editor", new Editor() },
-                { "Lobby", new LobbyScreen() }
+                { ScreenEnum.MenuScreens, new MenuScreen() },
+                { ScreenEnum.GameScreen, new GameScreen() },
+                { ScreenEnum.LoseScreen, new LoseScreen() },
+                { ScreenEnum.WinScreen, new WinScreen() },
+                { ScreenEnum.Editor, new Editor() },
+                { ScreenEnum.Lobby, new LobbyScreen() }
             };
-            currentScreen = (Screen)Screens["GameScreen"];
+            currentScreen = (Screen)Screens[ScreenEnum.GameScreen];
         }
         /// <summary>
         /// Chargement d'un écran spécifique (temporaire)
         /// </summary>
         /// <param name="_id">Identifiant de l'écran à charger</param>
-        public static void SelectScreen(String name)
+        public static void SelectScreen(ScreenEnum type)
         {
-            loadingScreen = (Screen)Screens[name];
+            loadingScreen = (Screen)Screens[type];
             loadingScreen.Initialize(Graphics);
             LoadContent();
             currentScreen = loadingScreen;
         }
-        public static void SetBackGroundScreen(String name)
+        public static void SetBackGroundScreen(ScreenEnum type)
         {
-            if (name != null)
-            {
-                backGroundScreen = (Screen)Screens[name];
-            }
-            else
-            {
-                backGroundScreen = null;
-            }
+                backGroundScreen = (Screen)Screens[type];
+        }
+        public static void UnsetBackGroundScreen()
+        {
+            backGroundScreen = null;
         }
 
         /// <summary>
@@ -106,10 +112,10 @@ namespace DowerTefense.Game.Screens
 
         public static void UpdateGameScreenMode(bool _vsAI, PlayerRole _role)
         {
-            ((GameScreen)Screens["GameScreen"]).VsAI = _vsAI;
+            ((GameScreen)Screens[ScreenEnum.GameScreen]).VsAI = _vsAI;
             //TODO : Enelver ce mode de débug et mettre défenseur
 
-            ((GameScreen)Screens["GameScreen"]).role = _role;
+            ((GameScreen)Screens[ScreenEnum.GameScreen]).role = _role;
 
         }
     }   

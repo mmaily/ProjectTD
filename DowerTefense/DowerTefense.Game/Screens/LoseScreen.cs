@@ -62,8 +62,8 @@ namespace DownerTefense.Game.Screens
                     switch (btn.Tag.ToString())
                     {
                         case "leave":
-                            ScreenManager.SetBackGroundScreen(null);
-                            ScreenManager.SelectScreen("MenuScreen");
+                            ScreenManager.UnsetBackGroundScreen();
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.MenuScreens);
                             break;
                         default:
                             break;

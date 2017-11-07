@@ -138,7 +138,7 @@ namespace DowerTefense.Game.Screens
                         connectionButton.Text = "Connexion";
                         connectionButton.BackgroundColor = Color.DarkRed;
                         UIElementsList.Find(elem => elem.Name.Equals("Matchmaking")).Disabled = true;
-                        ScreenManager.SelectScreen("MenuScreen");
+                        ScreenManager.SelectScreen(ScreenManager.ScreenEnum.MenuScreens);
                         break;
                     case MultiplayerState.Connected:
                         // Modification du bouton de connexion
@@ -158,7 +158,7 @@ namespace DowerTefense.Game.Screens
                         // TODO : remettre bouton en état
                         break;
                     case MultiplayerState.InLobby:
-                        ScreenManager.SelectScreen("Lobby");
+                        ScreenManager.SelectScreen(ScreenManager.ScreenEnum.Lobby);
                         break;
                     case MultiplayerState.InGame:
                         break;
@@ -188,7 +188,7 @@ namespace DowerTefense.Game.Screens
                 {
                     case "horsLigne":
                         ScreenManager.UpdateGameScreenMode(true, LibrairieTropBien.Network.Game.PlayerRole.Debug);
-                       ScreenManager.SelectScreen("GameScreen");
+                       ScreenManager.SelectScreen(ScreenManager.ScreenEnum.GameScreen);
                         break;
                     case "matchmaking":
                         //MultiplayerManager.SearchMatch("");
@@ -197,7 +197,7 @@ namespace DowerTefense.Game.Screens
                         MultiplayerManager.SearchMatch(btn.Name);
                         break;
                     case "editor":
-                        ScreenManager.SelectScreen("Editor");
+                        ScreenManager.SelectScreen(ScreenManager.ScreenEnum.Editor);
                         break;
                     case "connect":
                         // Si le compte est déconnecté

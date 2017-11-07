@@ -62,7 +62,7 @@ namespace DowerTefense.Game.Screens
             map = game.map;
 
             // Calcul de l'échelle de scaling selon taille des Tile
-            marginOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
+            marginOffset = new Vector2(ScreenManager.Screens[ScreenManager.ScreenEnum.GameScreen].leftMargin, ScreenManager.Screens[ScreenManager.ScreenEnum.GameScreen].topMargin);
 
             //Récupération de l'écran et instancition du spriteBatch
             this.Graphics = _graphics;
@@ -189,7 +189,6 @@ namespace DowerTefense.Game.Screens
                 // Affichage de l'interface
                 uiManager.Draw(_spriteBatch);
             }
-
             base.Draw(_spriteBatch);
         }
     }

@@ -154,7 +154,7 @@ namespace DowerTefense.Commons.GameElements.Units.Buildings.DefenseBuildings
 
         public override void SetInfoPopUp(InfoPopUp info)
         {
-            info.setText("Damage : " + AttackPower + Environment.NewLine + "Range : " + this.Range);
+            info.setText("Prix : " + Cost + Environment.NewLine + "Damage : " + AttackPower + Environment.NewLine + "Range : " + this.Range);
         }
 
         public override Building DeepCopy()

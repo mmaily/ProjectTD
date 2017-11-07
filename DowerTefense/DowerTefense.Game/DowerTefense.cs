@@ -62,7 +62,7 @@ namespace DowerTefense.Game
             graphics.ApplyChanges();
 
             ////Demande l'affichage du premier écran
-            ScreenManager.SelectScreen("MenuScreen");
+            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.MenuScreens);
 
 
         }

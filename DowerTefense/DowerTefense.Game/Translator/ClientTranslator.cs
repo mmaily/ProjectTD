@@ -68,25 +68,25 @@ namespace DowerTefense.Game.Translator
                         break;
                     #region Ecran de fin de jeu
                     case "attackWon":
-                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        ScreenManager.SetBackGroundScreen(ScreenManager.ScreenEnum.GameScreen);
                         if (_role == PlayerRole.Attacker || _role == PlayerRole.Debug)
                         {
-                            ScreenManager.SelectScreen("WinScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.WinScreen);
                         }
                         else
                         {
-                            ScreenManager.SelectScreen("LoseScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.LoseScreen);
                         }
                         break;
                     case "defenseWon":
-                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        ScreenManager.SetBackGroundScreen(ScreenManager.ScreenEnum.GameScreen);
                         if (_role == PlayerRole.Defender || _role == PlayerRole.Debug)
                         {
-                            ScreenManager.SelectScreen("WinScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.WinScreen);
                         }
                         else
                         {
-                            ScreenManager.SelectScreen("LoseScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.LoseScreen);
                         }
                         break;
                     #endregion
@@ -150,25 +150,25 @@ namespace DowerTefense.Game.Translator
                     #endregion
                     #region Ecran de fin de jeu
                     case "attackWon":
-                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        ScreenManager.SetBackGroundScreen(ScreenManager.ScreenEnum.GameScreen);
                         if (_role == PlayerRole.Attacker || _role == PlayerRole.Debug)
                         {
-                            ScreenManager.SelectScreen("WinScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.WinScreen);
                         }
                         else
                         {
-                            ScreenManager.SelectScreen("LoseScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.LoseScreen);
                         }
                         break;
                     case "defenseWon":
-                        ScreenManager.SetBackGroundScreen("GameScreen");
+                        ScreenManager.SetBackGroundScreen(ScreenManager.ScreenEnum.GameScreen);
                         if (_role == PlayerRole.Defender || _role == PlayerRole.Debug)
                         {
-                            ScreenManager.SelectScreen("WinScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.WinScreen);
                         }
                         else
                         {
-                            ScreenManager.SelectScreen("LoseScreen");
+                            ScreenManager.SelectScreen(ScreenManager.ScreenEnum.LoseScreen);
                         }
                         break;
                         #endregion

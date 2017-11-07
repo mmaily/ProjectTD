@@ -108,7 +108,7 @@ namespace DowerTefense.Game.Managers
 
             // Récupération du décalage gauche de l'interface
             currentMap = currentMap;
-            mapOffset = new Vector2(ScreenManager.Screens["GameScreen"].leftMargin, ScreenManager.Screens["GameScreen"].topMargin);
+            mapOffset = new Vector2(ScreenManager.Screens[ScreenManager.ScreenEnum.GameScreen].leftMargin, ScreenManager.Screens[ScreenManager.ScreenEnum.GameScreen].topMargin);
             leftUIOffset = currentMap.mapWidth * currentMap.tileSize + (int)mapOffset.Y * 2;
 
             //Création d'une zone pour l'ui

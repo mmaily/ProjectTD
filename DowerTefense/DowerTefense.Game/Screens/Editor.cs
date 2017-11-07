@@ -172,7 +172,7 @@ namespace DowerTefense.Game.Screens
                         GenerateMap(openMap(mapName));
                         break;
                     case "back":
-                        ScreenManager.SelectScreen("MenuScreen");
+                        ScreenManager.SelectScreen(ScreenManager.ScreenEnum.MenuScreens);
                         break;
                     default:
                         break;
