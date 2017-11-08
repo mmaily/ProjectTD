@@ -97,7 +97,7 @@ namespace DownerTefense.Game.Screens
             }
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.Textures["cursor"];
+            Texture2D fap = CustomContentManager.Textures["BananaCursor"];
             _spriteBatch.Draw(fap, lol, Color.White);
         }
     }

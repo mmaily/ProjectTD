@@ -32,7 +32,7 @@ namespace DownerTefense.Game.Screens
             {
                 Name = "leave",
                 Tag = "leave",
-                Text = "Gagné !" + Environment.NewLine + "Quitter",
+                Text = "GAGNE !" + Environment.NewLine + "Quitter",
                 TextColor = Color.White,
                 BackgroundColor = Color.DarkRed,
                 font = CustomContentManager.Fonts["font"],
@@ -97,7 +97,7 @@ namespace DownerTefense.Game.Screens
             }
             // Affichage du curseur
             Vector2 lol = Mouse.GetState().Position.ToVector2();
-            Texture2D fap = CustomContentManager.Textures["cursor"];
+            Texture2D fap = CustomContentManager.Textures["bananaCursor"];
             _spriteBatch.Draw(fap, lol, Color.White);
         }
     }

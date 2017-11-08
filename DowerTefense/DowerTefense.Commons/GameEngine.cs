@@ -65,6 +65,7 @@ namespace DowerTefense.Commons
         public double lastWaveTick;
         public byte waveCount;
         public int waveLength;
+        public int extraWaves; //Nombre de vagues après lesquelles le joueur attaquand a perdu
 
         // Carte
         public byte tileSize;
@@ -236,6 +237,7 @@ namespace DowerTefense.Commons
             waveCount = 0;
             tileSize = 8;
             waveLength = 10 * 1000;
+            extraWaves = 5;
             #endregion
 
             // Initialization de l'identifieur du bâtiment
@@ -407,9 +409,26 @@ namespace DowerTefense.Commons
 
                     // Verrouillage des spawners 
                     LockSpawners();
-                    //Attaquant gagne des sous
-                    attackPlayer.totalGold += 200;
-                    Changes[DattackPlayer] = true;
+                    //Attaquant gagne des sous si il lui reste du stock
+                    if (attackPlayer.betGold>=200)
+                    {
+                        attackPlayer.totalGold += 200;
+                        attackPlayer.betGold -= 200;
+                        Changes[DattackPlayer] = true;
+                    }
+                    else
+                    {
+                        if (extraWaves > 0)
+                        {
+                            extraWaves--;
+                        }
+                        else
+                        {
+                            DendGame["defenseWon"] = "";
+                            Changes[DendGame] = true;
+                        }
+                    }
+
                     // Notification de changement
                     Changes[DLockedBuildingsList] = true;
                 }

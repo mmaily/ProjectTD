@@ -779,8 +779,6 @@ namespace DowerTefense.Game.Managers
             millisecPerFrame = _gameTime.TotalGameTime.TotalMilliseconds - time;
             time = _gameTime.TotalGameTime.TotalMilliseconds;
             #endregion
-            #region Check si la game est finie
-            #endregion
         }
 
         /// <summary>
@@ -935,11 +933,6 @@ namespace DowerTefense.Game.Managers
             //Display le nombre de Spawner
             offset = 360;
             _spriteBatch.DrawString(deFaultFont, "Vie du joueur : " + game.defensePlayer.lives, new Vector2(leftUIOffset, offset), Color.White);
-            offset = 400;
-            _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + game.FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
-            offset = 420;
-            _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + game.DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
-
             // Affichage du nom de la carte
             _spriteBatch.DrawString(deFaultFont, game.map.Name + " -- Mode : " + mode, new Vector2(leftUIOffset, 5), Color.Wheat);
 
@@ -1002,6 +995,10 @@ namespace DowerTefense.Game.Managers
                 #region Info Joueur
                 offset = 380;
                 _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.attackPlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
+                offset = 400;
+                _spriteBatch.DrawString(deFaultFont, "Or en banque : " + game.attackPlayer.betGold, new Vector2(leftUIOffset, offset), Color.White);
+                offset = 420;
+                _spriteBatch.DrawString(deFaultFont, "Nombre de Spawner(s) : " + game.FreeBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
                 #endregion
                 #region Listes de spawner
                 AttackConstruction.Draw(_spriteBatch);
@@ -1020,6 +1017,8 @@ namespace DowerTefense.Game.Managers
                 _spriteBatch.DrawString(deFaultFont, "Or du joueur : " + game.defensePlayer.totalGold, new Vector2(leftUIOffset, offset), Color.White);
                 DefenseConstruction.Draw(_spriteBatch);
                 DefenseLvlUp.Draw(_spriteBatch);
+                offset = 400;
+                _spriteBatch.DrawString(deFaultFont, "Nombre de Tour(s) : " + game.DefenseBuildingsList.Count, new Vector2(leftUIOffset, offset), Color.White);
             }
 
             #endregion
